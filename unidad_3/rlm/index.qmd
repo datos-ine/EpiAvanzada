@@ -352,23 +352,23 @@ Una variable de confusión es una variable que distorsiona la medida de asociaci
 2.  Exageración o atenuación de una asociación real (confusión positiva)
 3.  Inversión del sentido de una asociación real (confusión negativa).
 
-Según @gordis2017, en un estudio sobre si la exposición x es una causa de la enfermedad y, se dice que un tercer factor, el factor z, es un factor de confusión si se cumple lo siguiente:
+Según @gordis2017, en un estudio sobre si la exposición `x` es una causa de la enfermedad `y`, se dice que un tercer factor, el factor `z`, es un factor de confusión si se cumple lo siguiente:
 
-1.  El factor z es un factor de riesgo conocido para la enfermedad y.
-2.  El factor z se asocia con la exposición x, pero no es un resultado de la exposición x.
+1.  El factor `z` es un factor de riesgo conocido para la enfermedad `y`.
+2.  El factor `z` se asocia con la exposición `x`, pero no es un resultado de la exposición `x`.
 
 Para conceptualizar este y otros mecanismos en epidemiología se suele utilizar graficos acíclicos dirigidos (**DAGs** en inglés). Su nombre se debe a que no forman un ciclo cerrado y las variables están unidas por flechas dirigidas.
 
 ::: {layout-nrow=2}
 
-![DAG Directo](images/dag_directo.PNG)
+![DAG de efecto directo entre x e y](images/dag_directo.PNG)
 
-![DAG confusión](images/dag_confusion.PNG)
+![DAG con z como variable confusora](images/dag_confusion.PNG)
 
 :::
 
 
-Para quienes necesitan repasar este tema, pueden leer el artículo de @deirala2001 o descargarlo desde [aquí](http://halweb.uc3m.es/esp/Personal/personas/amalonso/esp/bstat-tema8vc.pdf).
+Para quienes necesitan repasar este tema, pueden leer el artículo de @deirala2001 accediendo desde [aquí](http://halweb.uc3m.es/esp/Personal/personas/amalonso/esp/bstat-tema8vc.pdf).
 
 Dentro de las estrategias para manejar la confusión, podemos pensar en dos momentos:
 
@@ -403,7 +403,7 @@ datos_conf |>
 
 Observamos que la recta de regresión muestra una correlación positiva entre los valores de las variables, representando la ecuación:
 
-$$\hat{y} = \beta_0 + \beta_1x_1 + \epsilon$$
+$$\hat{y} = b_0 + b_1x_1 + \epsilon$$
 
 Un posible resultado resumen en R de esta regresión se muestra en la siguiente salida de consola.
 
@@ -415,9 +415,9 @@ modelo <- lm(y ~ x, data = datos_conf)
 summary(modelo)
 ```
 
-El intercepto ($\beta_0$) es de 2,45 y el coeficiente $\beta_1$ (pendiente) significativo de 0,78.
+El intercepto ($b_0$) es de 2,45 y el coeficiente $b_1$ (pendiente) significativo de 0,78 que explica un 56% de los valores de `y` ($R^2$)
 
-En la ecuación el valor de `y` es 2,45 ($\beta_0$) + 0,78\* el valor de `x` ($\beta_1*x$).
+En la ecuación el valor de `y` en la recta es 2,45 ($b_0$) + 0,78\* el valor de `x` ($b_1*x$).
 
 Ahora incorporemos la covariable `z`, con categorías **A** y **B**, que sospechamos tiene un rol de confusión en el modelo teórico.
 
@@ -434,9 +434,9 @@ datos_conf |>
   theme(legend.position = "bottom")
 ```
 
-El gráfico de dispersión muestra que hay una diferencia entre las rectas de regresión que se mantiene prácticamente constante (paralelas) en todo su desarrollo. Esa distancia medida en valores de `y` es $\beta_2$, para la ecuación:
+El gráfico de dispersión muestra que hay una diferencia entre las rectas de regresión que se mantiene prácticamente constante (paralelas) en todo su desarrollo. Esa distancia medida en valores de `y` es $b_2$, para la ecuación:
 
-$$\hat{y} = \beta_0 + \beta_1x_1 + \beta_2x_2 + \epsilon$$
+$$\hat{y} = b_0 + b_1x_1 + b_2x_2 + \epsilon$$
 
 Visto en resultados de consola:
 
@@ -448,11 +448,11 @@ modelo_conf <- lm(y ~ x + z, data = datos_conf)
 summary(modelo_conf)
 ```
 
-El coeficiente $\beta_1$ de la variable independiente principal `x` varió al incorporar la nueva variable `z`, pasando de 0,78 (cruda) a 0,65 (ajustada), es decir que disminuyó casi un 20%. A la vez, la covariable tiene una relación significativa con la variable dependiente `y`.
+El coeficiente $b_1$ de la variable independiente principal `x` varió al incorporar la nueva variable `z`, pasando de 0,78 (cruda) a 0,65 (ajustada), es decir que disminuyó casi un 20%. A la vez, la covariable tiene una relación significativa con la variable dependiente `y` y el modelo aumenta el $R^2$ ajustado a 0,70.
 
-Entonces podemos ver que la regresión ajustó el efecto de `x` sobre `y`, teniendo en cuenta el efecto confusor de `z`.
+Entonces podemos ver que la regresión multiple ajustó el efecto de `x` sobre `y`, teniendo en cuenta el efecto confusor de `z` que sospechabamos.
 
-El valor de `y` es 0,66 ($\beta_0$) + 0,65\* el valor de `x` ($\beta_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 0,66 ($\beta_0$) + 0,65\* el valor de `x` ($\beta_1*x$)  + 4,55 ($\beta_2$) cuando `z` es igual a **B**.
+El valor de `y` ahora es 0,66 ($b_0$) + 0,65\* el valor de `x` ($b_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 0,66 ($b_0$) + 0,65\* el valor de `x` ($b_1*x$)  + 4,55 ($b_2$) cuando `z` es igual a **B**.
 
 
 #### Interacción o modificación de efecto
@@ -467,7 +467,7 @@ El efecto puede ser mayor de lo esperado (interacción positiva, sinergismo) o m
 
 Entonces la modificación del efecto ocurre cuando el tamaño del efecto de la variable explicativa de interés (exposición) sobre el resultado (variable dependiente) difiere según el nivel de una tercera variable.
 
-Para quienes necesiten repasar el tema, pueden leer el documento de @de2001que del siguiente [\[Link\]](https://halweb.uc3m.es/esp/personal/personas/amalonso/esp/bstat-tema8vme.pdf){.uri}
+Para quienes necesiten profundizar el tema, pueden leer el documento de @de2001que del siguiente [\[Link\]](https://halweb.uc3m.es/esp/personal/personas/amalonso/esp/bstat-tema8vme.pdf){.uri}
 
 Es importante destacar que mediante la RLM es posible identificar la presencia de modificadores de efecto mediante la inclusión de términos de interacción.
 
@@ -491,7 +491,7 @@ datos_int |>
   geom_smooth(method = "lm", se = F, color = "#1e6590")
 ```
 
-$$\hat{y} = \beta_0 + \beta_1x_1 + \epsilon$$
+$$\hat{y} = b_0 + b_1x_1 + \epsilon$$
 
 Partimos de esta relación entre `x` e `y` representada por la recta de la ecuación con los valores de la siguiente tabla:
 
@@ -503,7 +503,7 @@ modelo2 <- lm(y ~ x, data = datos_int)
 summary(modelo2)
 ```
 
-El intercepto ($\beta_0$) es de 4,0 y el coeficiente $\beta_1$ (pendiente) significativo de 0,54.
+El intercepto ($b_0$) es de 4,0 y el coeficiente $b_1$ (pendiente) significativo de 0,54.
 
 Ahora incorporemos la covariable `z`, con categorías **A** y **B**, que sospechamos tiene un rol de interacción.
 
@@ -522,7 +522,7 @@ datos_int |>
 
 El gráfico de dispersión muestra que hay una diferencia entre las rectas de regresión que tienen distintas pendientes según el valor de `z`. Esa diferencia no es aditiva y pasa a ser multiplicativa y da lugar a la ecuación:
 
-$$\hat{y} = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_1x_2 + \epsilon$$
+$$\hat{y} = b_0 + b_1x_1 + b_2x_2 + b_3x_1x_2 + \epsilon$$
 
 Visto en resultados de consola:
 
@@ -534,9 +534,9 @@ modelo_int <- lm(y ~ x*z, data = datos_int)
 summary(modelo_int)
 ```
 
-El término de interacción es significativo, aunque la variable `z` pareciese que no, es decir la significación se asocia a uno de los niveles (la categoría **B**). No hay manera de escindir un nivel del otro por lo que debemos dejar la variable `z`.
+El término de interacción es significativo, aunque la variable `z` pareciese que no, es decir la significación se asocia a uno de los niveles (la categoría **B**). No hay manera de escindir un nivel del otro por lo que debemos dejar la variable `z`. A su vez aumentó el $R^2$ ajustado del modelo de 0,28 a 0,80.
 
-El valor de `y` es 2,77 ($\beta_0$) + 0,23\* el valor de `x` ($\beta_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 2,77 ($\beta_0$) + 0,23\* el valor de `x` ($\beta_1*x$)  + 2,49 ($\beta_2$) + 0,46\*x ($\beta_3*x$) cuando `z` es igual a **B**. Observamos una sinergia entre el nivel **B** de la variable `z` y la variable `x` en el efecto causado a la variable `y`.
+El valor de `y` en este caso es 2,77 ($b_0$) + 0,23\* el valor de `x` ($b_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 2,77 ($b_0$) + 0,23\* el valor de `x` ($b_1*x$)  + 2,49 ($b_2$) + 0,46\*x ($b_3*x$) cuando `z` es igual a **B**. Observamos una sinergia entre el nivel **B** de la variable `z` y la variable `x` en el efecto causado a la variable `y`.
 
 ### Variables *dummy*
 
