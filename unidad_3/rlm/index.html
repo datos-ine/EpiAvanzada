@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Regresión Lineal Múltiple</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="index_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="index_files/libs/plotly-binding-4.10.4/plotly.js"></script>
+
+<script src="index_files/libs/typedarray-0.1/typedarray.min.js"></script>
+
+<script src="index_files/libs/jquery-3.5.1/jquery.min.js"></script>
+
+<link href="index_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="index_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<link href="index_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+<script src="index_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+<link href="index_files/libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+
+<script src="index_files/libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenidos</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
+  <ul class="collapse">
+  <li><a href="#presupuestos-del-modelo-de-rlm" id="toc-presupuestos-del-modelo-de-rlm" class="nav-link" data-scroll-target="#presupuestos-del-modelo-de-rlm">Presupuestos del modelo de RLM</a></li>
+  <li><a href="#interpretación-de-un-modelo-de-rlm" id="toc-interpretación-de-un-modelo-de-rlm" class="nav-link" data-scroll-target="#interpretación-de-un-modelo-de-rlm">Interpretación de un modelo de RLM</a></li>
+  <li><a href="#confusión-e-interacción-en-rlm" id="toc-confusión-e-interacción-en-rlm" class="nav-link" data-scroll-target="#confusión-e-interacción-en-rlm">Confusión e interacción en RLM</a></li>
+  <li><a href="#variables-dummy" id="toc-variables-dummy" class="nav-link" data-scroll-target="#variables-dummy">Variables <em>dummy</em></a></li>
+  <li><a href="#estimación-y-predicción" id="toc-estimación-y-predicción" class="nav-link" data-scroll-target="#estimación-y-predicción">Estimación y predicción</a></li>
+  <li><a href="#lineamientos-para-el-uso-de-la-ecuación-de-regresión" id="toc-lineamientos-para-el-uso-de-la-ecuación-de-regresión" class="nav-link" data-scroll-target="#lineamientos-para-el-uso-de-la-ecuación-de-regresión">Lineamientos para el uso de la ecuación de regresión</a></li>
+  </ul></li>
+  <li><a href="#ejemplo-práctico-en-lenguaje-r" id="toc-ejemplo-práctico-en-lenguaje-r" class="nav-link" data-scroll-target="#ejemplo-práctico-en-lenguaje-r">Ejemplo práctico en lenguaje R</a>
+  <ul class="collapse">
+  <li><a href="#lectura-de-datos-y-visualización-de-estructura" id="toc-lectura-de-datos-y-visualización-de-estructura" class="nav-link" data-scroll-target="#lectura-de-datos-y-visualización-de-estructura">Lectura de datos y visualización de estructura</a></li>
+  <li><a href="#análisis-de-variables-potencialmente-explicativas" id="toc-análisis-de-variables-potencialmente-explicativas" class="nav-link" data-scroll-target="#análisis-de-variables-potencialmente-explicativas">Análisis de variables potencialmente explicativas</a></li>
+  <li><a href="#estrategia-de-construcción-del-modelo" id="toc-estrategia-de-construcción-del-modelo" class="nav-link" data-scroll-target="#estrategia-de-construcción-del-modelo">Estrategia de construcción del modelo</a></li>
+  <li><a href="#comparación-de-modelos" id="toc-comparación-de-modelos" class="nav-link" data-scroll-target="#comparación-de-modelos">Comparación de modelos</a></li>
+  <li><a href="#colinealidad-1" id="toc-colinealidad-1" class="nav-link" data-scroll-target="#colinealidad-1">Colinealidad</a></li>
+  <li><a href="#diagnóstico-del-modelo-análisis-de-residuos" id="toc-diagnóstico-del-modelo-análisis-de-residuos" class="nav-link" data-scroll-target="#diagnóstico-del-modelo-análisis-de-residuos">Diagnóstico del modelo (análisis de residuos)</a></li>
+  <li><a href="#resumen-del-mejor-modelo-elegido" id="toc-resumen-del-mejor-modelo-elegido" class="nav-link" data-scroll-target="#resumen-del-mejor-modelo-elegido">Resumen del mejor modelo elegido</a></li>
+  </ul></li>
+  <li><a href="#funciones-para-modelado-automático" id="toc-funciones-para-modelado-automático" class="nav-link" data-scroll-target="#funciones-para-modelado-automático">Funciones para modelado automático</a>
+  <ul class="collapse">
+  <li><a href="#inclusión-de-variables-categóricas" id="toc-inclusión-de-variables-categóricas" class="nav-link" data-scroll-target="#inclusión-de-variables-categóricas">Inclusión de variables categóricas</a></li>
+  </ul></li>
+  <li><a href="#bibliografía" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliografía">Bibliografía</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><strong>Regresión Lineal Múltiple</strong></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span class="text" style="display: block; text-align: center;">Este material es parte de la <strong>Unidad 3 del Curso de Epidemiología - Nivel Avanzado del Instituto Nacional de Epidemiología “Dr.&nbsp;Juan H. Jara” - ANLIS</strong></span></p>
+<p><span class="text" style="display: block; text-align: center;"><a href="https://cballejo.github.io/R_Epi_Avanzada/Unidad3/Ecologico/">Estudios ecológicos</a> por <a href="http://www.ine.gov.ar/">Andrea Silva, Christian Ballejo y Tamara Ricardo</a> bajo licencia <a href="http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1">CC BY-NC 4.0</a> <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxMy4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDE0OTQ4KSAgLS0+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMC8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMCIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSI1LjUgLTMuNSA2NCA2NCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyA1LjUgLTMuNSA2NCA2NCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8Y2lyY2xlIGZpbGw9IiNGRkZGRkYiIGN4PSIzNy43ODUiIGN5PSIyOC41MDEiIHI9IjI4LjgzNiIvPg0KCTxwYXRoIGQ9Ik0zNy40NDEtMy41YzguOTUxLDAsMTYuNTcyLDMuMTI1LDIyLjg1Nyw5LjM3MmMzLjAwOCwzLjAwOSw1LjI5NSw2LjQ0OCw2Ljg1NywxMC4zMTQNCgkJYzEuNTYxLDMuODY3LDIuMzQ0LDcuOTcxLDIuMzQ0LDEyLjMxNGMwLDQuMzgxLTAuNzczLDguNDg2LTIuMzE0LDEyLjMxM2MtMS41NDMsMy44MjgtMy44Miw3LjIxLTYuODI4LDEwLjE0Mw0KCQljLTMuMTIzLDMuMDg1LTYuNjY2LDUuNDQ4LTEwLjYyOSw3LjA4NmMtMy45NjEsMS42MzgtOC4wNTcsMi40NTctMTIuMjg1LDIuNDU3cy04LjI3Ni0wLjgwOC0xMi4xNDMtMi40MjkNCgkJYy0zLjg2Ni0xLjYxOC03LjMzMy0zLjk2MS0xMC40LTcuMDI3Yy0zLjA2Ny0zLjA2Ni01LjQtNi41MjQtNy0xMC4zNzJTNS41LDMyLjc2Nyw1LjUsMjguNWMwLTQuMjI5LDAuODA5LTguMjk1LDIuNDI4LTEyLjINCgkJYzEuNjE5LTMuOTA1LDMuOTcyLTcuNCw3LjA1Ny0xMC40ODZDMjEuMDgtMC4zOTQsMjguNTY1LTMuNSwzNy40NDEtMy41eiBNMzcuNTU3LDIuMjcyYy03LjMxNCwwLTEzLjQ2NywyLjU1My0xOC40NTgsNy42NTcNCgkJYy0yLjUxNSwyLjU1My00LjQ0OCw1LjQxOS01LjgsOC42Yy0xLjM1NCwzLjE4MS0yLjAyOSw2LjUwNS0yLjAyOSw5Ljk3MmMwLDMuNDI5LDAuNjc1LDYuNzM0LDIuMDI5LDkuOTEzDQoJCWMxLjM1MywzLjE4MywzLjI4NSw2LjAyMSw1LjgsOC41MTZjMi41MTQsMi40OTYsNS4zNTEsNC4zOTksOC41MTUsNS43MTVjMy4xNjEsMS4zMTQsNi40NzYsMS45NzEsOS45NDMsMS45NzENCgkJYzMuNDI4LDAsNi43NS0wLjY2NSw5Ljk3My0xLjk5OWMzLjIxOS0xLjMzNSw2LjEyMS0zLjI1Nyw4LjcxMy01Ljc3MWM0Ljk5LTQuODc2LDcuNDg0LTEwLjk5LDcuNDg0LTE4LjM0NA0KCQljMC0zLjU0My0wLjY0OC02Ljg5NS0xLjk0My0xMC4wNTdjLTEuMjkzLTMuMTYyLTMuMTgtNS45OC01LjY1NC04LjQ1OEM1MC45ODQsNC44NDQsNDQuNzk1LDIuMjcyLDM3LjU1NywyLjI3MnogTTM3LjE1NiwyMy4xODcNCgkJbC00LjI4NywyLjIyOWMtMC40NTgtMC45NTEtMS4wMTktMS42MTktMS42ODUtMmMtMC42NjctMC4zOC0xLjI4Ni0wLjU3MS0xLjg1OC0wLjU3MWMtMi44NTYsMC00LjI4NiwxLjg4NS00LjI4Niw1LjY1Nw0KCQljMCwxLjcxNCwwLjM2MiwzLjA4NCwxLjA4NSw0LjExM2MwLjcyNCwxLjAyOSwxLjc5MSwxLjU0NCwzLjIwMSwxLjU0NGMxLjg2NywwLDMuMTgxLTAuOTE1LDMuOTQ0LTIuNzQzbDMuOTQyLDINCgkJYy0wLjgzOCwxLjU2My0yLDIuNzkxLTMuNDg2LDMuNjg2Yy0xLjQ4NCwwLjg5Ni0zLjEyMywxLjM0My00LjkxNCwxLjM0M2MtMi44NTcsMC01LjE2My0wLjg3NS02LjkxNS0yLjYyOQ0KCQljLTEuNzUyLTEuNzUyLTIuNjI4LTQuMTktMi42MjgtNy4zMTNjMC0zLjA0OCwwLjg4Ni01LjQ2NiwyLjY1Ny03LjI1N2MxLjc3MS0xLjc5LDQuMDA5LTIuNjg2LDYuNzE1LTIuNjg2DQoJCUMzMi42MDQsMTguNTU4LDM1LjQ0MSwyMC4xMDEsMzcuMTU2LDIzLjE4N3ogTTU1LjYxMywyMy4xODdsLTQuMjI5LDIuMjI5Yy0wLjQ1Ny0wLjk1MS0xLjAyLTEuNjE5LTEuNjg2LTINCgkJYy0wLjY2OC0wLjM4LTEuMzA3LTAuNTcxLTEuOTE0LTAuNTcxYy0yLjg1NywwLTQuMjg3LDEuODg1LTQuMjg3LDUuNjU3YzAsMS43MTQsMC4zNjMsMy4wODQsMS4wODYsNC4xMTMNCgkJYzAuNzIzLDEuMDI5LDEuNzg5LDEuNTQ0LDMuMjAxLDEuNTQ0YzEuODY1LDAsMy4xOC0wLjkxNSwzLjk0MS0yLjc0M2w0LDJjLTAuODc1LDEuNTYzLTIuMDU3LDIuNzkxLTMuNTQxLDMuNjg2DQoJCWMtMS40ODYsMC44OTYtMy4xMDUsMS4zNDMtNC44NTcsMS4zNDNjLTIuODk2LDAtNS4yMDktMC44NzUtNi45NDEtMi42MjljLTEuNzM2LTEuNzUyLTIuNjAyLTQuMTktMi42MDItNy4zMTMNCgkJYzAtMy4wNDgsMC44ODUtNS40NjYsMi42NTgtNy4yNTdjMS43Ny0xLjc5LDQuMDA4LTIuNjg2LDYuNzEzLTIuNjg2QzUxLjExNywxOC41NTgsNTMuOTM4LDIwLjEwMSw1NS42MTMsMjMuMTg3eiIvPg0KPC9nPg0KPC9zdmc+DQo=" class="img-fluid" width="20"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxMy4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDE0OTQ4KSAgLS0+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMC8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMCIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSI1LjUgLTMuNSA2NCA2NCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyA1LjUgLTMuNSA2NCA2NCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8Y2lyY2xlIGZpbGw9IiNGRkZGRkYiIGN4PSIzNy42MzciIGN5PSIyOC44MDYiIHI9IjI4LjI3NiIvPg0KCTxnPg0KCQk8cGF0aCBkPSJNMzcuNDQzLTMuNWM4Ljk4OCwwLDE2LjU3LDMuMDg1LDIyLjc0Miw5LjI1N0M2Ni4zOTMsMTEuOTY3LDY5LjUsMTkuNTQ4LDY5LjUsMjguNWMwLDguOTkxLTMuMDQ5LDE2LjQ3Ni05LjE0NSwyMi40NTYNCgkJCUM1My44NzksNTcuMzE5LDQ2LjI0Miw2MC41LDM3LjQ0Myw2MC41Yy04LjY0OSwwLTE2LjE1My0zLjE0NC0yMi41MTQtOS40M0M4LjY0NCw0NC43ODQsNS41LDM3LjI2Miw1LjUsMjguNQ0KCQkJYzAtOC43NjEsMy4xNDQtMTYuMzQyLDkuNDI5LTIyLjc0MkMyMS4xMDEtMC40MTUsMjguNjA0LTMuNSwzNy40NDMtMy41eiBNMzcuNTU3LDIuMjcyYy03LjI3NiwwLTEzLjQyOCwyLjU1My0xOC40NTcsNy42NTcNCgkJCWMtNS4yMiw1LjMzNC03LjgyOSwxMS41MjUtNy44MjksMTguNTcyYzAsNy4wODYsMi41OSwxMy4yMiw3Ljc3LDE4LjM5OGM1LjE4MSw1LjE4MiwxMS4zNTIsNy43NzEsMTguNTE0LDcuNzcxDQoJCQljNy4xMjMsMCwxMy4zMzQtMi42MDcsMTguNjI5LTcuODI4YzUuMDI5LTQuODM4LDcuNTQzLTEwLjk1Miw3LjU0My0xOC4zNDNjMC03LjI3Ni0yLjU1My0xMy40NjUtNy42NTYtMTguNTcxDQoJCQlDNTAuOTY3LDQuODI0LDQ0Ljc5NSwyLjI3MiwzNy41NTcsMi4yNzJ6IE00Ni4xMjksMjAuNTU3djEzLjA4NWgtMy42NTZ2MTUuNTQyaC05Ljk0NFYzMy42NDNoLTMuNjU2VjIwLjU1Nw0KCQkJYzAtMC41NzIsMC4yLTEuMDU3LDAuNTk5LTEuNDU3YzAuNDAxLTAuMzk5LDAuODg3LTAuNiwxLjQ1Ny0wLjZoMTMuMTQ0YzAuNTMzLDAsMS4wMSwwLjIsMS40MjgsMC42DQoJCQlDNDUuOTE4LDE5LjUsNDYuMTI5LDE5Ljk4Niw0Ni4xMjksMjAuNTU3eiBNMzMuMDQyLDEyLjMyOWMwLTMuMDA4LDEuNDg1LTQuNTE0LDQuNDU4LTQuNTE0czQuNDU3LDEuNTA0LDQuNDU3LDQuNTE0DQoJCQljMCwyLjk3MS0xLjQ4Niw0LjQ1Ny00LjQ1Nyw0LjQ1N1MzMy4wNDIsMTUuMywzMy4wNDIsMTIuMzI5eiIvPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg0K" class="img-fluid" width="20"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxMy4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDE0OTQ4KSAgLS0+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMC8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMCIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSI1LjUgLTMuNSA2NCA2NCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyA1LjUgLTMuNSA2NCA2NCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8Y2lyY2xlIGZpbGw9IiNGRkZGRkYiIGN4PSIzNy40NyIgY3k9IjI4LjczNiIgcj0iMjkuNDcxIi8+DQoJPGc+DQoJCTxwYXRoIGQ9Ik0zNy40NDItMy41YzguOTksMCwxNi41NzEsMy4wODUsMjIuNzQzLDkuMjU2QzY2LjM5MywxMS45MjgsNjkuNSwxOS41MDksNjkuNSwyOC41YzAsOC45OTItMy4wNDgsMTYuNDc2LTkuMTQ1LDIyLjQ1OA0KCQkJQzUzLjg4LDU3LjMyLDQ2LjI0MSw2MC41LDM3LjQ0Miw2MC41Yy04LjY4NiwwLTE2LjE5LTMuMTYyLTIyLjUxMy05LjQ4NUM4LjY0NCw0NC43MjgsNS41LDM3LjIyNSw1LjUsMjguNQ0KCQkJYzAtOC43NjIsMy4xNDQtMTYuMzQzLDkuNDI5LTIyLjc0M0MyMS4xLTAuNDE0LDI4LjYwNC0zLjUsMzcuNDQyLTMuNXogTTEyLjcsMTkuODcyYy0wLjk1MiwyLjYyOC0xLjQyOSw1LjUwNS0xLjQyOSw4LjYyOQ0KCQkJYzAsNy4wODYsMi41OSwxMy4yMiw3Ljc3LDE4LjRjNS4yMTksNS4xNDQsMTEuMzkxLDcuNzE1LDE4LjUxNCw3LjcxNWM3LjIwMSwwLDEzLjQwOS0yLjYwOCwxOC42My03LjgyOQ0KCQkJYzEuODY3LTEuNzksMy4zMzItMy42NTcsNC4zOTgtNS42MDJsLTEyLjA1Ni01LjM3MWMtMC40MjEsMi4wMi0xLjQzOSwzLjY2Ny0zLjA1Nyw0Ljk0MmMtMS42MjIsMS4yNzYtMy41MzUsMi4wMTEtNS43NDQsMi4yDQoJCQl2NC45MTVoLTMuNzE0di00LjkxNWMtMy41NDMtMC4wMzYtNi43ODItMS4zMTItOS43MTQtMy44MjdsNC40LTQuNDU3YzIuMDk0LDEuOTQyLDQuNDc2LDIuOTEzLDcuMTQzLDIuOTEzDQoJCQljMS4xMDQsMCwyLjA0OC0wLjI0NiwyLjgzLTAuNzQzYzAuNzgtMC40OTQsMS4xNzItMS4zMTIsMS4xNzItMi40NTdjMC0wLjgwMS0wLjI4Ny0xLjQ0OC0wLjg1OC0xLjk0M2wtMy4wODUtMS4zMTVsLTMuNzcxLTEuNzE1DQoJCQlsLTUuMDg2LTIuMjI5TDEyLjcsMTkuODcyeiBNMzcuNTU3LDIuMjE0Yy03LjI3NiwwLTEzLjQyOCwyLjU3MS0xOC40NTcsNy43MTRjLTEuMjU4LDEuMjU4LTIuNDM5LDIuNjg2LTMuNTQzLDQuMjg3TDI3Ljc4NiwxOS43DQoJCQljMC41MzMtMS42NzYsMS41NDItMy4wMTksMy4wMjktNC4wMjhjMS40ODQtMS4wMDksMy4yMTgtMS41NzEsNS4yLTEuNjg2VjkuMDcxaDMuNzE1djQuOTE1YzIuOTM0LDAuMTUzLDUuNiwxLjE0Myw4LDIuOTcxDQoJCQlsLTQuMTcyLDQuMjg2Yy0xLjc5My0xLjI1Ny0zLjYxOS0xLjg4NS01LjQ4Ni0xLjg4NWMtMC45OTEsMC0xLjg3NiwwLjE5MS0yLjY1NiwwLjU3MWMtMC43ODEsMC4zODEtMS4xNzIsMS4wMjktMS4xNzIsMS45NDMNCgkJCWMwLDAuMjY3LDAuMDk1LDAuNTMzLDAuMjg1LDAuOGw0LjA1NywxLjgzbDIuOCwxLjI1N2w1LjE0NCwyLjI4NWwxNi4zOTcsNy4zMTRjMC41MzUtMi4yNDgsMC44MDEtNC41MzMsMC44MDEtNi44NTcNCgkJCWMwLTcuMzUzLTIuNTUyLTEzLjU0My03LjY1Ni0xOC41NzNDNTEuMDA1LDQuNzg1LDQ0LjgzMSwyLjIxNCwzNy41NTcsMi4yMTR6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=" class="img-fluid" width="20"></span></p>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>Los modelos de Regresión Lineal Múltiple (RLM) son típicamente empleados cuando la variable dependiente (también llamada variable respuesta, resultado o desenlace) es continua. Las variables independientes (variables explicativas, covariables o predictores) pueden ser tanto continuas como categóricas. A su vez las variables categóricas pueden ser dicotómicas, ordinales o tener múltiples niveles, siendo tratadas, en esta situación, como variables <em>dummy</em> (según veremos más adelante).</p>
+<p>Así como la RLS nos permite estimar el efecto bruto de una variable independiente sobre una variable respuesta, la RLM nos permite conocer el efecto conjunto de dos o más variables independientes (<span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>,…<span class="math inline">\(X_k\)</span>) sobre la variable respuesta (<span class="math inline">\(Y\)</span>). De esta manera podemos decir que la RLM nos permite:</p>
+<ul>
+<li><p>Analizar la dirección y fuerza de la asociación entre la variable dependiente y las variables independientes.</p></li>
+<li><p>Determinar cuáles variables independientes son importantes en la <strong>predicción/explicación</strong> de la variable dependiente.</p></li>
+<li><p>Describir la relación entre una o más variables independientes controlando por el efecto de las otras variables independientes (<strong>confusión</strong>).</p></li>
+<li><p>Identificar si la relación de la variable respuesta y una variable independiente cambia de acuerdo al nivel de otra variable independiente (<strong>interacción</strong>).</p></li>
+</ul>
+<p>El modelo estadístico de la RLS que expresa la relación entre <span class="math inline">\(X\)</span> e <span class="math inline">\(Y\)</span> es:</p>
+<p><span class="math display">\[ Y = \beta_0 + \beta_1X_1   \]</span></p>
+<p>La representación gráfica de dicha relación es una recta de ajuste que se realiza en un plano (2 dimensiones).</p>
+<p>El modelo estadístico de la RLM es:</p>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span class="math display">\[ Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + ...+\beta_kX_k   \]</span></p>
+</div>
+</div>
+</div>
+<p>Donde <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>,…,<span class="math inline">\(\beta_k\)</span> son los parámetros de la regresión. Para cada combinación de valores de <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>,…<span class="math inline">\(X_k\)</span> existe una distribución <span class="math inline">\(Y\)</span> cuya <strong>media</strong> es una función lineal de <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>,…, <span class="math inline">\(X_k\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La representación gráfica de la recta de ajuste se realiza en el espacio de dimensión <span class="math inline">\(K + 1\)</span> (donde <span class="math inline">\(K\)</span> es el número de variables). Recordamos que en el caso de la RLS, podíamos representarla en un plano (2 dimensiones), en el caso de la RLM, se nos dificulta la representación espacial si el modelo tuviera más de 2 variables.</p>
+<p>En el caso puntual que el modelo tuviera 2 variables independientes, la ecuación sería:</p>
+<p><span class="math display">\[ Y = \beta_0 + \beta_1 X_1 + \beta_2X_2 \]</span></p>
+<p>Y podríamos representarlo en un plano como:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-7ea80b0746f80e52b0ea" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-7ea80b0746f80e52b0ea">{"x":{"visdat":{"5ab069ea96d":["function () ","plotlyVisDat"]},"cur_data":"5ab069ea96d","attrs":{"5ab069ea96d":{"x":{},"y":{},"z":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d","mode":"markers","error_x":{"array":[-0.35762109361139816,-0.376344484108871,-0.46926935180344692,-0.52625663966936831,-0.21857976659019943,0.16558958647949093,-1.00710524896036,0.10599021668614589,0.61833752320828517,1.0187870091202176,0.65058799610029361,0.37838738189798077,-0.86336519955716495,-0.30075335400339098,-0.17602322829130843,0.35176195137844724,-0.052835667001887236,-0.62932431403008593,0.8422178540470574,0.45569564589798134,0.11871513624551289,0.60905430516290571,-0.66938714361748619,0.33041014889490017,-0.26145618815671096,0.34187276092535623,-0.030410977330037114,0.31648035651572543,0.66775880752969596,0.0036450451584493972,0.50877931847604618,-0.59421701757398948,-0.36080222021800762,0.75960885569408909,0.18869398651196465,-1.0261114102168649,-0.68201872604118763,-0.1003905077945606,0.43288970216724398,-0.050941627857611235,0.31209373601032636,0.47950268889391268,0.83552741443146961,0.028008366637480967,-0.025990953090449485,-0.87661867957113482,0.049663797043913743,-0.28592502894778166,-0.48700479140204561,-0.089953115523770152,0.50747158637182876,-0.99637424434429123,-0.21363964360271434,0.05831864179135321,-0.4466037850274765,0.16695147124961254,0.20571496030786535,-0.016518079637995873,-1.2329490968800136,1.2857290729333188,-0.10264962873409975,0.32559664079383516,0.13688324551827399,0.51233661740917513,0.40882972318704397,-0.10489658561425431,0.1890838861042535,-0.47270441556194642,0.42846150544965922,-0.23051916944217701,1.2083866768941054,-0.82552444784409362,-0.23199362148300745,0.41268993137962123,0.25506627343933175,-0.29474051925750017,-0.49839037110376117,0.072237852355348325,-0.0071537065834566937,-0.89514061863203009,0.017275533566925513,0.095115157846228551,0.087363198490920779,-0.52750852130134074,0.23806663915131451,0.68928506847962023,0.22811820158990626,-0.56779423518717154,-0.21782273484595252,0.17305180977680337,-0.32352281565913449,-1.0788231675076385,0.44212541001410449,-0.41473880581225903,-0.28678013538414143,0.75195030450226752,-0.38707246480270252,0.42286577009464793,-0.63034143940938769,-0.17727120153698886]},"error_y":{"array":[-0.35762109361139816,-0.376344484108871,-0.46926935180344692,-0.52625663966936831,-0.21857976659019943,0.16558958647949093,-1.00710524896036,0.10599021668614589,0.61833752320828517,1.0187870091202176,0.65058799610029361,0.37838738189798077,-0.86336519955716495,-0.30075335400339098,-0.17602322829130843,0.35176195137844724,-0.052835667001887236,-0.62932431403008593,0.8422178540470574,0.45569564589798134,0.11871513624551289,0.60905430516290571,-0.66938714361748619,0.33041014889490017,-0.26145618815671096,0.34187276092535623,-0.030410977330037114,0.31648035651572543,0.66775880752969596,0.0036450451584493972,0.50877931847604618,-0.59421701757398948,-0.36080222021800762,0.75960885569408909,0.18869398651196465,-1.0261114102168649,-0.68201872604118763,-0.1003905077945606,0.43288970216724398,-0.050941627857611235,0.31209373601032636,0.47950268889391268,0.83552741443146961,0.028008366637480967,-0.025990953090449485,-0.87661867957113482,0.049663797043913743,-0.28592502894778166,-0.48700479140204561,-0.089953115523770152,0.50747158637182876,-0.99637424434429123,-0.21363964360271434,0.05831864179135321,-0.4466037850274765,0.16695147124961254,0.20571496030786535,-0.016518079637995873,-1.2329490968800136,1.2857290729333188,-0.10264962873409975,0.32559664079383516,0.13688324551827399,0.51233661740917513,0.40882972318704397,-0.10489658561425431,0.1890838861042535,-0.47270441556194642,0.42846150544965922,-0.23051916944217701,1.2083866768941054,-0.82552444784409362,-0.23199362148300745,0.41268993137962123,0.25506627343933175,-0.29474051925750017,-0.49839037110376117,0.072237852355348325,-0.0071537065834566937,-0.89514061863203009,0.017275533566925513,0.095115157846228551,0.087363198490920779,-0.52750852130134074,0.23806663915131451,0.68928506847962023,0.22811820158990626,-0.56779423518717154,-0.21782273484595252,0.17305180977680337,-0.32352281565913449,-1.0788231675076385,0.44212541001410449,-0.41473880581225903,-0.28678013538414143,0.75195030450226752,-0.38707246480270252,0.42286577009464793,-0.63034143940938769,-0.17727120153698886]},"showlegend":false,"inherit":true},"5ab069ea96d.1":{"x":{},"y":{},"z":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"surface","showscale":false,"opacity":0.75,"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"X1"},"yaxis":{"title":"X2"},"zaxis":{"title":"Y"}},"zoom":{"enabled":true,"initialzoom":1},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[-0.5604756465522126,-0.23017748948327996,1.558708314149124,0.070508391424576003,0.12928773516094624,1.715064986883281,0.4609162059892023,-1.265061234606534,-0.68685285189352607,-0.44566197009995806,1.2240817974394615,0.35981382705736381,0.40077145059405217,0.11068271594511971,-0.55584113475407493,1.7869131368030782,0.49785047822923939,-1.9666171566296382,0.70135590156368555,-0.47279140772793404,-1.0678237059868452,-0.21797491465829513,-1.0260044483072397,-0.72889122929114025,-0.62503926784925667,-1.6866933107424134,0.83778704449452468,0.15337311783651522,-1.1381369370119476,1.2538149210699268,0.42646422147681357,-0.29507148299227115,0.89512566104502223,0.87813348753304221,0.82158108163748711,0.688640254100091,0.55391765353758882,-0.061911710576721679,-0.30596266373991676,-0.38047100101238268,-0.6947069789205127,-0.20791727801959878,-1.2653963515682645,2.1689559653385126,1.2079619983049905,-1.1231085832033492,-0.40288483529907598,-0.46665535362321886,0.77996511833631788,-0.083369066471829276,0.2533185139947548,-0.028546755348703018,-0.04287045729131609,1.3686022840144576,-0.22577098565926762,1.5164706044295397,-1.5487528042302212,0.58461374963606916,0.12385424384461378,0.21594156874397272,0.37963948275988207,-0.50232345310930226,-0.3332073836694201,-1.0185753831070887,-1.0717912264755778,0.30352864140425806,0.44820977862942618,0.053004226730504145,0.92226746787973757,2.0500846856271444,-0.4910311660565353,-2.3091688756408124,1.0057385244622565,-0.70920076258239262,-0.688008616467358,1.0255713696966988,-0.28477300705100889,-1.2207177122545356,0.1813034797491502,-0.13889136243904462,0.005764185899886933,0.3852804011263305,-0.37066003179240936,0.64437654851883297,-0.22048656181875062,0.33178196391569692,1.0968390131493477,0.43518149083380286,-0.32593158553122675,1.1488076184510938,0.99350385596211943,0.54839695950806999,0.23873173511144119,-0.62790607603937143,1.3606524485300076,-0.60025958714712691,2.1873329930165766,1.5326106261851893,-0.23570035910047687,-1.0264209003067808],"y":[-0.710406563699301,0.25688370915652953,-0.24669187846237361,-0.34754259939773319,-0.9516185672650157,-0.045027724808920269,-0.78490446945707582,-1.6679419365881367,-0.38022652028776244,0.91899660906076597,-0.57534696260839191,0.60796432222503338,-1.617882708289164,-0.055561965524539438,0.51940720394346229,0.3011533621667144,0.10567619414894333,-0.64070600830537638,-0.84970434603358225,-1.0241287906049132,0.11764659710012587,-0.94747461418480217,-0.49055744370066834,-0.25609219219824725,1.8438620052322074,-0.65194990169545852,0.23538657228485693,0.077960849563710771,-0.96185663413012856,-0.071308086123598666,1.4445508584233488,0.45150405307921465,0.04123292199293993,-0.42249683233962482,-2.0532472215405155,1.1313372134141755,-1.460640070924822,0.73994751087733446,1.9091035692174834,-1.4438931609717993,0.70178433537471085,-0.26219748940246801,-1.5721441591454877,-1.5146676537817514,-1.6015361735745934,-0.53090652217030299,-1.4617555849958999,0.68791677297582754,2.1001089405256717,-1.2870304760351789,0.78773884747517808,0.7690422410009099,0.33220257895011768,-1.0083766082770078,-0.11945260663065868,-0.28039533517024667,0.56298953322047984,-0.37243875610382904,0.97697338668562073,-0.37458085776701383,1.0527114655793319,-1.0491770066660657,-1.2601552447581124,3.2410399349424046,-0.41685758816043178,0.29822759154071532,0.63656967403384868,-0.48378062570874358,0.51686204431360905,0.36896452738508601,-0.21538050764169339,0.065293033525315264,-0.034067253738463997,2.1284518990161811,-0.74133609627282837,-1.0959962670746639,0.037788399171078818,0.31048074944313703,0.43652347891018295,-0.45836533271110569,-1.063326133971191,1.2631851760894901,-0.34965038795355474,-0.86551286265337402,-0.23627956894109653,-0.19717589434855221,1.1099202897136404,0.084737292197196459,0.75405378518452149,-0.49929201717226079,0.21444530958160127,-0.3246859114908347,0.094583528173571421,-0.89536335797754163,-1.3108015333279719,1.9972133847479665,0.60070882367241762,-1.251271361624944,-0.61116591668042086,-1.1854800845973104],"z":[-1.0533606353186085,1.6227091249365391,2.1121959362147744,-0.35841695611195801,-3.0106201793920144,2.8187999047242229,-2.2214838342430654,-8.1285655464369899,-0.8634777973136496,1.8116377618969413,0.84136794348133137,2.7872080503889198,-2.8196293451940502,-0.46138429562815919,-0.54596780806980039,6.1529832925094894,0.87156632200002337,-6.5784183081152792,-2.3826743538566686,-5.3026849095884039,-2.3566810999712997,-2.6603878547044681,-2.4138330887867663,-1.5184706813414344,3.9178501829028565,-5.2694863891866008,1.67713734216355,-0.17658937720984746,-4.2771932774373616,1.2781130051655134,7.1418749837161375,0.67404959928724995,2.1284889146980803,-0.24975122669236349,-5.0909681911098419,3.4542760161374666,-3.4570102940720155,2.5150015164030237,5.4396897243339959,-5.8741579719949142,-0.072682922570894593,-1.7046257425894624,-5.7511645107266407,-1.3433946513339736,-2.5677361184939977,-1.9365749112386803,-5.2920113109146598,-0.22940109214034909,7.1954876229755884,-3.5423695821443171,2.4942506987452706,1.6881568487555407,0.56694958813926144,-0.19742860966288728,0.78860897993531465,2.1031900912094557,-0.32773751264748552,0.68266534661121792,3.064988752239949,-2.2247614387036942,3.3962960447052399,-4.642048379355276,-4.39972606885165,8.9861677162798568,-1.1010762436013573,3.0493211164144314,2.6729776150314541,-3.1018608192228601,3.0063412046285589,5.2962701764828424,-0.78319085097071484,-3.4599306822214082,2.5935847171255855,3.5716798220842909,-2.7503824761198459,-1.6834032782578161,-0.28137811642752564,-1.4354419990059255,2.100344161199355,-1.6282037401852665,-4.8459251276994619,5.2966122952945733,-1.4042446590958073,-1.5734371162006786,-1.0316673194141099,0.20607489015420058,5.7444583640006188,2.765421024236681,1.3912478055576347,0.96780456927006275,3.7987275137381356,1.176917207920555,1.906477165123954,-4.5193702270709242,0.79138302736892863,4.8578218508798292,8.0436443017572685,-2.0394955185351646,-2.2839148818879789,-4.3593674834362766],"type":"scatter3d","mode":"markers","error_x":{"color":"rgba(31,119,180,1)","array":[-0.35762109361139816,-0.376344484108871,-0.46926935180344692,-0.52625663966936831,-0.21857976659019943,0.16558958647949093,-1.00710524896036,0.10599021668614589,0.61833752320828517,1.0187870091202176,0.65058799610029361,0.37838738189798077,-0.86336519955716495,-0.30075335400339098,-0.17602322829130843,0.35176195137844724,-0.052835667001887236,-0.62932431403008593,0.8422178540470574,0.45569564589798134,0.11871513624551289,0.60905430516290571,-0.66938714361748619,0.33041014889490017,-0.26145618815671096,0.34187276092535623,-0.030410977330037114,0.31648035651572543,0.66775880752969596,0.0036450451584493972,0.50877931847604618,-0.59421701757398948,-0.36080222021800762,0.75960885569408909,0.18869398651196465,-1.0261114102168649,-0.68201872604118763,-0.1003905077945606,0.43288970216724398,-0.050941627857611235,0.31209373601032636,0.47950268889391268,0.83552741443146961,0.028008366637480967,-0.025990953090449485,-0.87661867957113482,0.049663797043913743,-0.28592502894778166,-0.48700479140204561,-0.089953115523770152,0.50747158637182876,-0.99637424434429123,-0.21363964360271434,0.05831864179135321,-0.4466037850274765,0.16695147124961254,0.20571496030786535,-0.016518079637995873,-1.2329490968800136,1.2857290729333188,-0.10264962873409975,0.32559664079383516,0.13688324551827399,0.51233661740917513,0.40882972318704397,-0.10489658561425431,0.1890838861042535,-0.47270441556194642,0.42846150544965922,-0.23051916944217701,1.2083866768941054,-0.82552444784409362,-0.23199362148300745,0.41268993137962123,0.25506627343933175,-0.29474051925750017,-0.49839037110376117,0.072237852355348325,-0.0071537065834566937,-0.89514061863203009,0.017275533566925513,0.095115157846228551,0.087363198490920779,-0.52750852130134074,0.23806663915131451,0.68928506847962023,0.22811820158990626,-0.56779423518717154,-0.21782273484595252,0.17305180977680337,-0.32352281565913449,-1.0788231675076385,0.44212541001410449,-0.41473880581225903,-0.28678013538414143,0.75195030450226752,-0.38707246480270252,0.42286577009464793,-0.63034143940938769,-0.17727120153698886]},"error_y":{"color":"rgba(31,119,180,1)","array":[-0.35762109361139816,-0.376344484108871,-0.46926935180344692,-0.52625663966936831,-0.21857976659019943,0.16558958647949093,-1.00710524896036,0.10599021668614589,0.61833752320828517,1.0187870091202176,0.65058799610029361,0.37838738189798077,-0.86336519955716495,-0.30075335400339098,-0.17602322829130843,0.35176195137844724,-0.052835667001887236,-0.62932431403008593,0.8422178540470574,0.45569564589798134,0.11871513624551289,0.60905430516290571,-0.66938714361748619,0.33041014889490017,-0.26145618815671096,0.34187276092535623,-0.030410977330037114,0.31648035651572543,0.66775880752969596,0.0036450451584493972,0.50877931847604618,-0.59421701757398948,-0.36080222021800762,0.75960885569408909,0.18869398651196465,-1.0261114102168649,-0.68201872604118763,-0.1003905077945606,0.43288970216724398,-0.050941627857611235,0.31209373601032636,0.47950268889391268,0.83552741443146961,0.028008366637480967,-0.025990953090449485,-0.87661867957113482,0.049663797043913743,-0.28592502894778166,-0.48700479140204561,-0.089953115523770152,0.50747158637182876,-0.99637424434429123,-0.21363964360271434,0.05831864179135321,-0.4466037850274765,0.16695147124961254,0.20571496030786535,-0.016518079637995873,-1.2329490968800136,1.2857290729333188,-0.10264962873409975,0.32559664079383516,0.13688324551827399,0.51233661740917513,0.40882972318704397,-0.10489658561425431,0.1890838861042535,-0.47270441556194642,0.42846150544965922,-0.23051916944217701,1.2083866768941054,-0.82552444784409362,-0.23199362148300745,0.41268993137962123,0.25506627343933175,-0.29474051925750017,-0.49839037110376117,0.072237852355348325,-0.0071537065834566937,-0.89514061863203009,0.017275533566925513,0.095115157846228551,0.087363198490920779,-0.52750852130134074,0.23806663915131451,0.68928506847962023,0.22811820158990626,-0.56779423518717154,-0.21782273484595252,0.17305180977680337,-0.32352281565913449,-1.0788231675076385,0.44212541001410449,-0.41473880581225903,-0.28678013538414143,0.75195030450226752,-0.38707246480270252,0.42286577009464793,-0.63034143940938769,-0.17727120153698886]},"showlegend":false,"marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"line":{"color":"rgba(31,119,180,1)"},"frame":null},{"colorbar":{"title":"y<br />matrix(grid$y, nrow = length(x1_grid), ncol = length(x2_grid))","ticklen":2},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"x":[-2.3091688756408124,-2.0725108825535816,-1.8358528894663504,-1.5991948963791194,-1.3625369032918884,-1.1258789102046574,-0.88922091711742635,-0.65256292403019533,-0.41590493094296432,-0.17924693785573309,0.057411055231497699,0.29406904831872849,0.53072704140595972,0.76738503449319095,1.0040430275804217,1.2407010206676525,1.4773590137548838,1.714017006842115,1.9506749999293462,2.1873329930165766],"y":[-2.0532472215405155,-1.7746005290940461,-1.4959538366475766,-1.2173071442011072,-0.93866045175463775,-0.6600137593081683,-0.38136706686169886,-0.10272037441522941,0.17592631803124004,0.45457301047770926,0.73321970292417893,1.0118663953706486,1.2905130878171178,1.569159780263587,1.8478064727100567,2.1264531651565264,2.4050998576029956,2.6837465500494648,2.9623932424959341,3.2410399349424046],"z":[[-10.384388897476088,-9.541813883526082,-8.6992388695760781,-7.8566638556260742,-7.0140888416760694,-6.1715138277260646,-5.3289388137760598,-4.486363799826055,-3.6437887858760507,-2.8012137719260464,-1.9586387579760411,-1.1160637440260359,-0.27348873007603203,0.56908628387397187,1.4116612978239775,2.2542363117739823,3.0968113257239862,3.939386339673991,4.7819613536239949,5.6245363675740023],[-9.9425890179300112,-9.1000140039800073,-8.2574389900300016,-7.4148639760799977,-6.5722889621299938,-5.7297139481799881,-4.8871389342299842,-4.0445639202799795,-3.2019889063299747,-2.3594138923799708,-1.5168388784299651,-0.6742638644799599,0.168311149470044,1.0108861634200479,1.8534611773700536,2.6960361913200583,3.5386112052700622,4.3811862192200675,5.2237612331700713,6.0663362471200788],[-9.5007891383839329,-8.658214124433929,-7.8156391104839242,-6.9730640965339195,-6.1304890825839156,-5.2879140686339108,-4.445339054683906,-3.6027640407339012,-2.7601890267838969,-1.9176140128338928,-1.0750389988838873,-0.2324639849338821,0.6101110290161218,1.4526860429661257,2.2952610569161314,3.1378360708661361,3.98041108481614,4.8229860987661448,5.6655611127161487,6.5081361266661562],[-9.0589892588378564,-8.2164142448878525,-7.3738392309378469,-6.531264216987843,-5.6886892030378391,-4.8461141890878334,-4.0035391751378295,-3.1609641611878248,-2.31838914723782,-1.4758141332878159,-0.63323911933781041,0.20933589461219482,1.0519109085621987,1.8944859225122026,2.7370609364622083,3.5796359504122131,4.4222109643622165,5.2647859783122222,6.1073609922622261,6.9499360062122335],[-8.61718937929178,-7.7746143653417743,-6.9320393513917704,-6.0894643374417656,-5.2468893234917608,-4.404314309541757,-3.5617392955917517,-2.7191642816417474,-1.8765892676917426,-1.0340142537417385,-0.19143923979173305,0.65113577415827217,1.4937107881082761,2.33628580205828,3.1788608160082856,4.0214358299582909,4.8640108439082947,5.7065858578582986,6.5491608718083025,7.39173588575831],[-8.1753894997457017,-7.3328144857956978,-6.4902394718456931,-5.6476644578956883,-4.8050894439456844,-3.9625144299956796,-3.1199394160456748,-2.27736440209567,-1.4347893881456657,-0.59221437419566159,0.25036063975434386,1.0929356537043491,1.935510667654353,2.7780856816043569,3.6206606955543625,4.4632357095043673,5.3058107234543712,6.148385737404376,6.9909607513543799,7.8335357653043873],[-7.7335896201996253,-6.8910146062496205,-6.0484395922996157,-5.2058645783496118,-4.363289564399607,-3.5207145504496022,-2.6781395364995975,-1.8355645225495931,-0.99298950859958846,-0.15041449464958445,0.692160519300421,1.5347355332504262,2.3773105472004303,3.2198855611504342,4.0624605751004399,4.9050355890504447,5.7476106030004486,6.5901856169504534,7.4327606309004572,8.2753356448504647],[-7.2917897406535479,-6.4492147267035431,-5.6066397127535383,-4.7640646988035344,-3.9214896848535297,-3.0789146709035249,-2.2363396569535201,-1.3937646430035158,-0.5511896290535111,0.2913853848964929,1.1339603988464984,1.9765354127965036,2.8191104267465077,3.6616854406965116,4.5042604546465173,5.346835468596522,6.1894104825465259,7.0319854964965307,7.8745605104465346,8.7171355243965412],[-6.8499898611074705,-6.0074148471574667,-5.164839833207461,-4.3222648192574571,-3.4796898053074528,-2.637114791357448,-1.7945397774074432,-0.95196476345743863,-0.10938974950743396,0.73318526444257004,1.5757602783925755,2.4183352923425807,3.2609103062925846,4.1034853202425889,4.9460603341925946,5.7886353481425985,6.6312103620926024,7.4737853760426081,8.316360389992612,9.1589354039426194],[-6.4081899815613932,-5.5656149676113884,-4.7230399536613836,-3.8804649397113797,-3.0378899257613754,-2.1953149118113706,-1.3527398978613656,-0.51016488391136106,0.33241013003864361,1.1749851439886476,2.0175601579386528,2.8601351718886581,3.702710185838662,4.5452851997886663,5.387860213738672,6.2304352276886767,7.0730102416386806,7.9155852555886854,8.7581602695386884,9.6007352834886959],[-5.9663901020153167,-5.1238150880653119,-4.2812400741153072,-3.4386650601653028,-2.5960900462152985,-1.7535150322652937,-0.91094001831528892,-0.068365004365284338,0.7742100095847203,1.6167850235347243,2.4593600374847298,3.301935051434735,4.1445100653847389,4.9870850793347428,5.8296600932847484,6.6722351072347532,7.5148101211847571,8.3573851351347628,9.1999601490847667,10.042535163034774],[-5.5245902224692403,-4.6820152085192355,-3.8394401945692302,-2.9968651806192259,-2.1542901666692216,-1.3117151527192168,-0.46914013876921212,0.37343487518079244,1.2160098891307971,2.058584903080801,2.9011599170308067,3.7437349309808119,4.5863099449308153,5.4288849588808192,6.2714599728308249,7.1140349867808297,7.9566100007308336,8.7991850146808392,9.6417600286308431,10.484335042580851],[-5.0827903429231629,-4.2402153289731572,-3.3976403150231529,-2.5550653010731486,-1.7124902871231442,-0.86991527317313944,-0.027340259223134655,0.8152347547268699,1.6578097686768745,2.5003847826268784,3.342959796576884,4.1855348105268888,5.0281098244768927,5.8706848384268966,6.7132598523769023,7.5558348663269079,8.3984098802769118,9.2409848942269157,10.08355990817692,10.926134922126927],[-4.6409904633770847,-3.7984154494270799,-2.9558404354770751,-2.1132654215270712,-1.2706904075770666,-0.42811539362706186,0.41445962032294292,1.2570346342729475,2.0996096482229523,2.9421846621729562,3.7847596761229614,4.627334690072967,5.4699097040229709,6.3124847179729748,7.1550597319229805,7.9976347458729853,8.8402097598229883,9.682784773772994,10.525359787722998,11.367934801673005],[-4.1991905838310082,-3.3566155698810034,-2.5140405559309986,-1.6714655419809943,-0.82889052803098995,0.013684485919014833,0.85625949986901961,1.6988345138190242,2.5414095277690287,3.3839845417190331,4.2265595556690378,5.0691345696190435,5.9117095835690474,6.7542845975190513,7.596859611469057,8.4394346254190609,9.2820096393690648,10.12458465331907,10.967159667269074,11.809734681219082],[-3.7573907042849313,-2.9148156903349265,-2.0722406763849217,-1.2296656624349174,-0.38709064848491304,0.45548436546509175,1.2980593794150965,2.1406343933651009,2.9832094073151056,3.8257844212651095,4.6683594352151152,5.51093444916512,6.3535094631151239,7.1960844770651278,8.0386594910151334,8.8812345049651391,9.723809518915143,10.566384532865147,11.408959546815151,12.251534560765158],[-3.3155908247388539,-2.4730158107888491,-1.6304407968388444,-0.78786578288884002,0.054709231061164321,0.8972842450111691,1.7398592589611739,2.5824342729111782,3.425009286861183,4.2675843008111869,5.1101593147611926,5.9527343287111982,6.7953093426612021,7.637884356611206,8.4804593705612117,9.3230343845112156,10.165609398461219,11.008184412411225,11.850759426361229,12.693334440311236],[-2.8737909451927761,-2.0312159312427713,-1.1886409172927666,-0.34606590334276222,0.49650911060724212,1.3390841245572469,2.1816591385072517,3.0242341524572565,3.8668091664072608,4.7093841803572651,5.5519591943072708,6.3945342082572756,7.2371092222072795,8.0796842361572843,8.9222592501072882,9.7648342640572938,10.607409278007298,11.449984291957303,12.292559305907307,13.135134319857315],[-2.4319910656466988,-1.589416051696694,-0.7468410377466892,0.095733976203315141,0.93830899015331948,1.7808840041033243,2.623459018053329,3.4660340320033338,4.3086090459533386,5.1511840599033425,5.9937590738533473,6.8363340878033529,7.6789091017533568,8.5214841157033607,9.3640591296533664,10.20663414360337,11.049209157553374,11.89178417150338,12.734359185453384,13.576934199403391],[-1.9901911861006223,-1.1476161721506175,-0.30504115820061273,0.53753385574939161,1.3801088696993959,2.2226838836494007,3.0652588975994055,3.9078339115494103,4.7504089254994151,5.592983939449419,6.4355589533994237,7.2781339673494294,8.1207089812994333,8.9632839952494372,9.8058590091994429,10.648434023149449,11.491009037099452,12.333584051049456,13.17615906499946,14.018734078949468]],"type":"surface","opacity":0.75,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>En forma similar a la RLS, la interpretación de cada parámetro <span class="math inline">\(\beta\)</span> de la regresión es:</p>
+<ul>
+<li><p><span class="math inline">\(\beta_0\)</span>: es el valor esperado de <span class="math inline">\(Y\)</span> cuando todas las otras variables son iguales a cero.</p></li>
+<li><p><span class="math inline">\(\beta_1\)</span> es la pendiente a lo largo del eje <span class="math inline">\(X_1\)</span> y representa el cambio esperado en la respuesta por unidad de cambio en <span class="math inline">\(X_1\)</span> a valores constantes de <span class="math inline">\(X_2\)</span>.</p></li>
+<li><p><span class="math inline">\(\beta_2\)</span> es la pendiente a lo largo del eje <span class="math inline">\(X_2\)</span> y representa el cambio esperado en la respuesta por unidad de cambio en <span class="math inline">\(X_2\)</span> a valores constantes de <span class="math inline">\(X_1\)</span>.</p></li>
+</ul>
+<section id="presupuestos-del-modelo-de-rlm" class="level3">
+<h3 class="anchored" data-anchor-id="presupuestos-del-modelo-de-rlm">Presupuestos del modelo de RLM</h3>
+<section id="independencia" class="level4">
+<h4 class="anchored" data-anchor-id="independencia">Independencia</h4>
+<p>Las observaciones <span class="math inline">\(Y_i\)</span> son independientes unas de otras: el efecto de <span class="math inline">\(X_1\)</span> sobre la respuesta media no depende de <span class="math inline">\(X_2\)</span> y viceversa, siempre y cuando no exista interacción. Cuando existe interacción entre <span class="math inline">\(X_1\)</span> e <span class="math inline">\(X_2\)</span> , el efecto de <span class="math inline">\(X_1\)</span> sobre la respuesta media de <span class="math inline">\(Y\)</span> depende <span class="math inline">\(X_2\)</span> y viceversa (<span class="math inline">\(X_1\)</span> e <span class="math inline">\(X_2\)</span> no son independientes cuando existe interacción).</p>
+</section>
+<section id="linealidad" class="level4">
+<h4 class="anchored" data-anchor-id="linealidad">Linealidad</h4>
+<p>Para cada combinación de valores de las variables independientes (<span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>,…, <span class="math inline">\(X_k\)</span>) el valor medio de <span class="math inline">\(Y\)</span> es función lineal de <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>,…,<span class="math inline">\(X_k\)</span>.. La linealidad se define en relación a los coeficientes de la regresión, por lo tanto el modelo puede incluir términos cuadráticos e interacciones</p>
+<ul>
+<li>Modelo con interacción</li>
+</ul>
+<p><span class="math display">\[ Y = \beta_0X_1 + \beta_2X_2 + \beta_3X_1X_2 \]</span></p>
+<ul>
+<li><p>Modelo con términos cuadráticos</p>
+<p><span class="math display">\[ Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_1^2 + \beta_4X_2^2 \]</span></p></li>
+</ul>
+</section>
+<section id="homocedasticidad" class="level4">
+<h4 class="anchored" data-anchor-id="homocedasticidad">Homocedasticidad</h4>
+<p>la varianza de <span class="math inline">\(Y\)</span> para los distintos valores de <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>,…,<span class="math inline">\(X_k\)</span> se mantiene constante.</p>
+</section>
+<section id="normalidad" class="level4">
+<h4 class="anchored" data-anchor-id="normalidad">Normalidad</h4>
+<p>Los valores de <span class="math inline">\(Y\)</span> tienen una distribución normal según los valores de <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X_k\)</span> , ésto nos permite realizar inferencias en relación a los parámetros del modelo.</p>
+<p>Al igual que en la RLS la estimación de los parámetros de la regresión (coeficientes) se realiza mediante el <strong>Método de los Mínimos Cuadrados</strong> <strong>(MMC)</strong>.</p>
+<p>El MMC consiste en adoptar como estimativas de los parámetros de la regresión los valores que minimicen la suma de los cuadrados de los residuos.</p>
+<p><span class="math display">\[ \sum_{i=1}^{i=n}e_1^2=\sum_{i=1}^{i=n}(Y_i-\hat{Y_i})^2=\sum_{i=n}^{i=n}(Y_i-(\hat{\beta}_0+\hat{\beta}_1X_1+\dots+\hat{\beta}_kX_k))^2  \]</span></p>
+</section>
+</section>
+<section id="interpretación-de-un-modelo-de-rlm" class="level3">
+<h3 class="anchored" data-anchor-id="interpretación-de-un-modelo-de-rlm">Interpretación de un modelo de RLM</h3>
+<p>Comenzaremos aprendiendo a interpretar un modelo de RLM, para luego aprender a construirlos. Para ello, observemos detalladamente la salida de R para un modelo de RLM, donde modelamos la <code>V23</code>, en función de las variables <code>V10</code>, <code>V11</code>, <code>V12</code>, <code>V14</code>, <code>V15</code>, <code>V17</code>, <code>V18</code> y <code>V24</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = V23 ~ ., data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.45958 -0.57136  0.05354  0.57868  2.25036 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)  0.09504    0.09502   1.000   0.3199  
+V10         -0.05189    0.09725  -0.534   0.5950  
+V11         -0.11508    0.09711  -1.185   0.2391  
+V12         -0.08137    0.09151  -0.889   0.3763  
+V14         -0.16411    0.09738  -1.685   0.0954 .
+V15         -0.03240    0.10283  -0.315   0.7534  
+V17         -0.04053    0.09040  -0.448   0.6550  
+V18          0.14425    0.09456   1.525   0.1306  
+V24         -0.04953    0.08940  -0.554   0.5809  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9081 on 91 degrees of freedom
+Multiple R-squared:  0.09027,   Adjusted R-squared:  0.0103 
+F-statistic: 1.129 on 8 and 91 DF,  p-value: 0.3518</code></pre>
+</div>
+</div>
+<p>Donde:</p>
+<p><code>Estimate</code>: muestra los coeficientes <span class="math inline">\(\beta\)</span> estimados para el intercepto (<span class="math inline">\(\beta_0\)</span>) y cada una de las variables explicativas (<span class="math inline">\(\beta_i\)</span>),</p>
+<p><code>Std. Error</code>: error estándar de cada coeficiente <span class="math inline">\(\beta\)</span>,</p>
+<p><code>t-value</code>: valores del test <span class="math inline">\(F\)</span> parcial,</p>
+<p><code>Pr(&gt;|t|)</code> : <span class="math inline">\(p\)</span>-valores para el test <span class="math inline">\(F\)</span> parcial,</p>
+<p><code>Residual standard error</code>: error estándar de los residuales,</p>
+<p><code>Multiple R-squared</code>: <span class="math inline">\(R^2\)</span> múltiple,</p>
+<p><code>Adjusted R-squared</code>: <span class="math inline">\(R^2\)</span> ajustado,</p>
+<p><code>F-statistic</code>: resultados del test <span class="math inline">\(F\)</span> global y su <span class="math inline">\(p\)</span>-valor</p>
+<p>Profundicemos ahora en lo que significan algunos de estos puntos.</p>
+<section id="test-f-parcial" class="level5">
+<h5 class="anchored" data-anchor-id="test-f-parcial">Test F parcial</h5>
+<p>Como estamos sacando conclusiones partiendo de una muestra, es obvio que distintas muestras van a dar distintos valores de los parámetros. Es por eso que el test <span class="math inline">\(F\)</span> parcial, testea la siguiente afirmación o hipótesis:</p>
+<p><span class="math display">\[ H_0 = \beta_1 = \beta_2 = ... \beta_n = 0\]</span></p>
+<p><span class="math display">\[
+H_1 = \exists\beta_i \neq 0
+\]</span></p>
+<p>Donde <span class="math inline">\(H_1\)</span> indica que existe al menos un coeficiente <span class="math inline">\(\neq\)</span> 0</p>
+<p>De alguna forma, evalúa la contribución de cada variable al modelo. Nos dice si la inclusión de esa variable es útil para explicar significativamente la variabilidad observada en <span class="math inline">\(Y\)</span>. En los modelos lineales generalizados (GLM por sus siglas en inglés), el <em>test de Wald</em> testea esta <span class="math inline">\(H_0\)</span>. Para RLM, el test <span class="math inline">\(F\)</span> parcial es idéntico a Wald.</p>
+</section>
+<section id="varianza-residual" class="level5">
+<h5 class="anchored" data-anchor-id="varianza-residual">Varianza residual</h5>
+<p>Como vimos en ANOVA y al igual que en el caso de regresión lineal simple, vamos a descomponer la variabilidad de la variable dependiente <span class="math inline">\(Y\)</span> en dos componentes o fuentes de variabilidad: un componente va a representar la variabilidad explicada por el modelo de regresión y el otro componente va a representar la variabilidad no explicada por el modelo y, por tanto, atribuida a factores aleatorios.</p>
+<p><span class="math display">\[ Variabilidad \ total = Variabilidad \ regresión \ + \ Variabilidad \ residual \]</span></p>
+<p>Del mismo modo, podemos decir que la suma de cuadrados totales (SCT) es igual a la suma de cuadrados de la regresión (SCR) y la suma de cuadrados residuales (SCR)</p>
+<p><span class="math display">\[ \sum (y_i-\bar{y})^2 = \sum (\hat{y}-\bar{y})^2 + \sum (y_i -\hat{y}_i)^2  \]</span></p>
+<p><span class="math display">\[ SCT = SCR + SCE \]</span></p>
+<p>Recordemos que cada uno de estos términos, se divide por sus grados de libertad para obtener los cuadrados medios correspondientes (CMT/CMR/CME)</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-9f5eb7e2{}.cl-9f4c49fe{font-family:'Helvetica';font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-9f4c4a1c{font-family:'Helvetica';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-9f5321fc{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-9f536540{width:0.608in;background-color:rgba(57, 131, 132, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f536554{width:1.542in;background-color:rgba(57, 131, 132, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f536555{width:1.503in;background-color:rgba(57, 131, 132, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f536556{width:0.608in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f53655e{width:1.542in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f53655f{width:1.503in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f536568{width:0.608in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f536569{width:1.542in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9f53656a{width:1.503in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-9f5eb7e2"><thead><tr style="overflow-wrap:break-word;"><th class="cl-9f536540"><p class="cl-9f5321fc"><span class="cl-9f4c49fe"> </span></p></th><th class="cl-9f536554"><p class="cl-9f5321fc"><span class="cl-9f4c49fe">Grados de libertad</span></p></th><th class="cl-9f536555"><p class="cl-9f5321fc"><span class="cl-9f4c49fe">CM</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-9f536556"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">SCT</span></p></td><td class="cl-9f53655e"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">n-1</span></p></td><td class="cl-9f53655f"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">CMT = SCT/n-1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9f536556"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">SCR</span></p></td><td class="cl-9f53655e"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">k-1</span></p></td><td class="cl-9f53655f"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">CMR = SCR/k-1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9f536568"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">SCE</span></p></td><td class="cl-9f536569"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">n-k-1</span></p></td><td class="cl-9f53656a"><p class="cl-9f5321fc"><span class="cl-9f4c4a1c">CME = SCE/n-k-1</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="test-f-global" class="level5">
+<h5 class="anchored" data-anchor-id="test-f-global">Test F global</h5>
+<p>Compara el modelo de regresión con el modelo nulo. Evalúa el efecto conjunto de las variables independientes incluidas en el modelo ajustado.</p>
+<p><span class="math display">\[ F = CMR/CME \quad gl = (k -1, n - k - 1) \]</span></p>
+</section>
+<section id="coeficiente-de-determinación" class="level5">
+<h5 class="anchored" data-anchor-id="coeficiente-de-determinación">Coeficiente de determinación</h5>
+<p>Al igual de lo que aprendimos en la RLS la bondad de ajuste del modelo de RLM se valora con el coeficiente de determinación (<span class="math inline">\(R^2\)</span>), que nos dice qué proporción de la variabilidad de <span class="math inline">\(Y\)</span> es explicada por los coeficientes de la regresión del modelo en estudio. El <span class="math inline">\(R^2\)</span> es útil para comparar entre modelos</p>
+<p><span class="math display">\[ R^2 = \frac{SCT-SCE}{SCT}=\frac{SCR}{SCT} \]</span></p>
+<p>Sin embargo, en el caso de la RLM, en donde deseamos incluir en el modelo más de una variable independiente, el <span class="math inline">\(R^2\)</span> siempre va a mejorar al agregar una nueva variable, aunque su inclusión no mejore sustancialmente el modelo. El <span class="math inline">\(R^2\)</span> más grande se obtiene por el simple hecho de incluir todas las variables disponibles, pero la mejor ecuación de regresión múltiple no necesariamente utiliza todas las variables. El <span class="math inline">\(R^2\)</span> ajustado o corregido tiene esta expresión:</p>
+<p><span class="math display">\[ R^2_a = 1 - \bigg [ \frac{n-1}{n-(k+1)}\bigg]\frac{SCE}{SCT}=1-\bigg[\frac{n-1}{n-(k+1)}\bigg](1-R^2)  \]</span></p>
+<p>Teniendo en cuenta que 1-<span class="math inline">\(R^2\)</span> es un número constante y que <span class="math inline">\(n\)</span> es mayor que <span class="math inline">\(k\)</span>, a medida que añadimos variables al modelo, el cociente entre paréntesis se hace más grande. Consecuentemente, también el resultado de multiplicar este por 1-<span class="math inline">\(R^2\)</span>. Con lo cual vemos que la fórmula está construida para ajustar y penalizar la inclusión de coeficientes en el modelo.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cuando tenemos que elegir el mejor modelo será necesario utilizar distintos criterios para compararlos y basar nuestra decisión en elegir el modelo que mejor explique la variación de <span class="math inline">\(Y\)</span> con el menor número de variables independientes, el modelo más simple y efectivo, también llamado el modelo más <strong>parsimonioso</strong>.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="confusión-e-interacción-en-rlm" class="level3">
+<h3 class="anchored" data-anchor-id="confusión-e-interacción-en-rlm">Confusión e interacción en RLM</h3>
+<p>Antes de aprender a construir modelos de regresión, vamos a repasar algunos conceptos.</p>
+<p>Los estudios epidemiológicos suelen partir de modelos teóricos conocidos y vinculados al tema que se está estudiando. Las variables de interés que se recolectan surgen en la elaboración de los estudios y todas ellas cumplen con un rol hipotético que queremos probar. Solemos distinguir dos variables principalesy excluyentes: la exposición (variable independiente) y el resultado (variable dependiente). Una vez seleccionadas estas dos variables, las otras variables del estudio (medidas o no medidas) se denominan covariables.</p>
+<p>Las covariables, dentro del proceso salud-enfermedad, pueden tener varios roles, tales como confusoras, mediadoras de efecto, intermedias, colisionadoras, exposiciones en competencia, etc. Aplicado al tema de investigación sobre el que estemos trabajando, algunos de estos roles serán conocidos previamente por la literatura y otros hallados o sospechados durante el análisis.</p>
+<section id="confusión" class="level4">
+<h4 class="anchored" data-anchor-id="confusión">Confusión</h4>
+<p>Una variable de confusión es una variable que distorsiona la medida de asociación entre las variables principales. El resultado, en presencia de una variable de confusión, puede ser la observación de:</p>
+<ol type="1">
+<li>Efecto donde en realidad no existe (asociación espuria)</li>
+<li>Exageración o atenuación de una asociación real (confusión positiva)</li>
+<li>Inversión del sentido de una asociación real (confusión negativa).</li>
+</ol>
+<p>Según <span class="citation" data-cites="gordis2017">Gordis (<a href="#ref-gordis2017" role="doc-biblioref">2017</a>)</span>, en un estudio sobre si la exposición A es una causa de la enfermedad B, se dice que un tercer factor, el factor X, es un factor de confusión si se cumple lo siguiente:</p>
+<ol type="1">
+<li>El factor X es un factor de riesgo conocido para la enfermedad B.</li>
+<li>El factor X se asocia con la exposición A, pero no es un resultado de la exposición A.</li>
+</ol>
+<p>Para conceptualizar este y otros mecanismos en epidemiología se suele utilizar graficos acíclicos dirigidos (<strong>DAGs</strong> en inglés). Su nombre se debe a que no forman un ciclo cerrado y las variables están unidas por flechas dirigidas.</p>
+<p><img src=".png" class="img-fluid"></p>
+<p>Para quienes necesitan repasar este tema, pueden leer el artículo de <span class="citation" data-cites="deirala2001">De Irala, Martínez-González, and Guillén Grima (<a href="#ref-deirala2001" role="doc-biblioref">2001</a>)</span> o descargarlo desde <a href="http://halweb.uc3m.es/esp/Personal/personas/amalonso/esp/bstat-tema8vc.pdf">aquí</a>.</p>
+<p>Dentro de las estrategias para manejar la confusión, podemos pensar en dos momentos:</p>
+<ul>
+<li>A la hora de diseñar y llevar a cabo el estudio:
+<ul>
+<li>Emparejamiento individual.</li>
+<li>Emparejamiento de grupo.</li>
+</ul></li>
+<li>Al momento de analizar los datos:
+<ul>
+<li>Estratificación.</li>
+<li>Ajuste.</li>
+</ul></li>
+</ul>
+<p>El ajuste estadístico es la propiedad de los análisis multivariados por la que se determina la influencia específica de cada variable independiente sobre la variable dependiente al mantener el resto de variables constantes.</p>
+<p>En términos generales, se habla de confusión cuando existen diferencias estadísticas importantes entre las estimaciones brutas de una asociación y las ajustadas por los posibles factores de confusión. Existe un consenso en la bibliografía: un factor puede considerarse de confusión cuando su ajuste es responsable de un cambio de <strong>al menos un 10%</strong> en la magnitud de la diferencia entre las estimaciones ajustadas y las brutas.</p>
+<p>En muchos estudios epidemiológicos, la edad y el sexo son variables que juegan roles de confusión y generalmente son pocos los trabajos que no presentan datos ajustados por estas covariables.</p>
+<p>Durante el curso vamos a utilizar la regresión lineal y otras regresiones lineales generalizadas para resolver la confusión ajustando los efectos de las variables.</p>
+<p>Si lo mirásemos desde el punto gráfico de los datos podríamos partir de un diagrama de dispersión de puntos, con la variable dependiente de nombre <code>y</code> y la variable independiente de nombre <code>x</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observamos que la recta de regresión muestra una correlación positiva entre los valores de las variables, representando la ecuación:</p>
+<p><span class="math display">\[\hat{y} = \beta_0 + \beta_1x_1 + \epsilon\]</span></p>
+<p>Un posible resultado resumen en R de esta regresión se muestra en la siguiente salida de consola.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x, data = datos_conf)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.4701 -2.4124 -0.0179  2.5926  6.9821 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.45017    1.13262   2.163   0.0354 *  
+x            0.77889    0.09642   8.078 1.45e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.559 on 49 degrees of freedom
+Multiple R-squared:  0.5712,    Adjusted R-squared:  0.5624 
+F-statistic: 65.26 on 1 and 49 DF,  p-value: 1.45e-10</code></pre>
+</div>
+</div>
+<p>El intercepto (<span class="math inline">\(\beta_0\)</span>) es de 2,45 y el coeficiente <span class="math inline">\(\beta_1\)</span> (pendiente) significativo de 0,78.</p>
+<p>Ahora incorporemos la covariable <code>z</code>, con categorías <strong>A</strong> y <strong>B</strong>, que sospechamos tiene un rol de confusión en el modelo teórico.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El gráfico de dispersión muestra que hay una diferencia entre las rectas de regresión que se mantiene prácticamente constante (paralelas) en todo su desarrollo. Esa distancia medida en valores de <code>y</code> es <span class="math inline">\(\beta_2\)</span>, para la ecuación:</p>
+<p><span class="math display">\[\hat{y} = \beta_0 + \beta_1x_1 + \beta_2x_2 + \epsilon\]</span></p>
+<p>Visto en resultados de consola:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x * z, data = datos_conf)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.1552 -1.5104 -0.1793  2.0474  5.6297 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.97716    1.27741   0.765   0.4481    
+x            0.61348    0.12707   4.828  1.5e-05 ***
+zB           3.87413    1.90007   2.039   0.0471 *  
+x:zB         0.07007    0.17006   0.412   0.6822    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.965 on 47 degrees of freedom
+Multiple R-squared:  0.7145,    Adjusted R-squared:  0.6963 
+F-statistic: 39.22 on 3 and 47 DF,  p-value: 7.597e-13</code></pre>
+</div>
+</div>
+<p>El coeficiente <span class="math inline">\(\beta_1\)</span> de la variable independiente principal <code>x</code> varió al incorporar la nueva variable <code>z</code>, pasando de 0,78 (cruda) a 0,61 (ajustada), es decir que disminuyó más de un 20%. A la vez, la covariable tiene una relación significativa con la variable dependiente <code>y</code>.</p>
+<p>Entonces podemos ver que la regresión ajustó el efecto de <code>x</code> sobre <code>y</code>, teniendo en cuenta el efecto confusor de <code>z</code>.</p>
+</section>
+<section id="interacción-o-modificación-de-efecto" class="level4">
+<h4 class="anchored" data-anchor-id="interacción-o-modificación-de-efecto">Interacción o modificación de efecto</h4>
+<p><span class="citation" data-cites="macmahon">MacMahon (<a href="#ref-macmahon" role="doc-biblioref">1972</a>)</span> definió la interacción de la siguiente manera:</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>“Cuando la incidencia de la enfermedad en presencia de dos o más factores de riesgo difiere de la incidencia que sería previsible por sus efectos individuales”</em></p>
+</div>
+</div>
+</div>
+<p>El efecto puede ser mayor de lo esperado (interacción positiva, sinergismo) o menor de lo esperado (interacción negativa, antagonismo).</p>
+<p>Entonces la modificación del efecto ocurre cuando el tamaño del efecto de la variable explicativa de interés (exposición) sobre el resultado (variable dependiente) difiere según el nivel de una tercera variable.</p>
+<p>Para quienes necesiten repasar el tema, pueden leer el documento del siguiente <a href="https://halweb.uc3m.es/esp/personal/personas/amalonso/esp/bstat-tema8vme.pdf" class="uri">[Link]</a></p>
+<p>Es importante destacar que mediante la RLM es posible identificar la presencia de modificadores de efecto mediante la inclusión de términos de interacción.</p>
+<p>Seguramente recordarán de cursos previos de epidemiología, que frente a un modificador de efecto (ME) lo más adecuado era presentar las medidas de asociación según los estratos formados por las categorías de la variable ME (no estimar una medida ajustada para ambos estratos, como se hace en caso de variables confusoras).</p>
+<p>Al ajustar un modelo de RLM podemos incluir un término de interacción en la ecuación (que es el producto de ambas variables), el cual representa una nueva variable. El término de interacción implica el exceso de la variabilidad de los datos que no puede ser explicada por la suma de las variables consideradas.</p>
+<p>Un ejemplo similar al recién mostrado para la confusión, pero para la interacción podría ser:</p>
+<p><img src=".png" class="img-fluid"></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span class="math display">\[\hat{y} = \beta_0 + \beta_1x_1 + \epsilon\]</span></p>
+<p>Partimos de esta relación entre <code>x</code> e <code>y</code> representada por la recta de la ecuación con los valores de la siguiente tabla:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x, data = datos_int)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-9.8410 -3.8804  0.3709  3.2871  8.4102 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.0035     1.4065   2.847   0.0062 ** 
+x             0.5419     0.1132   4.789 1.31e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.554 on 55 degrees of freedom
+Multiple R-squared:  0.2943,    Adjusted R-squared:  0.2814 
+F-statistic: 22.93 on 1 and 55 DF,  p-value: 1.307e-05</code></pre>
+</div>
+</div>
+<p>El intercepto (<span class="math inline">\(\beta_0\)</span>) es de 4,0 y el coeficiente <span class="math inline">\(\beta_1\)</span> (pendiente) significativo de 0,54.</p>
+<p>Ahora incorporemos la covariable <code>z</code>, con categorías <strong>A</strong> y <strong>B</strong>, que sospechamos tiene un rol de interacción.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El gráfico de dispersión muestra que hay una diferencia entre las rectas de regresión que tienen distintas pendientes según el valor de <code>z</code>. Esa diferencia no es aditiva y pasa a ser multiplicativa y da lugar a la ecuación:</p>
+<p><span class="math display">\[\hat{y} = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3x_1x_2 + \epsilon\]</span></p>
+<p>Visto en resultados de consola:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ x * z, data = datos_int)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1427 -1.8739 -0.4598  1.3199  5.2230 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.77269    0.91587   3.027 0.003804 ** 
+x            0.22708    0.07719   2.942 0.004830 ** 
+zB           2.49329    1.51850   1.642 0.106522    
+x:zB         0.45574    0.12213   3.732 0.000465 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.364 on 53 degrees of freedom
+Multiple R-squared:  0.8168,    Adjusted R-squared:  0.8064 
+F-statistic: 78.75 on 3 and 53 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>El término de interacción es significativo, aunque la variable <code>z</code> pareciese que no, es decir la significación se asocia a uno de los niveles (la categoría <strong>B</strong>). No hay manera de escindir un nivel del otro por lo que debemos dejar la variable <code>z</code>.</p>
+<p>El valor de <code>y</code> es 2,77 (<span class="math inline">\(\beta_0\)</span>) + 0,23* el valor de <code>x</code> (<span class="math inline">\(\beta_1*x\)</span>) mientras <code>z</code> es igual al nivel de referencia <strong>A</strong>, en cambio <code>y</code> vale 2,77 (<span class="math inline">\(\beta_0\)</span>) + 0,23* el valor de <code>x</code> (<span class="math inline">\(\beta_1*x\)</span>) + 2,49 (<span class="math inline">\(\beta_2\)</span>) + 0,46*x (<span class="math inline">\(\beta_3*x\)</span>) cuando <code>z</code> es igual a <strong>B</strong>.</p>
+</section>
+</section>
+<section id="variables-dummy" class="level3">
+<h3 class="anchored" data-anchor-id="variables-dummy">Variables <em>dummy</em></h3>
+<p>Recordemos que en el modelo de regresión podemos incluir como variables independientes tanto variables cuantitativas como variables categóricas. Las variables categóricas pueden ser dicotómicas (sexo: fem/masc; hábito de fumar: si/no) o tener más de dos categorías, por ejemplo: grupo sanguíneo, religión, color de ojos.</p>
+<p>Para ser modeladas: cada categoría se transforma en una variable dicotómica (<span class="math inline">\(n\)</span> de categorías -1) donde <span class="math inline">\(1 =\)</span> tener esa característica. Se utiliza como grupo basal (no expuestos) a la categoría de menor valor. Cuando las variables cualitativas no ordinales sufren esta transformación se denominan variables <em>dummy</em>.</p>
+<p>Veamos un ejemplo con una variable cualitativa dicotómica Hábito de Fumar (1: si 0: no):</p>
+<p>Al ajustar un modelo con la variable Hábito de Fumar (1: si 0: no) el modelo quedaría:</p>
+<p><span class="math display">\[ Y = b_0+b_1F_1  \]</span></p>
+<p><span class="math inline">\(b_1\)</span> es la variación que experimentará <span class="math inline">\(Y\)</span> en caso de que el individuo fume.</p>
+<p>Veamos un ejemplo con la variable <em>“región”</em> con 3 categorías: Noreste (NE), Norte (N), Centro Oeste (CO).</p>
+<p>Para modelarlas la transformaremos en 2 categorías: <span class="math inline">\(Re_1\)</span> y <span class="math inline">\(Re_2\)</span> (<span class="math inline">\(n\)</span> categorías -1)</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-a55290d8{}.cl-a54428fe{font-family:'Helvetica';font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-a5442912{font-family:'Helvetica';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a5497fd4{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a5499ec4{width:1.007in;background-color:rgba(57, 131, 132, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a5499ece{width:0.582in;background-color:rgba(57, 131, 132, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a5499ed8{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a5499ed9{width:0.582in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a5499ee2{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a5499ee3{width:0.582in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a5499eec{width:1.007in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a5499eed{width:0.582in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a55290d8"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a5499ec4"><p class="cl-a5497fd4"><span class="cl-a54428fe">Región</span></p></th><th class="cl-a5499ece"><p class="cl-a5497fd4"><span class="cl-a54428fe">RE1</span></p></th><th class="cl-a5499ece"><p class="cl-a5497fd4"><span class="cl-a54428fe">RE2</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a5499ed8"><p class="cl-a5497fd4"><span class="cl-a5442912">NE (basal)</span></p></td><td class="cl-a5499ed9"><p class="cl-a5497fd4"><span class="cl-a5442912">0</span></p></td><td class="cl-a5499ed9"><p class="cl-a5497fd4"><span class="cl-a5442912">0</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a5499ee2"><p class="cl-a5497fd4"><span class="cl-a5442912">N</span></p></td><td class="cl-a5499ee3"><p class="cl-a5497fd4"><span class="cl-a5442912">1</span></p></td><td class="cl-a5499ee3"><p class="cl-a5497fd4"><span class="cl-a5442912">0</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a5499eec"><p class="cl-a5497fd4"><span class="cl-a5442912">CO</span></p></td><td class="cl-a5499eed"><p class="cl-a5497fd4"><span class="cl-a5442912">0</span></p></td><td class="cl-a5499eed"><p class="cl-a5497fd4"><span class="cl-a5442912">1</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p><span class="math inline">\(Re_1\)</span>=1 si vive en el norte</p>
+<p><span class="math inline">\(Re_1\)</span>=0 si vive en otra región</p>
+<p><span class="math inline">\(Re_2\)</span>=1 si vive en el CO</p>
+<p><span class="math inline">\(Re_2\)</span>=0 si vive en otra región</p>
+<p>Ahora imaginemos el modelo de regresión entre <span class="math inline">\(Y\)</span> y la variable <em>“región”</em> (supongamos que <span class="math inline">\(Y\)</span> es la Tasa de Mortalidad Infantil)</p>
+<p><span class="math display">\[ Y = b_0+b_1Re_1 + b_2Re_2 \]</span></p>
+<p>Para interpretar el modelo, cuando consideremos la región norte (<span class="math inline">\(Re_1\)</span>=1 y <span class="math inline">\(Re_2\)</span>=0) la ecuación será:</p>
+<p><span class="math display">\[ Y=b_0+b_1Re_1  \]</span></p>
+<p>Cuando consideremos la región CO (<span class="math inline">\(Re_1\)</span>=0 y <span class="math inline">\(Re_2\)</span>=1) la ecuación será:</p>
+<p><span class="math display">\[ Y=b_0+b_2Re_2  \]</span></p>
+<p>Cuando consideremos la región NE (<span class="math inline">\(Re_1\)</span>=0 y <span class="math inline">\(Re_2\)</span>=0) la ecuación será:</p>
+<p><span class="math display">\[ Y=b_0 \]</span></p>
+<p>El coeficiente <span class="math inline">\(b_1\)</span> y <span class="math inline">\(b_2\)</span> nos estarán indicando cuánto se modifica la TMI según consideremos la región N o CO. El coeficiente <span class="math inline">\(b_0\)</span> es el valor basal medio de la TMI considerada en la región NE.</p>
+<p>Las variables <em>dummy</em> (también llamadas variables indicadoras) no tienen ningún sentido por sí solas y, por lo tanto, deben figurar todas las categorías en los modelos y se debe contrastar su inclusión siempre en bloque, aunque el test <span class="math inline">\(F\)</span> parcial para alguna categoría resulte no significativo. Hay que notar que cuando se agrega una variable <em>dummy</em> al modelo, ésta le suma tantos grados de libertad a la regresión como categorías tenga.</p>
+</section>
+<section id="estimación-y-predicción" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-y-predicción">Estimación y predicción</h3>
+<p>Los modelos de regresión se pueden utilizar esencialmente:</p>
+<ul>
+<li><p>Con fines explicativos: obtener estimativas precisas sobre variables de interés para realizar inferencias o cuantificar relaciones entre variables controlando por otras variables)</p></li>
+<li><p>Con fines predictivos: a partir de los datos de una muestra predecir el comportamiento de <span class="math inline">\(Y\)</span> según posibles valores de <span class="math inline">\(X_k\)</span>.</p></li>
+</ul>
+<p>Es importante tener en cuenta que si el propósito es construir un modelo predictivo a partir de una ecuación de regresión debe tener en cuenta:</p>
+<ol type="1">
+<li>Si no existe una correlación lineal, no utilice la ecuación de regresión para hacer predicciones. En ese caso el mejor predictor de los datos será su media muestral. Sólo haga predicciones si la ecuación de regresión es un buen modelo para los datos.</li>
+<li>No haga predicciones en base a valores que rebasen las fronteras de los datos muestrales conocidos.</li>
+<li>Debe estar basada en datos actualizados</li>
+<li>No haga predicciones acerca de una población distinta de la población de donde se obtuvieron los datos muestrales.</li>
+<li>La relación entre la variable respuesta y la predictora no debe ser necesariamente causal. En cambio cuando el objetivo del modelo es explicativo la relación causal (particularmente la relación temporal entre la variable dependiente y la independiente) debe existir.</li>
+</ol>
+</section>
+<section id="lineamientos-para-el-uso-de-la-ecuación-de-regresión" class="level3">
+<h3 class="anchored" data-anchor-id="lineamientos-para-el-uso-de-la-ecuación-de-regresión">Lineamientos para el uso de la ecuación de regresión</h3>
+<p>Dada una variable dependiente <span class="math inline">\(Y\)</span> y un conjunto de <span class="math inline">\(k\)</span> variables independientes <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X_3\)</span>….,<span class="math inline">\(X_k\)</span> ¿cuál es el mejor conjunto de <span class="math inline">\(p\)</span> predictores (<span class="math inline">\(p \leq k\)</span>) y el correspondiente modelo de regresión para describir la relación entre <span class="math inline">\(Y\)</span> y las variables <span class="math inline">\(X\)</span>?</p>
+<p>Pasos para escoger la mejor ecuación de regresión:</p>
+<ol type="1">
+<li>Especificar el conjunto de variables potencialmente predictivas/explicativas y la forma del modelo</li>
+<li>Especificar un criterio estadístico para la elección de las variables</li>
+<li>Especificar una estrategia para seleccionar modelos</li>
+<li>Conducir el análisis específico</li>
+<li>Evaluar los presupuestos del modelo</li>
+<li>Evaluar la confiabilidad del modelo escogido</li>
+</ol>
+<section id="especificar-el-conjunto-de-variables-potencialmente-predictivas-y-la-forma-del-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="especificar-el-conjunto-de-variables-potencialmente-predictivas-y-la-forma-del-modelo">Especificar el conjunto de variables potencialmente predictivas y la forma del modelo</h4>
+<p>La finalidad es buscar de entre todas las posibles variables explicativas aquellas que más y mejor expliquen a la variable dependiente sin que ninguna de ellas sea combinación lineal de las restantes. Con este propósito primero identificaremos las relaciones entre la variable dependiente y las independientes de manera bivariada; y la relación entre las variables independientes entre sí, con el fin de identificar la presencia de colinelidad.</p>
+<section id="colinealidad" class="level5">
+<h5 class="anchored" data-anchor-id="colinealidad">Colinealidad</h5>
+<p>Un problema frecuente en los modelos de RLM es el de la <strong>multicolinealidad</strong>, que ocurre cuando los regresores están relacionados entre sí en forma lineal. Si bien no implica una violación de las hipótesis o presupuestos del modelo, puede ocasionar problemas en la inferencia, ya que:</p>
+<ul>
+<li><p>Aumenta las varianzas y covarianzas de los estimadores</p></li>
+<li><p>Los errores de las estimaciones serán grandes</p></li>
+<li><p>Tiende a producir estimadores con valores absolutos grandes</p></li>
+<li><p>Los coeficientes de cada variable independiente difieren notablemente de los que se obtendrían por RLS</p></li>
+<li><p>No se puede identificar de forma precisa el efecto individual de cada variable colineal sobre la variable respuesta</p></li>
+</ul>
+<p>Por consiguiente, a la hora de plantear modelos de RLM conviene estudiar previamente la existencia de casi-colinealidad (la colinealidad exacta no es necesario estudiarla previamente, ya que todos los algoritmos la detectan, de hecho no pueden acabar la estimación). Como medida de la misma hay varios estadísticos propuestos:</p>
+<ul>
+<li><p>Podemos examinar la matriz de correlación</p></li>
+<li><p>Realizar gráficos de dispersión entre las variables explicativas/predictivas</p></li>
+<li><p>Cálculo del factor de inflación de la varianza (VIF por sus siglas en inglés):</p></li>
+</ul>
+<p><span class="math display">\[
+VIF = \frac{1}{1-R^2_i}
+\]</span></p>
+<p>Una regla empírica, citada por <span class="citation" data-cites="kleinbaum1988">Kleinbaum et al. (<a href="#ref-kleinbaum1988" role="doc-biblioref">1988</a>)</span>, consiste en considerar que existen problemas de colinealidad si algún VIF es superior a 10. Por otro lado <span class="citation" data-cites="kim2019">Kim (<a href="#ref-kim2019" role="doc-biblioref">2019</a>)</span> considera que un VIF entre 5 y 10 indican la presencia de colinealidad. En caso de detectar colinealidad entre dos predictores, existen dos posibles soluciones:</p>
+<ul>
+<li><p>Excluir uno de los predictores problemáticos intentando conservar el que, a juicio del investigador, está influyendo realmente en la variable respuesta</p></li>
+<li><p>Combinar las variables colineales en un único predictor, aunque con el riesgo de perder su interpretación</p></li>
+</ul>
+</section>
+</section>
+<section id="especificar-un-criterio-estadístico-para-elección-de-variables" class="level4">
+<h4 class="anchored" data-anchor-id="especificar-un-criterio-estadístico-para-elección-de-variables">Especificar un criterio estadístico para elección de variables</h4>
+<p>Generalmente incluiremos en el modelo aquellas variables que resultaron significativas en el análisis bivariado y otras que, aun cuando no resultaran significativas, decidamos mantener por cuestiones teóricas, porque se necesitan establecer predicciones para distintas categorías de dicha variable, etc.</p>
+<p>El proceso de selección de variables puede realizarse en forma manual o automática, siendo este último desaconsejado por la mayoría de los autores, ya que en el proceso de ajuste de un modelo no sólo se involucran criterios estadísticos sino también conceptuales. Existen tres estrategias para realizar el proceso , basadas en el valor del test <span class="math inline">\(F\)</span> parcial:</p>
+<ul>
+<li><p>Método jerárquico o <em>forward:</em> se basa en el criterio del investigador que introduce predictores determinados en un orden específico en relación al marco teórico. Comienza con un modelo nulo que solo contiene el intercepto (<span class="math inline">\(\beta_0\)</span>) y agrega secuencialmente una variable a la vez, eligiendo la que proporciona el mayor beneficio en términos de ajuste del modelo. Este proceso continúa hasta que agregar más variables no mejore significativamente el ajuste del modelo.</p></li>
+<li><p>Método de entrada forzada o <em>backward</em>: es el método inverso al anterior. Se introducen todos los predictores simultáneamente y, en cada paso, elimina la variable que tenga el menor impacto en el ajuste del modelo. Este proceso continúa hasta que eliminar más variables no mejore significativamente el ajuste del modelo. Permite evaluar cada variable en presencia de las otras.</p></li>
+<li><p>Método paso a paso o <em>stepwise</em>: emplea criterios matemáticos para decidir qué predictores contribuyen significativamente al modelo y en qué orden se introducen. Se trata de una combinación de la selección <em>forward</em> y <em>backward.</em> Comienza con un modelo nulo, pero tras cada nueva incorporación se realiza un test de extracción de predictores no útiles como en el <em>backward.</em> Presenta la ventaja de que si a medida que se añaden predictores, alguno de los ya presentes deja de contribuir al modelo, se elimina.</p></li>
+</ul>
+</section>
+<section id="especificar-una-estrategia-para-seleccionar-modelos" class="level4">
+<h4 class="anchored" data-anchor-id="especificar-una-estrategia-para-seleccionar-modelos">Especificar una estrategia para seleccionar modelos</h4>
+<p>Hasta ahora hemos desarrollado algunos criterios que se pueden utilizar para comparar modelos como <span class="math inline">\(R^2\)</span>, <span class="math inline">\(R^2\)</span> ajustado y <span class="math inline">\(F\)</span> global. Como hemos mencionado anteriormente el uso de <span class="math inline">\(R^2\)</span> como único criterio de selección tiene varias desventajas: tiende a sobreestimar, al adicionar variables siempre aumenta, por lo que si fuera el único criterio elegiría modelos con el mayor número de variables, no tiene en consideración la relación entre parámetros y tamaño muestral.</p>
+<p>Para modelos anidados, podemos realizar una comparación entre ambos modelos mediante un ANOVA. Existen otros criterios como el Criterio de Información de Akaike (<strong>AIC</strong>), el Criterio de Información Bayesiano (<strong>BIC</strong>), etc. Tanto el BIC como el AIC, son funciones del logaritmo de la verosimilitud y un término de penalidad basado en el número de parámetros del modelo.</p>
+<p>Recuerden que frente a <span class="math inline">\(p\)</span> variables independientes existen <span class="math inline">\(2^p\)</span> posibles modelos. No necesariamente el modelo con mayor número de variables es el mejor. Debemos priorizar siempre el principio de parsimonia (el modelo más simple que mejor explique). El tamaño de la muestra también es importante, algunos autores recomiendan que el número de observaciones sea como mínimo entre 10 y 20 veces el número de predictores del modelo.</p>
+</section>
+<section id="validación-y-diagnóstico-del-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="validación-y-diagnóstico-del-modelo">Validación y diagnóstico del modelo</h4>
+<p>En este apartado vamos a comprobar que se verifican los supuestos del modelo de regresión lineal (normalidad, homocedasticidad o igualdad de varianzas, linealidad), ya que estos supuestos resultan necesarios para validar la inferencia respecto a los parámetros. Utilizaremos el análisis de los residuales para realizar los contrastes <em>a posteriori</em> de dichas hipótesis del modelo. Recordemos que los residuos se definen como la diferencia entre el valor observado y el valor predicho por el modelo.</p>
+<p><span class="math inline">\(y-\hat{y}=e\)</span> (residuo o error residual)</p>
+<p>El planteamiento habitual es considerar que, como dijimos inicialmente, los valores de <span class="math inline">\(Y\)</span> tienen una distribución normal según los valores de <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>,… <span class="math inline">\(X_k\)</span>., entonces, los residuos también tendrán una distribución normal. Los residuos tienen unidades de medida y, por tanto no se puede determinar si es grande o pequeño a simple vista. Para solucionar este problema se define el residuo estandarizado como el cociente entre el residuo y su desvío standard. Se considera que un residuo tiene un valor alto, y por lo tanto puede influir negativamente en el análisis, si su residuo estandarizado es mayor a 3 en valor absoluto. También se trabaja con los residuos tipificados o con los residuos estudentizados.</p>
+<section id="normalidad-1" class="level5">
+<h5 class="anchored" data-anchor-id="normalidad-1">Normalidad</h5>
+<p>El análisis de normalidad de los residuos lo realizaremos gráficamente (Histograma y gráfico de probabilidad normal) y analíticamente (Contraste de Kolmogorov-Smirnov) o similar.</p>
+</section>
+<section id="homocedasticidad-1" class="level5">
+<h5 class="anchored" data-anchor-id="homocedasticidad-1">Homocedasticidad</h5>
+<p>La hipótesis de homocedasticidad establece que la variabilidad de los residuos es independiente de las variables explicativas. En general, la variabilidad de los residuos estará en función de las variables explicativas, pero como las variables explicativas están fuertemente correlacionadas con la variable dependiente, bastara con examinar el gráfico de valores pronosticados versus residuos (a veces residuos al cuadrado).</p>
+<p>Comprobamos la hipótesis de homogeneidad de las varianzas gráficamente representando los residuos tipificados frente a los valores predichos por el modelo. El análisis de este gráfico puede revelar una posible violación de la hipótesis de homocedasticidad, por ejemplo si detectamos que el tamaño de los residuos aumenta o disminuye de forma sistemática para algunos valores ajustados de la variable <span class="math inline">\(Y\)</span>, si observamos que el gráfico muestra forma de embudo. Si por el contrario dicho gráfico no muestra patrón alguno, entonces no podemos rechazar la hipótesis de igualdad de varianzas.</p>
+</section>
+<section id="linealidad-1" class="level5">
+<h5 class="anchored" data-anchor-id="linealidad-1">Linealidad</h5>
+<p>Se evalúa en el mismo gráfico anterior (además de considerar <span class="math inline">\(R^2\)</span> ajustado)</p>
+</section>
+<section id="valores-de-influencia-leverage" class="level5">
+<h5 class="anchored" data-anchor-id="valores-de-influencia-leverage">Valores de influencia (<em>leverage</em>)</h5>
+<p>Se considera que una observación es influyente <em>a priori</em> si su inclusión en el análisis modifica sustancialmente el sentido del mismo. Una observación puede ser influyente si es un <em>outlier</em> respecto a alguna de las variables explicativas. Para detectar estos problemas se utiliza la medida de <strong>Leverage</strong>:</p>
+<p><span class="math display">\[ l(i)=\frac{1}{n}\bigg(1+\frac{(x_i-\bar{x})^2}{S^2_x}\bigg)  \]</span></p>
+<p>Este estadístico mide la distancia de un punto a la media de la distribución. Valores cercanos a 2/<span class="math inline">\(n\)</span> indican casos que pueden influir negativamente en la estimación del modelo introduciendo un fuerte sesgo en el valor de los estimadores.</p>
+</section>
+<section id="distancia-de-cook" class="level5">
+<h5 class="anchored" data-anchor-id="distancia-de-cook">Distancia de Cook</h5>
+<p>Es una medida de cómo influye la observación <em>i</em>-ésima sobre la estimación de <span class="math inline">\(\beta\)</span> al ser retirada del conjunto de datos. Una distancia de Cook grande significa que una observación tiene un peso grande en la estimación de <span class="math inline">\(\beta\)</span>. Son puntos influyentes las observaciones que presenten</p>
+<p><span class="math display">\[ D_i=\frac{4}{n-p-2}  \]</span></p>
+</section>
+<section id="independencia-de-residuos" class="level5">
+<h5 class="anchored" data-anchor-id="independencia-de-residuos">Independencia de residuos</h5>
+<p>La hipótesis de independencia de los residuos la realizaremos mediante el contraste de <em>Durbin-Watson</em>.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="ejemplo-práctico-en-lenguaje-r" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-en-lenguaje-r">Ejemplo práctico en lenguaje R</h2>
+<p>En el documento inicial de Estudios ecológicos vimos como generar en R una fórmula para la regresión lineal simple:</p>
+<p><span class="math display">\[ variable \ dependiente \; \sim variable  \ independiente \]</span></p>
+<p>Para generar fórmulas que contengan más de una variable independiente o predictora (necesario para que sea una regresión lineal múltiple) debemos agregarlas mediante el símbolo <span class="math inline">\(+\)</span></p>
+<p><span class="math display">\[ variable \ dependiente \ \sim var\_indepen\_1 \ + \ var\_indepen\_2 \ + \; \dots \ + \ var\_indepen\_n \]</span></p>
+<p>Si luego de la <span class="math inline">\(~\)</span> incluímos <strong>un punto</strong> como notación de “todas”, estamos creando un <em>modelo saturado</em> con todas las variables incluidas dentro del dataframe:</p>
+<p><code>lm(variable_dependiente ~ ., data)</code></p>
+<p>Esto es útil cuando tenemos muchas posibles variables explicativas y queremos conocer cuáles tienen una correlación significativa.</p>
+<p>También se puede descartar alguna o algunas variables explicativas en particular basado en la misma estructura, mediante el símbolo <span class="math inline">\(-\)</span></p>
+<p><code>lm(variable_dependiente ~ . -variable_indepen_x, data)</code></p>
+<p>En la línea anterior, incluimos dentro del modelo a todas las variables de <code>data</code> menos <code>variable_indepen_x</code>.</p>
+<p>A continuación mostraremos un ejemplo en lenguaje R a partir de un dataset ficticio llamado <code>cardiopatias</code>. El mismo contiene datos agregados sobre el porcentaje de personas que van en bicicleta al trabajo cada día, porcentaje de fumadores y porcentaje de personas con cardiopatías en una muestra imaginaria de 498 ciudades de un país determinado.</p>
+<p>Los pasos que trataremos, luego de leer la tabla de datos, son:</p>
+<ol type="1">
+<li>Análisis de variables potencialmente explicativas</li>
+<li>Estrategia de construcción del modelo</li>
+<li>Comparación de modelos</li>
+<li>Colinealidad</li>
+<li>Diagnóstico del modelo (análisis de residuales)</li>
+<li>Resumen del mejor modelo elegido</li>
+</ol>
+<section id="lectura-de-datos-y-visualización-de-estructura" class="level3">
+<h3 class="anchored" data-anchor-id="lectura-de-datos-y-visualización-de-estructura">Lectura de datos y visualización de estructura</h3>
+<p>Para comenzar, cargamos los paquetes de R necesarios para el análisis:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Carga paquetes necesarios  </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># correlación  </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dlookr) </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># chequeo de supuestos y análisis de residuales  </span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance) </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gvlma)  </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)   </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nortest)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># manejo de datos  </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A continuación leemos los datos guardados en <code>cardiopatias.txt</code> y exploramos su estructura con la función <code>glimpse()</code> de <code>tidyverse</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Carga datos  </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"cardiopatias.txt"</span>)  </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="do">### Estructura de datos </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 498
+Columns: 4
+$ ID_ciudad    &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17…
+$ ciclistas    &lt;dbl&gt; 30.801246, 65.129215, 1.959665, 44.800196, 69.428454, 54.…
+$ fumadores    &lt;dbl&gt; 10.896608, 2.219563, 17.588331, 2.802559, 15.974505, 29.3…
+$ cardiopatias &lt;dbl&gt; 11.769423, 2.854081, 17.177803, 6.816647, 4.062224, 9.550…</code></pre>
+</div>
+</div>
+<p>La tabla de datos contiene 4 variables y 498 observaciones.</p>
+</section>
+<section id="análisis-de-variables-potencialmente-explicativas" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-de-variables-potencialmente-explicativas">Análisis de variables potencialmente explicativas</h3>
+<p>En este pequeño ejemplo sólo tenemos dos variables potencialmente explicativas : <code>ciclistas</code> y <code>fumadores</code>.</p>
+<p>Analizaremos si hay relación entre ellas, y entre cada una y la variable dependiente mediante una matriz de correlación.</p>
+<p>Existen muchas funciones para llevar a cabo esta tarea en R. Dado que mostramos previamente la función <code>cor()</code> y <code>cor.test()</code> de R <code>base</code>, en esta oportunidad presentaremos otras funciones más elaboradas pertenecientes al paquete <code>dlookr</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla de correlación  </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>       </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID_ciudad) <span class="sc">|&gt;</span>       </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">correlate</span>() <span class="sc">|&gt;</span>       </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(coef_corr)))    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  var1         var2         coef_corr
+  &lt;fct&gt;        &lt;fct&gt;            &lt;dbl&gt;
+1 cardiopatias ciclistas      -0.935 
+2 ciclistas    cardiopatias   -0.935 
+3 cardiopatias fumadores       0.309 
+4 fumadores    cardiopatias    0.309 
+5 fumadores    ciclistas       0.0151
+6 ciclistas    fumadores       0.0151</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico  </span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>       </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID_ciudad) <span class="sc">|&gt;</span>        </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">correlate</span>() <span class="sc">|&gt;</span>      </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Encontramos de forma analítica y gráfica que existe correlación negativa alta entre <code>cardiopatias</code> y <code>ciclistas</code>, una correlación positiva baja con <code>fumadores</code>, así como una correlación positiva muy baja entre las dos variables independientes.</p>
+</section>
+<section id="estrategia-de-construcción-del-modelo" class="level3">
+<h3 class="anchored" data-anchor-id="estrategia-de-construcción-del-modelo">Estrategia de construcción del modelo</h3>
+<p>Al momento de seleccionar las variables independientes que formarán parte del modelo, una de las herramientas más utilizadas es el Criterio de Información de Akaike (AIC) que ajusta mediante <em>máxima verosimilitud</em>. Al penalizar la complejidad excesiva, el AIC ayuda a prevenir el sobreajuste y favorece la inclusión de variables relevantes buscando el modelo equilibrado que describa adecuadamente la relación y tenga el mínimo AIC. Podemos consultar el AIC de un modelo en R mediante la función <code>AIC()</code>.</p>
+<p>Como vimos anteriormente, la selección de variables se puede hacer mediante métodos <em>forward</em>, <em>backward</em> o <em>stepwise</em>. La función <code>step()</code> de R <code>base</code> permite encontrar de forma automática el mejor modelo basado en AIC utilizando cualquiera de las 3 variantes del método paso a paso.</p>
+<p>Por otro lado, la función <code>drop1()</code> de <code>R base</code> nos permite realizar un proceso <em>backward</em> manual, eligiendo que variable quitar del modelo en cada caso según su contribución al AIC.</p>
+<p>Siempre es oportuno aclarar que estos últimos métodos se basan en cálculos matemático/estadísticos que no tienen en cuenta criterios conceptuales epidemiológicos que surjan del marco teórico, por lo que exigen un control especial del analista.</p>
+<p>Como siempre el lenguaje R ofrece una variedad de funciones (algunas base y otras provenientes de paquetes adicionales) para abordar y facilitar la tarea de seleccionar el mejor modelo de regresión (aquel que mejor explique la relación entre variables y que a la vez sea el más simple - principio de parsimonia).</p>
+<p>El índice de bondad de ajuste utilizado para compararlos, además del AIC, es el R<sup>2</sup> ajustado.</p>
+<p>Como consecuencia de tener solo dos variables independientes posibles y a modo didáctico, vamos a crear tres objetos de regresión, dos de ellos regresiones lineales simples y uno de regresión lineal múltiple:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ciclistas</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mod_simple1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(cardiopatias <span class="sc">~</span> ciclistas, <span class="at">data =</span> datos)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fumadores</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>mod_simple2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(cardiopatias <span class="sc">~</span> fumadores, <span class="at">data =</span> datos)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ciclistas + fumadores</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>mod_multiple <span class="ot">&lt;-</span> <span class="fu">lm</span>(cardiopatias <span class="sc">~</span> ciclistas <span class="sc">+</span> fumadores, <span class="at">data =</span> datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Mediante <code>summary()</code> observamos sus resultados:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ciclistas  </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_simple1)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = cardiopatias ~ ciclistas, data = datos)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-4.028 -1.206 -0.004  1.151  3.643 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 17.697884   0.146780  120.57   &lt;2e-16 ***
+ciclistas   -0.199091   0.003378  -58.94   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.618 on 496 degrees of freedom
+Multiple R-squared:  0.8751,    Adjusted R-squared:  0.8748 
+F-statistic:  3474 on 1 and 496 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fumadores </span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_simple2)    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = cardiopatias ~ fumadores, data = datos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.7065 -3.7069  0.5007  3.6597  8.5434 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  7.54311    0.41251  18.286  &lt; 2e-16 ***
+fumadores    0.17048    0.02355   7.239 1.73e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.352 on 496 degrees of freedom
+Multiple R-squared:  0.09556,   Adjusted R-squared:  0.09374 
+F-statistic: 52.41 on 1 and 496 DF,  p-value: 1.729e-12</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ciclistas + fumadores</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span> (mod_multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = cardiopatias ~ ciclistas + fumadores, data = datos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.1789 -0.4463  0.0362  0.4422  1.9331 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 14.984658   0.080137  186.99   &lt;2e-16 ***
+ciclistas   -0.200133   0.001366 -146.53   &lt;2e-16 ***
+fumadores    0.178334   0.003539   50.39   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.654 on 495 degrees of freedom
+Multiple R-squared:  0.9796,    Adjusted R-squared:  0.9795 
+F-statistic: 1.19e+04 on 2 and 495 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>En los resúmenes observamos que todos los coeficientes de las variables involucradas son significativas y que los valores mostrados tienen forma de lista, es decir no son tablas “ordenadas” por lo que muchas veces, sobretodo cuando trabajamos con numerosas variables, se hace difícil la comparación de resultados.</p>
+</section>
+<section id="comparación-de-modelos" class="level3">
+<h3 class="anchored" data-anchor-id="comparación-de-modelos">Comparación de modelos</h3>
+<p>Algunas funciones vienen a aportar una solución sencilla para la comparación de modelos. Es el caso de <code>compare_performance()</code> del paquete <code>performance</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod_simple1, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                    mod_simple2,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                    mod_multiple,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name         | Model |  AIC (weights) |  BIC (weights) |    R2 | R2 (adj.) |  RMSE
+----------------------------------------------------------------------------------
+mod_simple1  |    lm | 1896.2 (&lt;.001) | 1908.9 (&lt;.001) | 0.875 |     0.875 | 1.614
+mod_simple2  |    lm | 2882.1 (&lt;.001) | 2894.7 (&lt;.001) | 0.096 |     0.094 | 4.344
+mod_multiple |    lm |  995.4 (&gt;.999) | 1012.2 (&gt;.999) | 0.980 |     0.980 | 0.652</code></pre>
+</div>
+</div>
+<p>Las métricas comunes extraídas de los objetos de regresión, presentadas en una tabla, son:</p>
+<ul>
+<li><p><code>AIC</code>: Criterio de información de Akaike</p></li>
+<li><p><code>BIC</code>: Criterio de información bayesiano</p></li>
+<li><p><code>R2</code>: Coeficiente de determinación <span class="math inline">\(R^2\)</span></p></li>
+<li><p><code>R2 (adj.)</code>: Coeficiente de determinación ajustado</p></li>
+<li><p><code>RMSE</code>: Error cuadrático medio</p></li>
+</ul>
+<p>En este ejemplo, vemos que el modelo simple de <code>ciclistas</code> es mucho mejor que el modelo simple de <code>fumadores</code>, pero el modelo múltiple que incluye ambas variables tiene un ajuste mejor (menor AIC y RMSE, mayor <span class="math inline">\(R^2\)</span> ajustado).</p>
+<p>También podemos pedirle a la función que nos ordene los modelos de mejor a peor con el argumento <code>rank = TRUE</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod_simple1, </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                    mod_simple2,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                    mod_multiple,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">metrics =</span> <span class="st">"common"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">rank =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name         | Model |    R2 | R2 (adj.) |  RMSE | AIC weights | BIC weights | Performance-Score
+------------------------------------------------------------------------------------------------
+mod_multiple |    lm | 0.980 |     0.980 | 0.652 |        1.00 |        1.00 |           100.00%
+mod_simple1  |    lm | 0.875 |     0.875 | 1.614 |   2.37e-196 |   1.95e-195 |            50.06%
+mod_simple2  |    lm | 0.096 |     0.094 | 4.344 |    0.00e+00 |    0.00e+00 |             0.00%</code></pre>
+</div>
+</div>
+</section>
+<section id="colinealidad-1" class="level3">
+<h3 class="anchored" data-anchor-id="colinealidad-1">Colinealidad</h3>
+<p>Hay varias formas de intuir si hay colinealidad, es decir relación lineal entre nuestras variables independientes.</p>
+<p>La primera es analizar el coeficiente de correlación; si tenemos variables altamente relacionadas es muy probable que el modelo pueda tener colinealidad entre esas variables independientes.</p>
+<p>Otro de los síntomas se produce cuando nuestro modelo tiene un <span class="math inline">\(R^2\)</span> alto y muchas variables no son significativas. En estos casos también es muy probable la existencia de colinealidad.</p>
+<p>Cuando hemos intuido que tenemos multicolinealidad y queremos comprobar, el paquete <code>performance</code> nos ofrece la función <code>check_collinearity()</code> que implementa el método de factor de inflación de la varianza (VIF, por sus siglas en inglés):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_collinearity</span>(mod_multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Check for Multicollinearity
+
+Low Correlation
+
+      Term  VIF  VIF 95% CI Increased SE Tolerance Tolerance 95% CI
+ ciclistas 1.00 [1.00, Inf]         1.00      1.00     [0.00, 1.00]
+ fumadores 1.00 [1.00, Inf]         1.00      1.00     [0.00, 1.00]</code></pre>
+</div>
+</div>
+<p>Los resultados del ejemplo muestra VIF de 1 que es el valor más bajo del índice (no hay colinealidad). Recordemos que el umbral de detección parte de valores cercanos a 5 y un VIF <span class="math inline">\(\geq\)</span> 10 indicaría que el modelo de regresión lineal presenta un grado de multicolinealidad preocupante.</p>
+</section>
+<section id="diagnóstico-del-modelo-análisis-de-residuos" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico-del-modelo-análisis-de-residuos">Diagnóstico del modelo (análisis de residuos)</h3>
+<p>El diagnóstico final del modelo elegido lo debemos realizar con sus residuales.</p>
+<p>La forma gráfica habitual es “plotear” el objeto de regresión, que como vimos para la regresión lineal simple, podía hacerse utilizando <code>R base</code> o la función <code>check_model()</code> del paquete <code>performance</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(mod_multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Por otra parte, también tenemos las funciones de análisis para los supuestos (independencia, linealidad, normalidad, homocedasticidad).</p>
+<p><strong>Independencia</strong></p>
+<p>El paquete <code>lmtest</code> permite evaluar independencia según estadístico de Durbin-Watson.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dwtest</span>(mod_multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Durbin-Watson test
+
+data:  mod_multiple
+DW = 1.9174, p-value = 0.1773
+alternative hypothesis: true autocorrelation is greater than 0</code></pre>
+</div>
+</div>
+<p>El valor de <em>p</em> es de 0.177 por lo que no podemos rechazar la hipótesis nula de inexistencia de autocorrelación (independencia)</p>
+<p><strong>Linealidad</strong></p>
+<p>El paquete <code>lmtest</code> implementa el <em>Ramsey’s RESET</em> bajo la función <code>resettest()</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">resettest</span>(mod_multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    RESET test
+
+data:  mod_multiple
+RESET = 1.4433, df1 = 2, df2 = 493, p-value = 0.2372</code></pre>
+</div>
+</div>
+<p>El <em>p</em>-valor es de 0.237 por lo que no podemos rechazar la hipótesis nula de linealidad.</p>
+<p><strong>Normalidad</strong></p>
+<p>El paquete <code>nortest</code> permite chequear normalidad mediante test de Lilliefors.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lillie.test</span>(mod_multiple<span class="sc">$</span>residuals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Lilliefors (Kolmogorov-Smirnov) normality test
+
+data:  mod_multiple$residuals
+D = 0.031511, p-value = 0.2681</code></pre>
+</div>
+</div>
+<p>Los resultados del test nos confirman lo visto en el grafico Q-Q, el valor <em>p</em> es de 0.268 y no podemos descartar normalidad de los residuos.</p>
+<p><strong>Homocedasticidad</strong></p>
+<p>Los paquetes <code>lmtest</code> y <code>performance</code> permiten chequear homocedasticidad con el test de Breush-Pagan.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lmtest </span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(mod_multiple)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  mod_multiple
+BP = 5.7775, df = 2, p-value = 0.05564</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># performance </span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">check_heteroscedasticity</span>(mod_multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Heteroscedasticity (non-constant error variance) detected (p = 0.016).</code></pre>
+</div>
+</div>
+<p>Se cumple con el supuesto de homocedasticidad (valor <em>p</em> al límite mayor a 0,05).</p>
+<p>Finalmente presentamos un paquete interesante para validar supuestos de modelos lineales denominado <code>gvlma</code>. Su función, de mismo nombre <code>gvlma()</code>, implementa un procedimiento global sobre vector residual estandarizado para probar los cuatro supuestos del modelo lineal.</p>
+<p>Si el procedimiento global indica una violación de al menos uno de los supuestos, los componentes se pueden utilizar para obtener información sobre qué supuestos se han violado.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gvlma</span>(mod_multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = cardiopatias ~ ciclistas + fumadores, data = datos)
+
+Coefficients:
+(Intercept)    ciclistas    fumadores  
+    14.9847      -0.2001       0.1783  
+
+
+ASSESSMENT OF THE LINEAR MODEL ASSUMPTIONS
+USING THE GLOBAL TEST ON 4 DEGREES-OF-FREEDOM:
+Level of Significance =  0.05 
+
+Call:
+ gvlma(x = mod_multiple) 
+
+                    Value p-value                Decision
+Global Stat        5.8125  0.2136 Assumptions acceptable.
+Skewness           1.6568  0.1980 Assumptions acceptable.
+Kurtosis           0.9251  0.3361 Assumptions acceptable.
+Link Function      2.6348  0.1045 Assumptions acceptable.
+Heteroscedasticity 0.5958  0.4402 Assumptions acceptable.</code></pre>
+</div>
+</div>
+</section>
+<section id="resumen-del-mejor-modelo-elegido" class="level3">
+<h3 class="anchored" data-anchor-id="resumen-del-mejor-modelo-elegido">Resumen del mejor modelo elegido</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_multiple)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = cardiopatias ~ ciclistas + fumadores, data = datos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.1789 -0.4463  0.0362  0.4422  1.9331 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 14.984658   0.080137  186.99   &lt;2e-16 ***
+ciclistas   -0.200133   0.001366 -146.53   &lt;2e-16 ***
+fumadores    0.178334   0.003539   50.39   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.654 on 495 degrees of freedom
+Multiple R-squared:  0.9796,    Adjusted R-squared:  0.9795 
+F-statistic: 1.19e+04 on 2 and 495 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>El modelo <code>mod_multiple</code> es capaz de explicar el 97,95 % de la variabilidad observada en la proporción de cardiopatías de estas ciudades (<span class="math inline">\(R^2_{ajustado}\)</span>: 0.9795). El test F global muestra que es significativo (<em>p</em>-valor: <span class="math inline">\(&lt; 2,2e^{-16}\)</span>).</p>
+<p>El coeficiente de pendiente de la recta para la proporción de ciclistas fue de -0.2 por lo que la proporción de cardiopatías disminuye un 0,2 % por cada 1 % que sube la proporción de ciclistas manteniendo constante la variable fumadores. Por otra parte, fumadores tiene un coeficiente de <code>round(fit$coefficients[3],2)</code>, por lo que la proporción de cardiopatías aumenta un 0,17 % por cada 1 % que sube la proporción de fumadores de la ciudad manteniendo constante la variable ciclistas.</p>
+<p>Se satisfacen todas las condiciones para la regresión lineal.</p>
+</section>
+</section>
+<section id="funciones-para-modelado-automático" class="level2">
+<h2 class="anchored" data-anchor-id="funciones-para-modelado-automático">Funciones para modelado automático</h2>
+<p>El uso de la función <code>step()</code> se enmarca en los procedimientos automáticos y puede ser <em>forward</em>, <em>backward</em> o mixto.</p>
+<p>La sintaxis básica de la función es: <code>step(objeto, direction)</code></p>
+<p>donde:</p>
+<p><code>objeto</code> es el modelo inicial de regresión lineal (nulo o saturado)</p>
+<p><code>direction</code> es la dirección que indicamos. Puede ser “<em>forward</em>”, “<em>backward</em>” o “<em>both</em>” (predeterminado, si no se define)</p>
+<p>Generalmente conviene partir del modelo saturado y utilizar la dirección por defecto, donde se usan ambas direcciones.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>modelo_saturado <span class="ot">&lt;-</span> <span class="fu">lm</span>(cardiopatias <span class="sc">~</span> .<span class="sc">-</span>ID_ciudad, <span class="at">data =</span> datos)  </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>modelo_step <span class="ot">&lt;-</span> <span class="fu">step</span>(modelo_saturado, <span class="at">direction =</span> <span class="st">"both"</span>) <span class="co"># el argumento direction se puede omitir</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start:  AIC=-419.91
+cardiopatias ~ (ID_ciudad + ciclistas + fumadores) - ID_ciudad
+
+            Df Sum of Sq    RSS     AIC
+&lt;none&gt;                    211.7 -419.91
+- fumadores  1    1086.0 1297.7  480.97
+- ciclistas  1    9183.8 9395.6 1466.82</code></pre>
+</div>
+</div>
+<p>Observamos que arribamos al mismo resultado con las dos variables, esperable dado la cantidad mínima de variables para la regresión múltiple.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_step)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = cardiopatias ~ (ID_ciudad + ciclistas + fumadores) - 
+    ID_ciudad, data = datos)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.1789 -0.4463  0.0362  0.4422  1.9331 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 14.984658   0.080137  186.99   &lt;2e-16 ***
+ciclistas   -0.200133   0.001366 -146.53   &lt;2e-16 ***
+fumadores    0.178334   0.003539   50.39   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.654 on 495 degrees of freedom
+Multiple R-squared:  0.9796,    Adjusted R-squared:  0.9795 
+F-statistic: 1.19e+04 on 2 and 495 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Si bien en el ejemplo mostramos como usar el método <em>stepwise</em> automático para la selección de variables, no se recomienda su uso ya que está basado únicamente en criterios matemáticos y no en la relevancia en el mundo real.</p>
+<p>Además, cuenta con las siguientes limitaciones:</p>
+<ul>
+<li><p>Sensibilidad a la selección de variables</p></li>
+<li><p>Propensión al sobreajuste</p></li>
+<li><p>Violación de supuestos estadísticos</p></li>
+<li><p>Inclusión de variables irrelevantes</p></li>
+</ul>
+<p>Para evitar estos inconvenientes, es recomendable usar métodos alternativos de selección de variables tales como:</p>
+<ul>
+<li><p><strong>Selección manual de variables</strong>, según su relevancia teórica y conocimiento experto del tema.</p></li>
+<li><p><strong>Selección de variables por AIC o BIC</strong> (Criterio de Información Bayesiano).</p></li>
+<li><p><strong>Regularización</strong> por regresión LASSO (<em>Least Absolute Shrinkage and Selection Operator</em>), que penaliza los coeficientes de las variables menos importantes, favoreciendo modelos más simples y generalizables. Para conocer más sobre este método pueden entrar al siguiente <a href="https://towardsdatascience.com/stopping-stepwise-why-stepwise-selection-is-bad-and-what-you-should-use-instead-90818b3f52df">[Link]</a>.</p></li>
+<li><p><strong>Árboles de decisión</strong> (<em>random forest</em> y <em>gradient boosting),</em> herramientas de aprendizaje automático que permiten manejar automáticamente la selección de variables con menor probabilidad de sobreajuste.</p></li>
+</ul>
+<p>Estos dos últimos métodos escapan al alcance del curso. Sin embargo, invitamos a quienes tengan interés a explorar las múltiples posibilidades que ofrecen, en particular al momento de analizar datasets grandes y con múltiples variables explicativas.</p>
+<section id="inclusión-de-variables-categóricas" class="level3">
+<h3 class="anchored" data-anchor-id="inclusión-de-variables-categóricas">Inclusión de variables categóricas</h3>
+<p>Si bien en este ejemplo no tenemos variables categóricas, cuando debemos introducirlas como independientes, una categoría (habitualmente denominado nivel) de la variable se considera el nivel de referencia (normalmente codificado como 0) y el resto de los niveles se comparan con él.</p>
+<p>En el caso que el predictor categórico tenga más de dos niveles, se generan las variables <em>dummy</em> (presentadas anteriormente) para cada uno de los niveles del predictor categórico y que pueden tomar el valor de 0 o 1.</p>
+<p>Cada vez que se emplee el modelo para predecir un valor, solamente una variable <em>dummy</em> por predictor adquiere el valor 1 (la que coincida con el valor que adquiere el predictor en ese caso) mientras que el resto se consideran 0.</p>
+<p>El valor del coeficiente parcial de regresión <span class="math inline">\(\beta_i\)</span> de cada variable <em>dummy</em> indica la proporción promedio en el que influye dicho nivel sobre la variable dependiente <span class="math inline">\(Y\)</span> en comparación con el nivel de referencia de dicho predictor.</p>
+<p>Cuando trabajamos en R, el lenguaje se encarga de construir las variables <em>dummy</em> automáticamente siempre que su estructura sea <strong>factor</strong>. Los tipos de datos <strong>factor</strong> tienen una estructura de niveles donde el primero de ellos es el de referencia. Para modificar el nivel de referencia podemos utilizar las funciones <code>relevel()</code> de R <code>base</code> o <code>fct_relevel()</code> de <code>tidyverse</code>.</p>
+</section>
+</section>
+<section id="bibliografía" class="level2 unnumbered">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Bibliografía</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-deirala2001" class="csl-entry" role="listitem">
+De Irala, Jokin, Miguel Ángel Martínez-González, and Francisco Guillén Grima. 2001. <span>“¿Qué es una variable de confusión?”</span> <em>Medicina Clínica</em> 117 (10): 377–85. <a href="https://doi.org/10.1016/S0025-7753(01)72121-5">https://doi.org/10.1016/S0025-7753(01)72121-5</a>.
+</div>
+<div id="ref-gordis2017" class="csl-entry" role="listitem">
+Gordis, Leon. 2017. <em>Epidemiologia</em>. Thieme Revinter Publicações LTDA.
+</div>
+<div id="ref-kim2019" class="csl-entry" role="listitem">
+Kim, Jong Hae. 2019. <span>“Multicollinearity and Misleading Statistical Results.”</span> <em>Korean Journal of Anesthesiology</em> 72 (6): 558–69. <a href="https://doi.org/10.4097/kja.19087">https://doi.org/10.4097/kja.19087</a>.
+</div>
+<div id="ref-kleinbaum1988" class="csl-entry" role="listitem">
+Kleinbaum, David G, Lawrence L Kupper, Keith E Muller, and Azhar Nizam. 1988. <em>Applied Regression Analysis and Other Multivariable Methods</em>. Vol. 601. Duxbury press Belmont, CA.
+</div>
+<div id="ref-macmahon" class="csl-entry" role="listitem">
+MacMahon, B. 1972. <span>“Concepts of Multiple Factors.”</span> In <em>Multiple Factors in the Causation of Environmentally Induced Disease.</em>
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
