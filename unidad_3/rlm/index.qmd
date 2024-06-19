@@ -859,7 +859,7 @@ summary(mod_simple1)
 summary(mod_simple2)    
 
 # ciclistas + fumadores
-summary (mod_multiple)
+summary(mod_multiple)
 ```
 
 En los resúmenes observamos que todos los coeficientes de las variables involucradas son significativas y que los valores mostrados tienen forma de lista, es decir no son tablas "ordenadas" por lo que muchas veces, sobretodo cuando trabajamos con numerosas variables, se hace difícil la comparación de resultados.
