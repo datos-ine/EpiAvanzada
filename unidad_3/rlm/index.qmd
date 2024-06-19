@@ -352,14 +352,21 @@ Una variable de confusión es una variable que distorsiona la medida de asociaci
 2.  Exageración o atenuación de una asociación real (confusión positiva)
 3.  Inversión del sentido de una asociación real (confusión negativa).
 
-Según @gordis2017, en un estudio sobre si la exposición A es una causa de la enfermedad B, se dice que un tercer factor, el factor X, es un factor de confusión si se cumple lo siguiente:
+Según @gordis2017, en un estudio sobre si la exposición x es una causa de la enfermedad y, se dice que un tercer factor, el factor z, es un factor de confusión si se cumple lo siguiente:
 
-1.  El factor X es un factor de riesgo conocido para la enfermedad B.
-2.  El factor X se asocia con la exposición A, pero no es un resultado de la exposición A.
+1.  El factor z es un factor de riesgo conocido para la enfermedad y.
+2.  El factor z se asocia con la exposición x, pero no es un resultado de la exposición x.
 
 Para conceptualizar este y otros mecanismos en epidemiología se suele utilizar graficos acíclicos dirigidos (**DAGs** en inglés). Su nombre se debe a que no forman un ciclo cerrado y las variables están unidas por flechas dirigidas.
 
-![]()
+::: {layout-nrow=2}
+
+![DAG Directo](images/dag_directo.PNG)
+
+![DAG confusión](images/dag_confusion.PNG)
+
+:::
+
 
 Para quienes necesitan repasar este tema, pueden leer el artículo de @deirala2001 o descargarlo desde [aquí](http://halweb.uc3m.es/esp/Personal/personas/amalonso/esp/bstat-tema8vc.pdf).
 
@@ -378,7 +385,7 @@ En términos generales, se habla de confusión cuando existen diferencias estad�
 
 En muchos estudios epidemiológicos, la edad y el sexo son variables que juegan roles de confusión y generalmente son pocos los trabajos que no presentan datos ajustados por estas covariables.
 
-Durante el curso vamos a utilizar la regresión lineal y otras regresiones lineales generalizadas para resolver la confusión ajustando los efectos de las variables.
+Durante el curso vamos a utilizar la regresión lineal y otras regresiones lineales generalizadas para resolver la confusión ajustando los efectos de múltiples variables.
 
 Si lo mirásemos desde el punto gráfico de los datos podríamos partir de un diagrama de dispersión de puntos, con la variable dependiente de nombre `y` y la variable independiente de nombre `x`.
 
@@ -410,6 +417,8 @@ summary(modelo)
 
 El intercepto ($\beta_0$) es de 2,45 y el coeficiente $\beta_1$ (pendiente) significativo de 0,78.
 
+En la ecuación el valor de `y` es 2,45 ($\beta_0$) + 0,78\* el valor de `x` ($\beta_1*x$).
+
 Ahora incorporemos la covariable `z`, con categorías **A** y **B**, que sospechamos tiene un rol de confusión en el modelo teórico.
 
 ```{r}
@@ -434,14 +443,17 @@ Visto en resultados de consola:
 ```{r}
 #| echo: false
 
-modelo_conf <- lm(y ~ x*z, data = datos_conf)
+modelo_conf <- lm(y ~ x + z, data = datos_conf)
 
 summary(modelo_conf)
 ```
 
-El coeficiente $\beta_1$ de la variable independiente principal `x` varió al incorporar la nueva variable `z`, pasando de 0,78 (cruda) a 0,61 (ajustada), es decir que disminuyó más de un 20%. A la vez, la covariable tiene una relación significativa con la variable dependiente `y`.
+El coeficiente $\beta_1$ de la variable independiente principal `x` varió al incorporar la nueva variable `z`, pasando de 0,78 (cruda) a 0,65 (ajustada), es decir que disminuyó casi un 20%. A la vez, la covariable tiene una relación significativa con la variable dependiente `y`.
 
 Entonces podemos ver que la regresión ajustó el efecto de `x` sobre `y`, teniendo en cuenta el efecto confusor de `z`.
+
+El valor de `y` es 0,66 ($\beta_0$) + 0,65\* el valor de `x` ($\beta_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 0,66 ($\beta_0$) + 0,65\* el valor de `x` ($\beta_1*x$)  + 4,55 ($\beta_2$) cuando `z` es igual a **B**.
+
 
 #### Interacción o modificación de efecto
 
@@ -455,7 +467,7 @@ El efecto puede ser mayor de lo esperado (interacción positiva, sinergismo) o m
 
 Entonces la modificación del efecto ocurre cuando el tamaño del efecto de la variable explicativa de interés (exposición) sobre el resultado (variable dependiente) difiere según el nivel de una tercera variable.
 
-Para quienes necesiten repasar el tema, pueden leer el documento del siguiente [\[Link\]](https://halweb.uc3m.es/esp/personal/personas/amalonso/esp/bstat-tema8vme.pdf){.uri}
+Para quienes necesiten repasar el tema, pueden leer el documento de @de2001que del siguiente [\[Link\]](https://halweb.uc3m.es/esp/personal/personas/amalonso/esp/bstat-tema8vme.pdf){.uri}
 
 Es importante destacar que mediante la RLM es posible identificar la presencia de modificadores de efecto mediante la inclusión de términos de interacción.
 
@@ -465,7 +477,7 @@ Al ajustar un modelo de RLM podemos incluir un término de interacción en la ec
 
 Un ejemplo similar al recién mostrado para la confusión, pero para la interacción podría ser:
 
-![]()
+![DAG interacción](images/dag_interaccion.PNG)
 
 ```{r}
 #| echo: false
@@ -524,7 +536,7 @@ summary(modelo_int)
 
 El término de interacción es significativo, aunque la variable `z` pareciese que no, es decir la significación se asocia a uno de los niveles (la categoría **B**). No hay manera de escindir un nivel del otro por lo que debemos dejar la variable `z`.
 
-El valor de `y` es 2,77 ($\beta_0$) + 0,23\* el valor de `x` ($\beta_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 2,77 ($\beta_0$) + 0,23\* el valor de `x` ($\beta_1*x$)  + 2,49 ($\beta_2$) + 0,46\*x ($\beta_3*x$) cuando `z` es igual a **B**.
+El valor de `y` es 2,77 ($\beta_0$) + 0,23\* el valor de `x` ($\beta_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 2,77 ($\beta_0$) + 0,23\* el valor de `x` ($\beta_1*x$)  + 2,49 ($\beta_2$) + 0,46\*x ($\beta_3*x$) cuando `z` es igual a **B**. Observamos una sinergia entre el nivel **B** de la variable `z` y la variable `x` en el efecto causado a la variable `y`.
 
 ### Variables *dummy*
 
