@@ -68,3 +68,8 @@ h6 {
     border-color: $active-border-color;
   }
 }
+
+.sidebar nav[role="doc-toc"] ul > li > a.active {
+    color: #fff !important;
+    background-color: #066;
+}

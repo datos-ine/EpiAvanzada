@@ -3,6 +3,7 @@ title: "**Regresión Lineal Múltiple**"
 format: html
 editor: source
 toc: true
+toc-location: left
 toc-title: "Contenidos"
 theme: "custom.scss"
 bibliography: references.bib
@@ -184,13 +185,13 @@ En forma similar a la RLS, la interpretación de cada parámetro $\beta$ de la r
 
 -   $\beta_2$ es la pendiente a lo largo del eje $X_2$ y representa el cambio esperado en la respuesta por unidad de cambio en $X_2$ a valores constantes de $X_1$.
 
-### Presupuestos del modelo de RLM
+## Presupuestos del modelo de RLM
 
-#### Independencia
+### Independencia
 
 Las observaciones $Y_i$ son independientes unas de otras: el efecto de $X_1$ sobre la respuesta media no depende de $X_2$ y viceversa, siempre y cuando no exista interacción. Cuando existe interacción entre $X_1$ e $X_2$ , el efecto de $X_1$ sobre la respuesta media de $Y$ depende $X_2$ y viceversa ($X_1$ e $X_2$ no son independientes cuando existe interacción).
 
-#### Linealidad
+### Linealidad
 
 Para cada combinación de valores de las variables independientes ($X_1$, $X_2$,..., $X_k$) el valor medio de $Y$ es función lineal de $X_1$, $X_2$,...,$X_k$.. La linealidad se define en relación a los coeficientes de la regresión, por lo tanto el modelo puede incluir términos cuadráticos e interacciones
 
@@ -202,11 +203,11 @@ $$ Y = \beta_0X_1 + \beta_2X_2 + \beta_3X_1X_2 $$
 
     $$ Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_1^2 + \beta_4X_2^2 $$
 
-#### Homocedasticidad
+### Homocedasticidad
 
 la varianza de $Y$ para los distintos valores de $X_1$, $X_2$,...,$X_k$ se mantiene constante.
 
-#### Normalidad
+### Normalidad
 
 Los valores de $Y$ tienen una distribución normal según los valores de $X_1$, $X_2$, $X_k$ , ésto nos permite realizar inferencias en relación a los parámetros del modelo.
 
@@ -216,7 +217,7 @@ El MMC consiste en adoptar como estimativas de los parámetros de la regresión 
 
 $$ \sum_{i=1}^{i=n}e_1^2=\sum_{i=1}^{i=n}(Y_i-\hat{Y_i})^2=\sum_{i=n}^{i=n}(Y_i-(\hat{\beta}_0+\hat{\beta}_1X_1+\dots+\hat{\beta}_kX_k))^2  $$
 
-### Interpretación de un modelo de RLM
+## Interpretación de un modelo de RLM
 
 Comenzaremos aprendiendo a interpretar un modelo de RLM, para luego aprender a construirlos. Para ello, observemos detalladamente la salida de R para un modelo de RLM, donde modelamos la `V23`, en función de las variables `V10`, `V11`, `V12`, `V14`, `V15`, `V17`, `V18` y `V24`.
 
@@ -264,7 +265,7 @@ Donde:
 
 Profundicemos ahora en lo que significan algunos de estos puntos.
 
-##### Test F parcial
+### Test F parcial
 
 Como estamos sacando conclusiones partiendo de una muestra, es obvio que distintas muestras van a dar distintos valores de los parámetros. Es por eso que el test $F$ parcial, testea la siguiente afirmación o hipótesis:
 
@@ -278,7 +279,7 @@ Donde $H_1$ indica que existe al menos un coeficiente $\neq$ 0
 
 De alguna forma, evalúa la contribución de cada variable al modelo. Nos dice si la inclusión de esa variable es útil para explicar significativamente la variabilidad observada en $Y$. En los modelos lineales generalizados (GLM por sus siglas en inglés), el *test de Wald* testea esta $H_0$. Para RLM, el test $F$ parcial es idéntico a Wald.
 
-##### Varianza residual
+### Varianza residual
 
 Como vimos en ANOVA y al igual que en el caso de regresión lineal simple, vamos a descomponer la variabilidad de la variable dependiente $Y$ en dos componentes o fuentes de variabilidad: un componente va a representar la variabilidad explicada por el modelo de regresión y el otro componente va a representar la variabilidad no explicada por el modelo y, por tanto, atribuida a factores aleatorios.
 
@@ -312,13 +313,13 @@ tibble(
   color(color = "white", part = "header")
 ```
 
-##### Test F global
+### Test F global
 
 Compara el modelo de regresión con el modelo nulo. Evalúa el efecto conjunto de las variables independientes incluidas en el modelo ajustado.
 
 $$ F = CMR/CME \quad gl = (k -1, n - k - 1) $$
 
-##### Coeficiente de determinación
+### Coeficiente de determinación
 
 Al igual de lo que aprendimos en la RLS la bondad de ajuste del modelo de RLM se valora con el coeficiente de determinación ($R^2$), que nos dice qué proporción de la variabilidad de $Y$ es explicada por los coeficientes de la regresión del modelo en estudio. El $R^2$ es útil para comparar entre modelos
 
@@ -336,7 +337,7 @@ Teniendo en cuenta que 1-$R^2$ es un número constante y que $n$ es mayor que $k
 Cuando tenemos que elegir el mejor modelo será necesario utilizar distintos criterios para compararlos y basar nuestra decisión en elegir el modelo que mejor explique la variación de $Y$ con el menor número de variables independientes, el modelo más simple y efectivo, también llamado el modelo más **parsimonioso**.
 :::
 
-### Confusión e interacción en RLM
+## Confusión e interacción en RLM
 
 Antes de aprender a construir modelos de regresión, vamos a repasar algunos conceptos.
 
@@ -344,7 +345,7 @@ Los estudios epidemiológicos suelen partir de modelos teóricos conocidos y vin
 
 Las covariables, dentro del proceso salud-enfermedad, pueden tener varios roles, tales como confusoras, mediadoras de efecto, intermedias, colisionadoras, exposiciones en competencia, etc. Aplicado al tema de investigación sobre el que estemos trabajando, algunos de estos roles serán conocidos previamente por la literatura y otros hallados o sospechados durante el análisis.
 
-#### Confusión
+### Confusión
 
 Una variable de confusión es una variable que distorsiona la medida de asociación entre las variables principales. El resultado, en presencia de una variable de confusión, puede ser la observación de:
 
@@ -455,7 +456,7 @@ Entonces podemos ver que la regresión multiple ajustó el efecto de `x` sobre `
 El valor de `y` ahora es 0,66 ($b_0$) + 0,65\* el valor de `x` ($b_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 0,66 ($b_0$) + 0,65\* el valor de `x` ($b_1*x$)  + 4,55 ($b_2$) cuando `z` es igual a **B**.
 
 
-#### Interacción o modificación de efecto
+### Interacción o modificación de efecto
 
 @macmahon definió la interacción de la siguiente manera:
 
@@ -538,7 +539,7 @@ El término de interacción es significativo, aunque la variable `z` pareciese q
 
 El valor de `y` en este caso es 2,77 ($b_0$) + 0,23\* el valor de `x` ($b_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 2,77 ($b_0$) + 0,23\* el valor de `x` ($b_1*x$)  + 2,49 ($b_2$) + 0,46\*x ($b_3*x$) cuando `z` es igual a **B**. Observamos una sinergia entre el nivel **B** de la variable `z` y la variable `x` en el efecto causado a la variable `y`.
 
-### Variables *dummy*
+## Variables *dummy*
 
 Recordemos que en el modelo de regresión podemos incluir como variables independientes tanto variables cuantitativas como variables categóricas. Las variables categóricas pueden ser dicotómicas (sexo: fem/masc; hábito de fumar: si/no) o tener más de dos categorías, por ejemplo: grupo sanguíneo, religión, color de ojos.
 
@@ -609,7 +610,7 @@ El coeficiente $b_1$ y $b_2$ nos estarán indicando cuánto se modifica la TMI s
 
 Las variables *dummy* (también llamadas variables indicadoras) no tienen ningún sentido por sí solas y, por lo tanto, deben figurar todas las categorías en los modelos y se debe contrastar su inclusión siempre en bloque, aunque el test $F$ parcial para alguna categoría resulte no significativo. Hay que notar que cuando se agrega una variable *dummy* al modelo, ésta le suma tantos grados de libertad a la regresión como categorías tenga.
 
-### Estimación y predicción
+## Estimación y predicción
 
 Los modelos de regresión se pueden utilizar esencialmente:
 
@@ -625,7 +626,7 @@ Es importante tener en cuenta que si el propósito es construir un modelo predic
 4.  No haga predicciones acerca de una población distinta de la población de donde se obtuvieron los datos muestrales.
 5.  La relación entre la variable respuesta y la predictora no debe ser necesariamente causal. En cambio cuando el objetivo del modelo es explicativo la relación causal (particularmente la relación temporal entre la variable dependiente y la independiente) debe existir.
 
-### Lineamientos para el uso de la ecuación de regresión
+## Lineamientos para el uso de la ecuación de regresión
 
 Dada una variable dependiente $Y$ y un conjunto de $k$ variables independientes $X_1$, $X_2$, $X_3$....,$X_k$ ¿cuál es el mejor conjunto de $p$ predictores ($p \leq k$) y el correspondiente modelo de regresión para describir la relación entre $Y$ y las variables $X$?
 
@@ -638,11 +639,11 @@ Pasos para escoger la mejor ecuación de regresión:
 5.  Evaluar los presupuestos del modelo
 6.  Evaluar la confiabilidad del modelo escogido
 
-#### Especificar el conjunto de variables potencialmente predictivas y la forma del modelo
+### Especificar el conjunto de variables potencialmente predictivas y la forma del modelo
 
 La finalidad es buscar de entre todas las posibles variables explicativas aquellas que más y mejor expliquen a la variable dependiente sin que ninguna de ellas sea combinación lineal de las restantes. Con este propósito primero identificaremos las relaciones entre la variable dependiente y las independientes de manera bivariada; y la relación entre las variables independientes entre sí, con el fin de identificar la presencia de colinelidad.
 
-##### Colinealidad
+### Colinealidad
 
 Un problema frecuente en los modelos de RLM es el de la **multicolinealidad**, que ocurre cuando los regresores están relacionados entre sí en forma lineal. Si bien no implica una violación de las hipótesis o presupuestos del modelo, puede ocasionar problemas en la inferencia, ya que:
 
@@ -674,7 +675,7 @@ Una regla empírica, citada por @kleinbaum1988, consiste en considerar que exist
 
 -   Combinar las variables colineales en un único predictor, aunque con el riesgo de perder su interpretación
 
-#### Especificar un criterio estadístico para elección de variables
+### Especificar un criterio estadístico para elección de variables
 
 Generalmente incluiremos en el modelo aquellas variables que resultaron significativas en el análisis bivariado y otras que, aun cuando no resultaran significativas, decidamos mantener por cuestiones teóricas, porque se necesitan establecer predicciones para distintas categorías de dicha variable, etc.
 
@@ -686,7 +687,7 @@ El proceso de selección de variables puede realizarse en forma manual o automá
 
 -   Método paso a paso o *stepwise*: emplea criterios matemáticos para decidir qué predictores contribuyen significativamente al modelo y en qué orden se introducen. Se trata de una combinación de la selección *forward* y *backward.* Comienza con un modelo nulo, pero tras cada nueva incorporación se realiza un test de extracción de predictores no útiles como en el *backward.* Presenta la ventaja de que si a medida que se añaden predictores, alguno de los ya presentes deja de contribuir al modelo, se elimina.
 
-#### Especificar una estrategia para seleccionar modelos
+### Especificar una estrategia para seleccionar modelos
 
 Hasta ahora hemos desarrollado algunos criterios que se pueden utilizar para comparar modelos como $R^2$, $R^2$ ajustado y $F$ global. Como hemos mencionado anteriormente el uso de $R^2$ como único criterio de selección tiene varias desventajas: tiende a sobreestimar, al adicionar variables siempre aumenta, por lo que si fuera el único criterio elegiría modelos con el mayor número de variables, no tiene en consideración la relación entre parámetros y tamaño muestral.
 
@@ -694,7 +695,7 @@ Para modelos anidados, podemos realizar una comparación entre ambos modelos med
 
 Recuerden que frente a $p$ variables independientes existen $2^p$ posibles modelos. No necesariamente el modelo con mayor número de variables es el mejor. Debemos priorizar siempre el principio de parsimonia (el modelo más simple que mejor explique). El tamaño de la muestra también es importante, algunos autores recomiendan que el número de observaciones sea como mínimo entre 10 y 20 veces el número de predictores del modelo.
 
-#### Validación y diagnóstico del modelo
+## Validación y diagnóstico del modelo
 
 En este apartado vamos a comprobar que se verifican los supuestos del modelo de regresión lineal (normalidad, homocedasticidad o igualdad de varianzas, linealidad), ya que estos supuestos resultan necesarios para validar la inferencia respecto a los parámetros. Utilizaremos el análisis de los residuales para realizar los contrastes *a posteriori* de dichas hipótesis del modelo. Recordemos que los residuos se definen como la diferencia entre el valor observado y el valor predicho por el modelo.
 
@@ -702,21 +703,21 @@ $y-\hat{y}=e$ (residuo o error residual)
 
 El planteamiento habitual es considerar que, como dijimos inicialmente, los valores de $Y$ tienen una distribución normal según los valores de $X_1$, $X_2$,... $X_k$., entonces, los residuos también tendrán una distribución normal. Los residuos tienen unidades de medida y, por tanto no se puede determinar si es grande o pequeño a simple vista. Para solucionar este problema se define el residuo estandarizado como el cociente entre el residuo y su desvío standard. Se considera que un residuo tiene un valor alto, y por lo tanto puede influir negativamente en el análisis, si su residuo estandarizado es mayor a 3 en valor absoluto. También se trabaja con los residuos tipificados o con los residuos estudentizados.
 
-##### Normalidad
+### Normalidad
 
 El análisis de normalidad de los residuos lo realizaremos gráficamente (Histograma y gráfico de probabilidad normal) y analíticamente (Contraste de Kolmogorov-Smirnov) o similar.
 
-##### Homocedasticidad
+### Homocedasticidad
 
 La hipótesis de homocedasticidad establece que la variabilidad de los residuos es independiente de las variables explicativas. En general, la variabilidad de los residuos estará en función de las variables explicativas, pero como las variables explicativas están fuertemente correlacionadas con la variable dependiente, bastara con examinar el gráfico de valores pronosticados versus residuos (a veces residuos al cuadrado).
 
 Comprobamos la hipótesis de homogeneidad de las varianzas gráficamente representando los residuos tipificados frente a los valores predichos por el modelo. El análisis de este gráfico puede revelar una posible violación de la hipótesis de homocedasticidad, por ejemplo si detectamos que el tamaño de los residuos aumenta o disminuye de forma sistemática para algunos valores ajustados de la variable $Y$, si observamos que el gráfico muestra forma de embudo. Si por el contrario dicho gráfico no muestra patrón alguno, entonces no podemos rechazar la hipótesis de igualdad de varianzas.
 
-##### Linealidad
+### Linealidad
 
 Se evalúa en el mismo gráfico anterior (además de considerar $R^2$ ajustado)
 
-##### Valores de influencia (*leverage*)
+### Valores de influencia (*leverage*)
 
 Se considera que una observación es influyente *a priori* si su inclusión en el análisis modifica sustancialmente el sentido del mismo. Una observación puede ser influyente si es un *outlier* respecto a alguna de las variables explicativas. Para detectar estos problemas se utiliza la medida de **Leverage**:
 
@@ -724,13 +725,13 @@ $$ l(i)=\frac{1}{n}\bigg(1+\frac{(x_i-\bar{x})^2}{S^2_x}\bigg)  $$
 
 Este estadístico mide la distancia de un punto a la media de la distribución. Valores cercanos a 2/$n$ indican casos que pueden influir negativamente en la estimación del modelo introduciendo un fuerte sesgo en el valor de los estimadores.
 
-##### Distancia de Cook
+### Distancia de Cook
 
 Es una medida de cómo influye la observación *i*-ésima sobre la estimación de $\beta$ al ser retirada del conjunto de datos. Una distancia de Cook grande significa que una observación tiene un peso grande en la estimación de $\beta$. Son puntos influyentes las observaciones que presenten
 
 $$ D_i=\frac{4}{n-p-2}  $$
 
-##### Independencia de residuos
+### Independencia de residuos
 
 La hipótesis de independencia de los residuos la realizaremos mediante el contraste de *Durbin-Watson*.
 

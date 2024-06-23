@@ -3,6 +3,7 @@ title: "**Estudios ecológicos**"
 format: html
 editor: source
 toc: true
+toc-location: left
 toc-title: "Contenidos"
 theme: "custom.scss"
 bibliography: references.bib
