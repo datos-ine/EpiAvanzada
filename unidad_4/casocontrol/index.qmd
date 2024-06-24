@@ -4,6 +4,7 @@ format: html
 editor: visual
 toc: true
 toc-title: "Contenidos"
+toc-location: left
 theme: "../../custom.scss"
 bibliography: references.bib
 nocite: |
