@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
   dpi = 300
 )
 
-showtext::showtext_opts(dpi = 300)
+showtext::showtext_opts(dpi = 500)
 
 # paquetes
 pacman::p_load(
@@ -70,6 +70,7 @@ Donde $\beta_0$, $\beta_1$, $\beta_2$,...,$\beta_k$ son los parámetros de la re
 
 ```{r}
 #| echo: false
+#| out-width: 80%
 
 ## Sample data
 set.seed(1234)
@@ -390,13 +391,13 @@ Si lo mirásemos desde el punto gráfico de los datos podríamos partir de un di
 ```{r}
 #| echo: false
 #| fig-align: center
-#| out-width: 70%
+#| out-width: 80%
 datos_conf <- read_csv2("datos_conf.csv")
 
 datos_conf |> 
   ggplot(aes(x = x, y = y)) +
-  geom_point(color = "#49917a", size = 2) +
-  geom_smooth(method = "lm", se = F, color = "#1e6590") +
+  geom_point(color = pal[7], size = 2) +
+  geom_smooth(method = "lm", se = F, color = pal[4]) +
   theme_minimal()
 ```
 
@@ -423,13 +424,14 @@ Ahora incorporemos la covariable `z`, con categorías **A** y **B**, que sospech
 ```{r}
 #| echo: false
 #| fig-align: center
-#| out-width: 70%
+#| out-width: 80%
 
 datos_conf |> 
   ggplot(aes(x = x, y = y, color = z)) +
   geom_point(size = 2) +
   geom_smooth(method = "lm", se = F)  +
-  scale_color_manual(values = c("#49917a", "#c97533")) +
+  scale_color_manual(values = c(pal[2], pal[6])) +
+  # scale_color_manual(values = c("#49917a", "#c97533")) +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
@@ -481,13 +483,13 @@ Un ejemplo similar al recién mostrado para la confusión, pero para la interacc
 ```{r}
 #| echo: false
 #| fig-align: center
-#| out-width: 70%
+#| out-width: 80%
 datos_int <- read_csv2("datos_int.csv")
 
 datos_int |> 
   ggplot(aes(x = x, y = y)) +
-  geom_point(color = "#49917a", size = 2) +
-  geom_smooth(method = "lm", se = F, color = "#1e6590") +
+  geom_point(color = pal[7], size = 2) +
+  geom_smooth(method = "lm", se = F, color = pal[4]) +
   theme_minimal()
 ```
 
@@ -510,13 +512,14 @@ Ahora incorporemos la covariable `z`, con categorías **A** y **B**, que sospech
 ```{r}
 #| echo: false
 #| fig-align: center
-#| out-width: 70%
+#| out-width: 80%
 
 datos_int |> 
   ggplot(aes(x = x, y = y, color = z)) +
   geom_point(size = 2) +
   geom_smooth(method = "lm", se = F)  +
-  scale_color_manual(values = c("#49917a", "#c97533")) +
+  # scale_color_manual(values = c("#49917a", "#c97533")) +
+  scale_color_manual(values = c(pal[2], pal[6])) +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
