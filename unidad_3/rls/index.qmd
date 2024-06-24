@@ -3,6 +3,7 @@ title: "**Regresión lineal simple (RLS)**"
 format: html
 editor: visual
 toc: true
+toc-location: left
 toc-title: "Contenidos"
 theme: "../../custom.scss"
 bibliography: references.bib

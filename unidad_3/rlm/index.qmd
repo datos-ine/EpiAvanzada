@@ -5,7 +5,7 @@ editor: source
 toc: true
 toc-location: left
 toc-title: "Contenidos"
-theme: "custom.scss"
+theme: "../../custom.scss"
 bibliography: references.bib
 ---
 
@@ -360,14 +360,11 @@ Según @gordis2017, en un estudio sobre si la exposición `x` es una causa de la
 
 Para conceptualizar este y otros mecanismos en epidemiología se suele utilizar graficos acíclicos dirigidos (**DAGs** en inglés). Su nombre se debe a que no forman un ciclo cerrado y las variables están unidas por flechas dirigidas.
 
-::: {layout-nrow=2}
-
+::: {layout-nrow="2"}
 ![DAG de efecto directo entre x e y](images/dag_directo.PNG)
 
 ![DAG con z como variable confusora](images/dag_confusion.PNG)
-
 :::
-
 
 Para quienes necesitan repasar este tema, pueden leer el artículo de @deirala2001 accediendo desde [aquí](http://halweb.uc3m.es/esp/Personal/personas/amalonso/esp/bstat-tema8vc.pdf).
 
@@ -399,7 +396,8 @@ datos_conf <- read_csv2("datos_conf.csv")
 datos_conf |> 
   ggplot(aes(x = x, y = y)) +
   geom_point(color = "#49917a", size = 2) +
-  geom_smooth(method = "lm", se = F, color = "#1e6590")
+  geom_smooth(method = "lm", se = F, color = "#1e6590") +
+  theme_minimal()
 ```
 
 Observamos que la recta de regresión muestra una correlación positiva entre los valores de las variables, representando la ecuación:
@@ -432,6 +430,7 @@ datos_conf |>
   geom_point(size = 2) +
   geom_smooth(method = "lm", se = F)  +
   scale_color_manual(values = c("#49917a", "#c97533")) +
+  theme_minimal() +
   theme(legend.position = "bottom")
 ```
 
@@ -453,8 +452,7 @@ El coeficiente $b_1$ de la variable independiente principal `x` varió al incorp
 
 Entonces podemos ver que la regresión multiple ajustó el efecto de `x` sobre `y`, teniendo en cuenta el efecto confusor de `z` que sospechabamos.
 
-El valor de `y` ahora es 0,66 ($b_0$) + 0,65\* el valor de `x` ($b_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 0,66 ($b_0$) + 0,65\* el valor de `x` ($b_1*x$)  + 4,55 ($b_2$) cuando `z` es igual a **B**.
-
+El valor de `y` ahora es 0,66 ($b_0$) + 0,65\* el valor de `x` ($b_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 0,66 ($b_0$) + 0,65\* el valor de `x` ($b_1*x$) + 4,55 ($b_2$) cuando `z` es igual a **B**.
 
 ### Interacción o modificación de efecto
 
@@ -489,7 +487,8 @@ datos_int <- read_csv2("datos_int.csv")
 datos_int |> 
   ggplot(aes(x = x, y = y)) +
   geom_point(color = "#49917a", size = 2) +
-  geom_smooth(method = "lm", se = F, color = "#1e6590")
+  geom_smooth(method = "lm", se = F, color = "#1e6590") +
+  theme_minimal()
 ```
 
 $$\hat{y} = b_0 + b_1x_1 + \epsilon$$
@@ -518,6 +517,7 @@ datos_int |>
   geom_point(size = 2) +
   geom_smooth(method = "lm", se = F)  +
   scale_color_manual(values = c("#49917a", "#c97533")) +
+  theme_minimal() +
   theme(legend.position = "bottom")
 ```
 
@@ -537,7 +537,7 @@ summary(modelo_int)
 
 El término de interacción es significativo, aunque la variable `z` pareciese que no, es decir la significación se asocia a uno de los niveles (la categoría **B**). No hay manera de escindir un nivel del otro por lo que debemos dejar la variable `z`. A su vez aumentó el $R^2$ ajustado del modelo de 0,28 a 0,80.
 
-El valor de `y` en este caso es 2,77 ($b_0$) + 0,23\* el valor de `x` ($b_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 2,77 ($b_0$) + 0,23\* el valor de `x` ($b_1*x$)  + 2,49 ($b_2$) + 0,46\*x ($b_3*x$) cuando `z` es igual a **B**. Observamos una sinergia entre el nivel **B** de la variable `z` y la variable `x` en el efecto causado a la variable `y`.
+El valor de `y` en este caso es 2,77 ($b_0$) + 0,23\* el valor de `x` ($b_1*x$) mientras `z` es igual al nivel de referencia **A**, en cambio `y` vale 2,77 ($b_0$) + 0,23\* el valor de `x` ($b_1*x$) + 2,49 ($b_2$) + 0,46\*x ($b_3*x$) cuando `z` es igual a **B**. Observamos una sinergia entre el nivel **B** de la variable `z` y la variable `x` en el efecto causado a la variable `y`.
 
 ## Variables *dummy*
 
