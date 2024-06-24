@@ -163,4 +163,4 @@ La manera usual de evaluación de la asociación en estudios de grupos múltiple
 
 En este capítulo abordaremos la [**regresión lineal simple**](https://datos-ine.github.io/EpiAvanzada/unidad_3/rls/), a modo de introducción, para luego entender los modelos de [**regresión lineal múltiple**](https://datos-ine.github.io/EpiAvanzada/unidad_3/rlm/), ampliamente usados en el análisis de los estudios ecológicos, aunque no exclusivos de ellos.
 
-## Referencias
+## Bibliografía
