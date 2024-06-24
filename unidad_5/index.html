@@ -1,0 +1,2730 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Estudios de cohortes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+
+<script src="index_files/libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenidos</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
+  <ul class="collapse">
+  <li><a href="#cómo-analizar-un-estudio-de-cohortes" id="toc-cómo-analizar-un-estudio-de-cohortes" class="nav-link" data-scroll-target="#cómo-analizar-un-estudio-de-cohortes">¿Cómo analizar un estudio de cohortes?</a></li>
+  </ul></li>
+  <li><a href="#regresión-de-poisson" id="toc-regresión-de-poisson" class="nav-link" data-scroll-target="#regresión-de-poisson">Regresión de Poisson</a>
+  <ul class="collapse">
+  <li><a href="#supuestos-del-modelo-de-poisson" id="toc-supuestos-del-modelo-de-poisson" class="nav-link" data-scroll-target="#supuestos-del-modelo-de-poisson">Supuestos del modelo de Poisson</a></li>
+  </ul></li>
+  <li><a href="#aplicación-en-r" id="toc-aplicación-en-r" class="nav-link" data-scroll-target="#aplicación-en-r">Aplicación en R</a>
+  <ul class="collapse">
+  <li><a href="#construcción-de-un-modelo-de-regresión-de-poisson-en-r" id="toc-construcción-de-un-modelo-de-regresión-de-poisson-en-r" class="nav-link" data-scroll-target="#construcción-de-un-modelo-de-regresión-de-poisson-en-r">Construcción de un modelo de regresión de Poisson en R</a></li>
+  <li><a href="#ejemplo-práctico" id="toc-ejemplo-práctico" class="nav-link" data-scroll-target="#ejemplo-práctico">Ejemplo práctico</a></li>
+  </ul></li>
+  <li><a href="#bibliografía" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliografía">Bibliografía</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><strong>Estudios de cohortes</strong></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span class="text" style="display: block; text-align: center;">Este material es parte de la</span><strong>Unidad 5 del Curso de Epidemiología - Nivel Avanzado del Instituto Nacional de Epidemiología “Dr.&nbsp;Juan H. Jara” - ANLIS</strong></p>
+<p><span class="text" style="display: block; text-align: center;">Estudios de cohortes by <a href="http://www.ine.gov.ar/">Andrea Silva, Christian Ballejo y Tamara Ricardo</a> is licensed under <a href="http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1">CC BY-NC 4.0</a> <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxMy4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDE0OTQ4KSAgLS0+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMC8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMCIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSI1LjUgLTMuNSA2NCA2NCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyA1LjUgLTMuNSA2NCA2NCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8Y2lyY2xlIGZpbGw9IiNGRkZGRkYiIGN4PSIzNy43ODUiIGN5PSIyOC41MDEiIHI9IjI4LjgzNiIvPg0KCTxwYXRoIGQ9Ik0zNy40NDEtMy41YzguOTUxLDAsMTYuNTcyLDMuMTI1LDIyLjg1Nyw5LjM3MmMzLjAwOCwzLjAwOSw1LjI5NSw2LjQ0OCw2Ljg1NywxMC4zMTQNCgkJYzEuNTYxLDMuODY3LDIuMzQ0LDcuOTcxLDIuMzQ0LDEyLjMxNGMwLDQuMzgxLTAuNzczLDguNDg2LTIuMzE0LDEyLjMxM2MtMS41NDMsMy44MjgtMy44Miw3LjIxLTYuODI4LDEwLjE0Mw0KCQljLTMuMTIzLDMuMDg1LTYuNjY2LDUuNDQ4LTEwLjYyOSw3LjA4NmMtMy45NjEsMS42MzgtOC4wNTcsMi40NTctMTIuMjg1LDIuNDU3cy04LjI3Ni0wLjgwOC0xMi4xNDMtMi40MjkNCgkJYy0zLjg2Ni0xLjYxOC03LjMzMy0zLjk2MS0xMC40LTcuMDI3Yy0zLjA2Ny0zLjA2Ni01LjQtNi41MjQtNy0xMC4zNzJTNS41LDMyLjc2Nyw1LjUsMjguNWMwLTQuMjI5LDAuODA5LTguMjk1LDIuNDI4LTEyLjINCgkJYzEuNjE5LTMuOTA1LDMuOTcyLTcuNCw3LjA1Ny0xMC40ODZDMjEuMDgtMC4zOTQsMjguNTY1LTMuNSwzNy40NDEtMy41eiBNMzcuNTU3LDIuMjcyYy03LjMxNCwwLTEzLjQ2NywyLjU1My0xOC40NTgsNy42NTcNCgkJYy0yLjUxNSwyLjU1My00LjQ0OCw1LjQxOS01LjgsOC42Yy0xLjM1NCwzLjE4MS0yLjAyOSw2LjUwNS0yLjAyOSw5Ljk3MmMwLDMuNDI5LDAuNjc1LDYuNzM0LDIuMDI5LDkuOTEzDQoJCWMxLjM1MywzLjE4MywzLjI4NSw2LjAyMSw1LjgsOC41MTZjMi41MTQsMi40OTYsNS4zNTEsNC4zOTksOC41MTUsNS43MTVjMy4xNjEsMS4zMTQsNi40NzYsMS45NzEsOS45NDMsMS45NzENCgkJYzMuNDI4LDAsNi43NS0wLjY2NSw5Ljk3My0xLjk5OWMzLjIxOS0xLjMzNSw2LjEyMS0zLjI1Nyw4LjcxMy01Ljc3MWM0Ljk5LTQuODc2LDcuNDg0LTEwLjk5LDcuNDg0LTE4LjM0NA0KCQljMC0zLjU0My0wLjY0OC02Ljg5NS0xLjk0My0xMC4wNTdjLTEuMjkzLTMuMTYyLTMuMTgtNS45OC01LjY1NC04LjQ1OEM1MC45ODQsNC44NDQsNDQuNzk1LDIuMjcyLDM3LjU1NywyLjI3MnogTTM3LjE1NiwyMy4xODcNCgkJbC00LjI4NywyLjIyOWMtMC40NTgtMC45NTEtMS4wMTktMS42MTktMS42ODUtMmMtMC42NjctMC4zOC0xLjI4Ni0wLjU3MS0xLjg1OC0wLjU3MWMtMi44NTYsMC00LjI4NiwxLjg4NS00LjI4Niw1LjY1Nw0KCQljMCwxLjcxNCwwLjM2MiwzLjA4NCwxLjA4NSw0LjExM2MwLjcyNCwxLjAyOSwxLjc5MSwxLjU0NCwzLjIwMSwxLjU0NGMxLjg2NywwLDMuMTgxLTAuOTE1LDMuOTQ0LTIuNzQzbDMuOTQyLDINCgkJYy0wLjgzOCwxLjU2My0yLDIuNzkxLTMuNDg2LDMuNjg2Yy0xLjQ4NCwwLjg5Ni0zLjEyMywxLjM0My00LjkxNCwxLjM0M2MtMi44NTcsMC01LjE2My0wLjg3NS02LjkxNS0yLjYyOQ0KCQljLTEuNzUyLTEuNzUyLTIuNjI4LTQuMTktMi42MjgtNy4zMTNjMC0zLjA0OCwwLjg4Ni01LjQ2NiwyLjY1Ny03LjI1N2MxLjc3MS0xLjc5LDQuMDA5LTIuNjg2LDYuNzE1LTIuNjg2DQoJCUMzMi42MDQsMTguNTU4LDM1LjQ0MSwyMC4xMDEsMzcuMTU2LDIzLjE4N3ogTTU1LjYxMywyMy4xODdsLTQuMjI5LDIuMjI5Yy0wLjQ1Ny0wLjk1MS0xLjAyLTEuNjE5LTEuNjg2LTINCgkJYy0wLjY2OC0wLjM4LTEuMzA3LTAuNTcxLTEuOTE0LTAuNTcxYy0yLjg1NywwLTQuMjg3LDEuODg1LTQuMjg3LDUuNjU3YzAsMS43MTQsMC4zNjMsMy4wODQsMS4wODYsNC4xMTMNCgkJYzAuNzIzLDEuMDI5LDEuNzg5LDEuNTQ0LDMuMjAxLDEuNTQ0YzEuODY1LDAsMy4xOC0wLjkxNSwzLjk0MS0yLjc0M2w0LDJjLTAuODc1LDEuNTYzLTIuMDU3LDIuNzkxLTMuNTQxLDMuNjg2DQoJCWMtMS40ODYsMC44OTYtMy4xMDUsMS4zNDMtNC44NTcsMS4zNDNjLTIuODk2LDAtNS4yMDktMC44NzUtNi45NDEtMi42MjljLTEuNzM2LTEuNzUyLTIuNjAyLTQuMTktMi42MDItNy4zMTMNCgkJYzAtMy4wNDgsMC44ODUtNS40NjYsMi42NTgtNy4yNTdjMS43Ny0xLjc5LDQuMDA4LTIuNjg2LDYuNzEzLTIuNjg2QzUxLjExNywxOC41NTgsNTMuOTM4LDIwLjEwMSw1NS42MTMsMjMuMTg3eiIvPg0KPC9nPg0KPC9zdmc+DQo=" class="img-fluid" width="20"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxMy4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDE0OTQ4KSAgLS0+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMC8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMCIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSI1LjUgLTMuNSA2NCA2NCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyA1LjUgLTMuNSA2NCA2NCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8Y2lyY2xlIGZpbGw9IiNGRkZGRkYiIGN4PSIzNy42MzciIGN5PSIyOC44MDYiIHI9IjI4LjI3NiIvPg0KCTxnPg0KCQk8cGF0aCBkPSJNMzcuNDQzLTMuNWM4Ljk4OCwwLDE2LjU3LDMuMDg1LDIyLjc0Miw5LjI1N0M2Ni4zOTMsMTEuOTY3LDY5LjUsMTkuNTQ4LDY5LjUsMjguNWMwLDguOTkxLTMuMDQ5LDE2LjQ3Ni05LjE0NSwyMi40NTYNCgkJCUM1My44NzksNTcuMzE5LDQ2LjI0Miw2MC41LDM3LjQ0Myw2MC41Yy04LjY0OSwwLTE2LjE1My0zLjE0NC0yMi41MTQtOS40M0M4LjY0NCw0NC43ODQsNS41LDM3LjI2Miw1LjUsMjguNQ0KCQkJYzAtOC43NjEsMy4xNDQtMTYuMzQyLDkuNDI5LTIyLjc0MkMyMS4xMDEtMC40MTUsMjguNjA0LTMuNSwzNy40NDMtMy41eiBNMzcuNTU3LDIuMjcyYy03LjI3NiwwLTEzLjQyOCwyLjU1My0xOC40NTcsNy42NTcNCgkJCWMtNS4yMiw1LjMzNC03LjgyOSwxMS41MjUtNy44MjksMTguNTcyYzAsNy4wODYsMi41OSwxMy4yMiw3Ljc3LDE4LjM5OGM1LjE4MSw1LjE4MiwxMS4zNTIsNy43NzEsMTguNTE0LDcuNzcxDQoJCQljNy4xMjMsMCwxMy4zMzQtMi42MDcsMTguNjI5LTcuODI4YzUuMDI5LTQuODM4LDcuNTQzLTEwLjk1Miw3LjU0My0xOC4zNDNjMC03LjI3Ni0yLjU1My0xMy40NjUtNy42NTYtMTguNTcxDQoJCQlDNTAuOTY3LDQuODI0LDQ0Ljc5NSwyLjI3MiwzNy41NTcsMi4yNzJ6IE00Ni4xMjksMjAuNTU3djEzLjA4NWgtMy42NTZ2MTUuNTQyaC05Ljk0NFYzMy42NDNoLTMuNjU2VjIwLjU1Nw0KCQkJYzAtMC41NzIsMC4yLTEuMDU3LDAuNTk5LTEuNDU3YzAuNDAxLTAuMzk5LDAuODg3LTAuNiwxLjQ1Ny0wLjZoMTMuMTQ0YzAuNTMzLDAsMS4wMSwwLjIsMS40MjgsMC42DQoJCQlDNDUuOTE4LDE5LjUsNDYuMTI5LDE5Ljk4Niw0Ni4xMjksMjAuNTU3eiBNMzMuMDQyLDEyLjMyOWMwLTMuMDA4LDEuNDg1LTQuNTE0LDQuNDU4LTQuNTE0czQuNDU3LDEuNTA0LDQuNDU3LDQuNTE0DQoJCQljMCwyLjk3MS0xLjQ4Niw0LjQ1Ny00LjQ1Nyw0LjQ1N1MzMy4wNDIsMTUuMywzMy4wNDIsMTIuMzI5eiIvPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg0K" class="img-fluid" width="20"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxMy4wLjIsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDE0OTQ4KSAgLS0+DQo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMC8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMCIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSI1LjUgLTMuNSA2NCA2NCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyA1LjUgLTMuNSA2NCA2NCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8Zz4NCgk8Y2lyY2xlIGZpbGw9IiNGRkZGRkYiIGN4PSIzNy40NyIgY3k9IjI4LjczNiIgcj0iMjkuNDcxIi8+DQoJPGc+DQoJCTxwYXRoIGQ9Ik0zNy40NDItMy41YzguOTksMCwxNi41NzEsMy4wODUsMjIuNzQzLDkuMjU2QzY2LjM5MywxMS45MjgsNjkuNSwxOS41MDksNjkuNSwyOC41YzAsOC45OTItMy4wNDgsMTYuNDc2LTkuMTQ1LDIyLjQ1OA0KCQkJQzUzLjg4LDU3LjMyLDQ2LjI0MSw2MC41LDM3LjQ0Miw2MC41Yy04LjY4NiwwLTE2LjE5LTMuMTYyLTIyLjUxMy05LjQ4NUM4LjY0NCw0NC43MjgsNS41LDM3LjIyNSw1LjUsMjguNQ0KCQkJYzAtOC43NjIsMy4xNDQtMTYuMzQzLDkuNDI5LTIyLjc0M0MyMS4xLTAuNDE0LDI4LjYwNC0zLjUsMzcuNDQyLTMuNXogTTEyLjcsMTkuODcyYy0wLjk1MiwyLjYyOC0xLjQyOSw1LjUwNS0xLjQyOSw4LjYyOQ0KCQkJYzAsNy4wODYsMi41OSwxMy4yMiw3Ljc3LDE4LjRjNS4yMTksNS4xNDQsMTEuMzkxLDcuNzE1LDE4LjUxNCw3LjcxNWM3LjIwMSwwLDEzLjQwOS0yLjYwOCwxOC42My03LjgyOQ0KCQkJYzEuODY3LTEuNzksMy4zMzItMy42NTcsNC4zOTgtNS42MDJsLTEyLjA1Ni01LjM3MWMtMC40MjEsMi4wMi0xLjQzOSwzLjY2Ny0zLjA1Nyw0Ljk0MmMtMS42MjIsMS4yNzYtMy41MzUsMi4wMTEtNS43NDQsMi4yDQoJCQl2NC45MTVoLTMuNzE0di00LjkxNWMtMy41NDMtMC4wMzYtNi43ODItMS4zMTItOS43MTQtMy44MjdsNC40LTQuNDU3YzIuMDk0LDEuOTQyLDQuNDc2LDIuOTEzLDcuMTQzLDIuOTEzDQoJCQljMS4xMDQsMCwyLjA0OC0wLjI0NiwyLjgzLTAuNzQzYzAuNzgtMC40OTQsMS4xNzItMS4zMTIsMS4xNzItMi40NTdjMC0wLjgwMS0wLjI4Ny0xLjQ0OC0wLjg1OC0xLjk0M2wtMy4wODUtMS4zMTVsLTMuNzcxLTEuNzE1DQoJCQlsLTUuMDg2LTIuMjI5TDEyLjcsMTkuODcyeiBNMzcuNTU3LDIuMjE0Yy03LjI3NiwwLTEzLjQyOCwyLjU3MS0xOC40NTcsNy43MTRjLTEuMjU4LDEuMjU4LTIuNDM5LDIuNjg2LTMuNTQzLDQuMjg3TDI3Ljc4NiwxOS43DQoJCQljMC41MzMtMS42NzYsMS41NDItMy4wMTksMy4wMjktNC4wMjhjMS40ODQtMS4wMDksMy4yMTgtMS41NzEsNS4yLTEuNjg2VjkuMDcxaDMuNzE1djQuOTE1YzIuOTM0LDAuMTUzLDUuNiwxLjE0Myw4LDIuOTcxDQoJCQlsLTQuMTcyLDQuMjg2Yy0xLjc5My0xLjI1Ny0zLjYxOS0xLjg4NS01LjQ4Ni0xLjg4NWMtMC45OTEsMC0xLjg3NiwwLjE5MS0yLjY1NiwwLjU3MWMtMC43ODEsMC4zODEtMS4xNzIsMS4wMjktMS4xNzIsMS45NDMNCgkJCWMwLDAuMjY3LDAuMDk1LDAuNTMzLDAuMjg1LDAuOGw0LjA1NywxLjgzbDIuOCwxLjI1N2w1LjE0NCwyLjI4NWwxNi4zOTcsNy4zMTRjMC41MzUtMi4yNDgsMC44MDEtNC41MzMsMC44MDEtNi44NTcNCgkJCWMwLTcuMzUzLTIuNTUyLTEzLjU0My03LjY1Ni0xOC41NzNDNTEuMDA1LDQuNzg1LDQ0LjgzMSwyLjIxNCwzNy41NTcsMi4yMTR6Ii8+DQoJPC9nPg0KPC9nPg0KPC9zdmc+DQo=" class="img-fluid" width="20"></span></p>
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>En su concepción más simple, un diseño de cohorte implica la selección de un grupo de personas expuestas al factor de estudio y la selección de un grupo similar, pero sin la exposición, considerado como no expuesto. El seguimiento de ambos grupos se pautará para un lapso determinado, y se evaluará en dicho período si se produjo o no el evento de interés. Finalmente se realiza una comparación entre ambos grupos.</p>
+<p>La esencia de los estudios de cohortes es el seguimiento. Por tratarse de estudios longitudinales, los mismos podrán ser prospectivos, retrospectivos o mixtos. La cohorte podrá ser una cohorte fija o dinámica. En las primeras, se fija un período de reclutamiento de participantes y una vez finalizado dicho período, no se incluyen más sujetos para el seguimiento. En una cohorte abierta, o dinámica, se permite el ingreso y egreso de participantes en toda la extensión del estudio.</p>
+<p>Como recordarán, los criterios de selección están en la exposición, por lo cual la misma debe estar claramente definida. Como dijimos anteriormente, la idea clásica de un estudio de cohorte es comparar dos grupos, expuestos y no expuestos. Pero los grupos de referencia pueden ser otros:</p>
+<ul>
+<li><p><strong>Estudios de comparación con la población general</strong>: El estudio identifica y sigue a una determinada cohorte de exposición. La frecuencia de aparición de la enfermedad en dicha cohorte es comparada con la observada en la población general. Para ello es necesario disponer de registros poblacionales que suministren dicha información.</p></li>
+<li><p><strong>Comparaciones internas</strong>: La cohorte a estudio supone una mezcla de personas expuestas y no expuestas. Las comparaciones se realizan dentro de la propia cohorte.</p></li>
+</ul>
+<p>Por otra parte, el evento a observar puede tomar distintas formas: puede tratarse de un evento fijo, eventos múltiples, cambio en una medida de función (la cual se evalúa mediante tasa de cambio) o marcadores intermedios del evento, esto también impactará en la forma de análisis.</p>
+<p>A la hora de diseñar un estudio de cohortes es importante, entonces, definir de forma clara los siguientes aspectos:</p>
+<ul>
+<li>Criterios de inclusión</li>
+<li>Fecha de entrada y de salida de los participantes en el estudio</li>
+<li>Seguimiento</li>
+<li>Eventos finales de interés</li>
+<li>La exposición</li>
+<li>Factores de confusión</li>
+<li>Consideraciones éticas</li>
+<li>Estrategias de análisis</li>
+<li>Potencia estadística</li>
+</ul>
+<p>En la siguiente tabla se remarcan ventajas y desventajas de estos estudios:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-b1c9fa56{table-layout:auto;}.cl-b1c2f904{font-family:'Helvetica';font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-b1c2f918{font-family:'Helvetica';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b1c5a2a8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b1c5b2a2{background-color:rgba(57, 131, 132, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b1c5b2ac{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b1c5b2ad{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-b1c9fa56"><caption><p>Tabla 1. ventajas y desventajas de los estudios de cohorte.</p></caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-b1c5b2a2"><p class="cl-b1c5a2a8"><span class="cl-b1c2f904">Ventajas</span></p></th><th class="cl-b1c5b2a2"><p class="cl-b1c5a2a8"><span class="cl-b1c2f904">Desventajas</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Más cercanos a un experimento</span></p></td><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Cuando se trata de eventos poco frecuentes la complejidad y el costo pueden aumentar considerablemente</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">La relación temporal causa efecto es verificable</span></p></td><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Requiere estudiar y seguir un número grande de participantes</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Se pueden estimar medidas de incidencia</span></p></td><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Son estudios difíciles de realizar</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Eficientes para evaluar exposiciones poco frecuentes</span></p></td><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Se pueden estudiar varios eventos</span></p></td><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Se pueden fijar criterios de calidad en la medición del evento</span></p></td><td class="cl-b1c5b2ac"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1c5b2ad"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918">Bajo riesgo de sesgo de selección (en especial en estudios prospectivos)</span></p></td><td class="cl-b1c5b2ad"><p class="cl-b1c5a2a8"><span class="cl-b1c2f918"></span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<section id="cómo-analizar-un-estudio-de-cohortes" class="level3">
+<h3 class="anchored" data-anchor-id="cómo-analizar-un-estudio-de-cohortes">¿Cómo analizar un estudio de cohortes?</h3>
+<p>Seguramente ustedes recordarán de otros cursos de epidemiología, que en su forma más simple, podemos calcular Riesgos Relativos (RR) en un estudio de cohortes. Vamos a profundizar otros aspectos de este diseño.</p>
+<p>El análisis de los estudios de cohortes ha de tener en cuenta la variable tiempo. La existencia de pérdidas de participantes por diferentes motivos y la diferente duración del seguimiento de los distintos miembros de la cohorte, implican la necesidad de técnicas analíticas especiales que, a la vez, permitan considerar toda la información aportada por los integrantes de la cohorte. Existen dos estrategias diferentes de análisis en los estudios de cohortes: el análisis supervivencia y el análisis personas-tiempo, pero ambas requieren disponer de información precisa sobre el inicio y el final del seguimiento de cada participante y conocer el status del participante en el momento de finalización o salida del estudio (desarrollo o no el evento de interés). Asimismo será necesario definir una escala temporal adecuada.</p>
+<p>La estrategia de <strong>análisis de supervivencia</strong>, la abordaremos en la próxima unidad, de la mano de los estudios experimentales, pero tengan presente que la podemos emplear en cualquier estudio de cohorte, que contemos con la información puntualizada anteriormente.</p>
+<p>Las técnicas de <strong>personas-año</strong> utilizan como unidad de análisis estratos o grupos homogéneos en los que es razonable asumir una misma tasa de incidencia. Las técnicas clásicas de análisis “personas tiempo” incluyen la comparación de tasas, la estandarización directa y las razones estandarizadas de incidencia o mortalidad (denominadas en la literatura RIE o SIR, para la incidencia y RME o SMR para la mortalidad). RIE y RME comparan el número de casos observados con el número esperado teniendo en cuenta la frecuencia de enfermedad en la población utilizada como referencia. La técnica multivariada por excelencia para la modelización de las tasas es la regresión de Poisson, que utiliza la distribución de Poisson para modelizar la variabilidad aleatoria del numerador de las tasas y es lo que aprenderemos en este capítulo.</p>
+<p>A modo de resumen, compartimos esta tabla, extraída del libro de <span class="citation" data-cites="hernández-ávila2011">Hernández-Ávila (<a href="#ref-hernández-ávila2011" role="doc-biblioref">2011</a>)</span>:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-b1f91836{table-layout:auto;}.cl-b1f18364{font-family:'Helvetica';font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-b1f1836e{font-family:'Helvetica';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b1f52da2{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b1f53bf8{background-color:rgba(57, 131, 132, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b1f53bf9{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b1f53bfa{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-b1f91836"><caption><p>Tabla 1. ventajas y desventajas de los estudios de cohorte.</p></caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-b1f53bf8"><p class="cl-b1f52da2"><span class="cl-b1f18364">Aspecto</span></p></th><th class="cl-b1f53bf8"><p class="cl-b1f52da2"><span class="cl-b1f18364">Análisis de supervivencia</span></p></th><th class="cl-b1f53bf8"><p class="cl-b1f52da2"><span class="cl-b1f18364">Análisis basado en tiempo-persona</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Tamaño de la muestra</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Relativamente pequeño</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Relativamente grande</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Tipo de eventos</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Frecuentes</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Raros</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Escala temporal</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Única</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Única o múltiple</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Tipos de medida</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Probabilidad (condicional y acumulada)</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Tasa (densidad)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Análisis bivariado</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Comparación de curvas de supervivencia</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Comparación de tasas</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e"></span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Log-rank test</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Razón de tasas</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e"></span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Razón de riesgos</span></p></td><td class="cl-b1f53bf9"><p class="cl-b1f52da2"><span class="cl-b1f1836e">REM</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b1f53bfa"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Análisis multivariado</span></p></td><td class="cl-b1f53bfa"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Regresión de Cox</span></p></td><td class="cl-b1f53bfa"><p class="cl-b1f52da2"><span class="cl-b1f1836e">Regresión de Poisson</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+</section>
+<section id="regresión-de-poisson" class="level2">
+<h2 class="anchored" data-anchor-id="regresión-de-poisson">Regresión de Poisson</h2>
+<p>La distribución de Poisson es una distribución que modeliza bien situaciones de conteo. Por ejemplo: números de accidentes, número de personas que tienen un infarto, número de personas que asisten a una consulta, número de hijos, etc. La característica es que son números finitos, no muy grandes, siempre positivos. Los mismos transcurren dentro de un intervalo, habitualmente de tiempo, pero también se puede considerar intervalos de población. Es decir que busca modelar el número de veces en que ocurre un evento en un intervalo determinado.</p>
+<p>La distribución de Poisson toma, pues, valores enteros no negativos: 0, 1, 2, 3, 4… La distribución de Poisson tiene un único parámetro, lambda (<span class="math inline">\(\lambda\)</span>), que coincide con la Esperanza y la Varianza de la distribución. O sea, es una distribución que cuanto más grande es el valor esperado más dispersión tienen los valores.</p>
+<p>Vamos a entender cómo se aplica la regresión de Poisson en el marco de un estudio de cohortes. Supongamos entonces que tenemos un estudio de cohortes clásico, con dos grupos de comparación: un grupo expuesto y otro no expuesto. Para cada grupo se dispone el número de eventos (<span class="math inline">\(d\)</span>) y la cantidad de personas-tiempo seguidas (<span class="math inline">\(n\)</span>). Como recordarán, la tasa de incidencia (<span class="math inline">\(\lambda\)</span>), la podemos calcular como el cociente:</p>
+<p><span class="math display">\[\lambda = \frac{d}{n}\]</span> Se asume que el número de eventos observados en cada grupo sigue una distribución de Poisson, con un valor esperado igual al producto de la tasa de incidencia por las personas tiempo. <span class="math inline">\(E(d)= \lambda*n\)</span>. Así, la probabilidad de observar <span class="math inline">\(d\)</span> eventos, sería:</p>
+<p><span class="math display">\[
+P(x=d)= \frac{(\lambda n)^d e^{-\lambda n}}{d}
+\]</span></p>
+<p>Omitiendo el desarrollo matemático, la modelización de la regresión de Poisson consiste en establecer un modelo de efectos lineales de distintas covariables sobre el logaritmo de la tasa del subgrupo correspondiente.En general, el modelo de Poisson se expresa como:</p>
+<p><span class="math display">\[
+ln\lambda = \alpha+\beta_1x_1+\beta_2x_2+\dots+\beta_nx_n \qquad (*)
+\]</span></p>
+<p>En forma equivalente, podemos decir:</p>
+<p><span class="math display">\[
+\lambda=e^{\beta_0+\beta_1x_1+\dots+\beta_nx_n}
+\]</span> Si operamos en forma análoga a lo que hicimos en la regresión logística, concluiremos que los parámetros del modelo son interpretables a través de potencias de base <span class="math inline">\(e\)</span> como riesgos relativos (cocientes de tasas). La expresión formal es:</p>
+<p><span class="math display">\[
+RR_{x*/x}=e^{\sum^k_i=1\beta_i(x^*_i-x_i)}=\prod^k_{i=1}e^{\beta_i(x^*_i-x_i)}
+\]</span> El símbolo <span class="math inline">\(\prod\)</span> significa productoria. Se simboliza con la letra Pi en mayúscula e implica una secuencia de productos.</p>
+<p>Nuevamente, si volvemos a la ecuación:</p>
+<p><span class="math display">\[
+\lambda = \frac{d}{n}
+\]</span></p>
+<p>Entonces, si aplicamos logaritmo natural:</p>
+<p><span class="math display">\[
+ln\lambda=ln \frac{d}{n}=ln(d)-ln(n)
+\]</span> Si igualamos con (*)</p>
+<p><span class="math display">\[
+ln\lambda=\alpha+\beta_1x_1+\beta_2x_2+\dots+\beta_nx_n
+\]</span> <span class="math display">\[
+ln(d)=ln(n)+\alpha+\beta_1x_1+\beta_2x_2+\dots+\beta_nx_n
+\]</span> Al término <span class="math inline">\(ln(n)\)</span> se lo llama <strong><em>offset</em></strong>. En general, es un valor que debemos darle al software para que ajuste un modelo de Poisson, no se estima a partir de los datos.</p>
+<p>Ahora que tenemos la ecuación del modelo, será necesario estimar los coeficientes y luego evaluar la calidad del ajuste.</p>
+<p>Los coeficientes se calculan utilizando métodos como la Estimación de máxima verosimilitud (MLE). A partir de los coeficientes que nos produce la estimación de máximo-verosimilitud podemos realizar las siguientes inferencias: el test de Wald, para testear la <span class="math inline">\(H_0 : β_i=0\)</span>, sus IC, y de ahí calcular los RR, con sus respectivos IC.</p>
+<p>La bondad de ajuste del modelo se evaluará a través de la función Deviance siguiendo el mismo esquema jerárquico de evaluación que en el caso de la regresión logística</p>
+<section id="supuestos-del-modelo-de-poisson" class="level3">
+<h3 class="anchored" data-anchor-id="supuestos-del-modelo-de-poisson">Supuestos del modelo de Poisson</h3>
+<p>Como dijimos, la idea de Poisson es contar eventos en intervalos de tiempo o de población (también podría ser espacial). La variable respuesta toma valores positivos. Depende de un solo parámetro: <span class="math inline">\(\lambda\)</span>. La distribución de Poisson tiene iguales la media y la varianza. Este es un supuesto muy importante de este modelo, y se conoce como supuesto de <strong>equidispersión</strong>. Si la variación de los casos observados en una población excede a la variación esperada por Poisson, se está ante la presencia de un problema conocido como <strong>sobredispersión</strong> y, en tal caso, existen distribuciones más adecuadas como la binomial negativa, la Conway-Maxwell Poisson o las distribuciones <em>quasi</em> (que no abordaremos aquí).</p>
+<p>Los principales supuestos de Poisson son:</p>
+<ul>
+<li>Las observaciones deben ser independientes.</li>
+<li>El parámetro <span class="math inline">\(\lambda\)</span> debe ser constante a lo largo del tiempo: esto se garantiza si se cumple con el principio de equidispersión.</li>
+<li>La cantidad de eventos en un intervalo es proporcional al tamaño del intervalo</li>
+<li>Dos o más eventos no pueden ocurrir en un mismo momento puntual</li>
+</ul>
+<p>En la práctica, no siempre se cumple el principio de equidispersión, y lo más frecuente es la sobredispersión, es decir que la varianza sea superior a la media. Esto conduce a sesgos en la estimación de los desvíos estándares de los coeficientes. Por eso es importante diagnosticar la sobredispersión. <em>Lindsay</em> propone aplicar el coeficiente de variación (CV) como indicador para evaluar sobredispersión. El CV se define como el cociente entre la varianza estimada y la media estimada. Otros autores sugieren otros indicadores, veremos en el ejemplo como podemos evaluar sobredispersión en R.</p>
+<p>Otras situaciones en las cuales el modelo de Poisson no es adecuado es cuando existe un número excesivo de ceros, esto es, una frecuencia observada de ceros que no es consistente con el modelo Poisson. Esto se debe a que el <span class="math inline">\(ln(0)\)</span> no está definido. Como se señaló previamente, si bien es cierto que el modelo binomial negativo se ha desarrollado para modelar la heterogeneidad no observada, también es cierto que esa misma heterogeneidad es originada por un número excesivo de ceros. De manera particular, es posible que el mecanismo aleatorio que dio origen a los datos de conteo muestre una mayor concentración para algún valor específico, que puede ser el cero (como ocurre con algunas variables vinculadas a salud) o cualquier otro valor positivo. Esto implica que dicho valor tiene una mayor probabilidad de ocurrencia que la especificada por la distribución Poisson o cualquier otra distribución. En estos casos, se suele utilizar un modelo para datos de conteo cero-inflado (<em>zero-inflated</em> Poisson o <em>zero-inflated</em> binomial negativa), que le confiere mayor peso a la probabilidad de que la variable de conteo sea igual a cero.</p>
+</section>
+</section>
+<section id="aplicación-en-r" class="level2">
+<h2 class="anchored" data-anchor-id="aplicación-en-r">Aplicación en R</h2>
+<p>La regresión de Poisson se encuentra implementada en lenguaje R como otro de los modelos de la familia de modelos lineales generalizados (GLM de las siglas en inglés de <em>Generalized Linear Models</em>) similar a la regresión logística vista en la unidad anterior.</p>
+<p>Un criterio importante en la elección de la función de enlace para varias familias de distribuciones es asegurar que los valores ajustados del modelado permanezcan dentro de límites razonables. La especificación de un enlace logarítmico (predeterminado para Poisson) garantiza que los recuentos ajustados sean todos mayores o iguales a cero (propio de los conteos).</p>
+<p>Por lo tanto, en este caso el ajuste tiene errores de Poisson y la función de enlace para linealizar la relación entre la variable respuesta y la(s) variable(s) independiente(s) es el <code>log</code>.</p>
+<section id="construcción-de-un-modelo-de-regresión-de-poisson-en-r" class="level3">
+<h3 class="anchored" data-anchor-id="construcción-de-un-modelo-de-regresión-de-poisson-en-r">Construcción de un modelo de regresión de Poisson en R</h3>
+<p>Como es de imaginar utilizaremos la misma función general <code>glm()</code>, cambiando los argumentos en familia y enlace.</p>
+<p>La sintaxis básica de esta función, contenida en el paquete <code>stats</code> de R <code>base</code>, es:</p>
+<p><span class="math display">\[
+glm(formula, family = poisson(link = "log"), data)
+\]</span></p>
+<p>o lo mismo si omitimos el enlace, dado que el valor <code>log</code> es el predeterminado para esta familia.</p>
+<p><span class="math display">\[
+glm(formula, family = poisson, data)
+\]</span></p>
+<p>donde:</p>
+<p><code>formula</code>: al igual que en la regresión logística o lineal, es la fórmula que describe el modelo a ajustar. Sigue la estructura:</p>
+<p><span class="math display">\[
+variable\_dependiente \sim variable\_indepen_1 + variable\_indepen_2 +\dots+ variable\_indepen_n
+\]</span></p>
+<p><code>family</code>: hace referencia a la familia de distribuciones y, en <code>link</code>, a la función de enlace elegida para el ajuste de este modelo.</p>
+<p><code>data</code>: indica el nombre de la base de datos (dataframe) que contiene las variables del modelo.</p>
+<p>La salida de resultados de esta función puede obtenerse a través de la función <code>summary()</code> al igual que en las otras regresiones vistas. La sintaxis es <code>summary(nombre_modelo)</code>, siendo <code>nombre_modelo</code> el nombre del modelo ajustado.</p>
+<p>La resultados del objeto de regresión de Poisson mostrados están compuesto por:</p>
+<p><strong>Call</strong>: fórmula del modelo</p>
+<p><strong>Deviance Residuals</strong>: distribución de los residuos (mediana, mínimo, máximo y percentilos 25-75) obtenidos en la última iteración</p>
+<p><strong>Coefficients</strong>: coeficientes del intercepto y los asociados a cada variable independiente. Además se agregan los errores estándar y el valor z (<em>estadístico de Wald</em> que surge del cociente entre el coeficiente y su error estándar) con el p-valor correspondiente.</p>
+<p><strong>Dispersion parameter for poisson family taken to be 1</strong>: Significa que el modelo asume el supuesto de igualdad entre la media y la varianza (dispersión = 1)</p>
+<p><strong>Null deviance</strong>: devianza para el modelo nulo que solo contiene la constante.</p>
+<p><strong>Residual deviance</strong>: devianza del modelo ajustado.</p>
+<p><strong>AIC</strong>: criterio de información de Akaike.</p>
+<p><strong>Number of Fisher Scoring iterations</strong>: cantidad de iteraciones.</p>
+<p>Este resumen surge del <em>objeto de regresión</em> construido cuando asignamos la salida de la función <code>glm()</code> que pertenece a la clase “glm” y “lm”.</p>
+<p>El objeto de regresión está compuesto por 30 componentes que pueden accederse a través del nombre del modelo seguido del signo <code>$</code> y el nombre del componente.</p>
+<p>Entre los componentes más relevantes podemos señalar (usamos <em>nombre_modelo</em> como generalización del nombre del objeto creado):</p>
+<p><code>nombre_modelo$coeficients</code>: vector de coeficientes del modelo. También se puede obtener a través de la función <code>coef(nombre_modelo)</code></p>
+<p><code>nombre_modelo$residuals</code>: vector que contiene los residuos obtenidos en la última iteración.</p>
+<p><code>nombre_modelo$fitted.values</code>: vector con los valores medios ajustados, obtenidos según la transformación de los predictores lineales por la inversa de la función de enlace.</p>
+<p><code>nombre_modelo$family</code>: devuelve la familia utilizada en la construcción del modelo.</p>
+<p><code>nombre_modelo$deviance</code>: devianza del modelo ajustado o -2 veces el máximo de la log verosimilitud.</p>
+<p><code>nombre_modelo$aic</code>: criterio de información de Akaike (AIC)</p>
+<p><code>nombre_modelo$null.deviance</code>: devianza para el modelo nulo que solo contiene la constante.</p>
+</section>
+<section id="ejemplo-práctico" class="level3">
+<h3 class="anchored" data-anchor-id="ejemplo-práctico">Ejemplo práctico</h3>
+<p>A fin de mostrar las funciones y la metodología de análisis con R vamos a utilizar datos que se tomaron de un estudio de cohorte ocupacional realizado para probar la asociación entre las muertes respiratorias y la exposición al arsénico en la industria, después de ajustar por varios otros factores de riesgo.</p>
+<p>La variable principal es <code>muertes</code>. Este es el número de muertes por persona-años (<code>persona_anio</code>) de sujetos en cada categoría, por lo que finalmente nos interesa la tasa de incidencia (<code>mortalidad</code>) como variable resultado.</p>
+<p>Las otras variables son covariables independientes que incluyen el grupo de edad <code>grupo_edad</code>, el período de empleo <code>periodo</code>, el año de inicio del empleo <code>comienzo</code> y el nivel de exposición al arsénico durante el período de estudio <code>arsenico</code>.</p>
+<p>Activemos paquetes y leamos los datos:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Carga paquetes</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># chequeo de supuestos</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># tablas regresión</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># formato de tablas</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># manejo de datos</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="do">### Carga datos</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"cohorte_ocupacional.txt"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">### Explora datos</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 114
+Columns: 6
+$ muertes      &lt;dbl&gt; 2, 0, 0, 0, 2, 1, 0, 0, 0, 1, 1, 0, 2, 1, 0, 0, 7, 0, 0, …
+$ persona_anio &lt;dbl&gt; 30753, 4858, 4782, 3373, 39816, 6561, 1903, 125, 9368, 19…
+$ grupo_edad   &lt;chr&gt; "40-49", "40-49", "40-49", "40-49", "40-49", "40-49", "40…
+$ periodo      &lt;chr&gt; "1938-1949", "1938-1949", "1938-1949", "1938-1949", "1938…
+$ comienzo     &lt;chr&gt; "1925 y post", "1925 y post", "1925 y post", "1925 y post…
+$ arsenico     &lt;chr&gt; "&lt;1 año", "1-4 años", "5-14 años", "15+ años", "&lt;1 año", …</code></pre>
+</div>
+</div>
+<p>Las variables <code>grupo_edad</code>, <code>periodo</code>, <code>comienzo</code> y <code>arsenico</code> son categóricas y debemos convertirlas a factor. Podemos hacer esto variable por variable o usando el comando <code>across()</code> dentro de <code>mutate()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Transformo a factor</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(grupo_edad<span class="sc">:</span>arsenico, <span class="at">.fns =</span> <span class="sc">~</span> <span class="fu">as.factor</span>(.x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Revisemos los niveles de cada factor:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># grupo etario</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>grupo_edad)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "40-49" "50-59" "60-69" "70-79"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># periodo</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>periodo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1938-1949" "1950-1959" "1960-1969" "1970-1977"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># comienzo</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>comienzo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "&lt; 1925"      "1925 y post"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># arsenico</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>arsenico)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "&lt;1 año"    "1-4 años"  "15+ años"  "5-14 años"</code></pre>
+</div>
+</div>
+<p>Exploremos los datos de la base organizando la información de persona-años por edad y período. Transformaremos la salida en una tabla usando las funciones <code>flextable()</code> y <code>autofit()</code> del paquete <code>flextable</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Creo tabla</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>datos  <span class="sc">|&gt;</span>  </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad, <span class="at">wt =</span> persona_anio) <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> grupo_edad, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># formato de tabla</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flextable</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autofit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-b29679aa{}.cl-b29032b6{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b2927e54{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b2927e5e{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b2928e08{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2928e09{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2928e0a{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2928e12{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2928e13{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2928e14{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2928e1c{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2928e1d{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2928e1e{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-b29679aa"><thead><tr style="overflow-wrap:break-word;"><th class="cl-b2928e08"><p class="cl-b2927e54"><span class="cl-b29032b6">periodo</span></p></th><th class="cl-b2928e09"><p class="cl-b2927e5e"><span class="cl-b29032b6">40-49</span></p></th><th class="cl-b2928e09"><p class="cl-b2927e5e"><span class="cl-b29032b6">50-59</span></p></th><th class="cl-b2928e0a"><p class="cl-b2927e5e"><span class="cl-b29032b6">60-69</span></p></th><th class="cl-b2928e0a"><p class="cl-b2927e5e"><span class="cl-b29032b6">70-79</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-b2928e12"><p class="cl-b2927e54"><span class="cl-b29032b6">1938-1949</span></p></td><td class="cl-b2928e13"><p class="cl-b2927e5e"><span class="cl-b29032b6">92,171</span></p></td><td class="cl-b2928e13"><p class="cl-b2927e5e"><span class="cl-b29032b6">64,211</span></p></td><td class="cl-b2928e14"><p class="cl-b2927e5e"><span class="cl-b29032b6">40,056</span></p></td><td class="cl-b2928e14"><p class="cl-b2927e5e"><span class="cl-b29032b6">15,072</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2928e12"><p class="cl-b2927e54"><span class="cl-b29032b6">1950-1959</span></p></td><td class="cl-b2928e13"><p class="cl-b2927e5e"><span class="cl-b29032b6">149,493</span></p></td><td class="cl-b2928e13"><p class="cl-b2927e5e"><span class="cl-b29032b6">102,234</span></p></td><td class="cl-b2928e14"><p class="cl-b2927e5e"><span class="cl-b29032b6">48,960</span></p></td><td class="cl-b2928e14"><p class="cl-b2927e5e"><span class="cl-b29032b6">18,511</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2928e12"><p class="cl-b2927e54"><span class="cl-b29032b6">1960-1969</span></p></td><td class="cl-b2928e13"><p class="cl-b2927e5e"><span class="cl-b29032b6">161,234</span></p></td><td class="cl-b2928e13"><p class="cl-b2927e5e"><span class="cl-b29032b6">136,627</span></p></td><td class="cl-b2928e14"><p class="cl-b2927e5e"><span class="cl-b29032b6">75,552</span></p></td><td class="cl-b2928e14"><p class="cl-b2927e5e"><span class="cl-b29032b6">27,240</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2928e1c"><p class="cl-b2927e54"><span class="cl-b29032b6">1970-1977</span></p></td><td class="cl-b2928e1d"><p class="cl-b2927e5e"><span class="cl-b29032b6">90,730</span></p></td><td class="cl-b2928e1d"><p class="cl-b2927e5e"><span class="cl-b29032b6">115,040</span></p></td><td class="cl-b2928e1e"><p class="cl-b2927e5e"><span class="cl-b29032b6">79,366</span></p></td><td class="cl-b2928e1e"><p class="cl-b2927e5e"><span class="cl-b29032b6">33,410</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>Ahora hacemos lo mismo para el número de muertes y calculamos la incidencia por 10000 personas-año para cada celda:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Creo objeto para personas-años</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>personas_años <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">wt =</span> persona_anio,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"p.a"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="do">### Creo tabla</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad, <span class="at">wt =</span> muertes) <span class="sc">|&gt;</span> </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(personas_años) <span class="sc">|&gt;</span> </span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">incidencia =</span> <span class="fu">round</span>(n<span class="sc">/</span>p.a<span class="sc">*</span><span class="dv">10000</span>,<span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n, <span class="sc">-</span>p.a) <span class="sc">|&gt;</span> </span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># formato de tabla</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flextable</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autofit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-b2c2794c{}.cl-b2bb9ec4{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b2bdea62{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b2bdea6c{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b2bdfa16{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa17{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa20{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa21{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa22{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa2a{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa2b{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa2c{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa2d{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa2e{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa34{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b2bdfa35{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-b2c2794c"><thead><tr style="overflow-wrap:break-word;"><th class="cl-b2bdfa16"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">periodo</span></p></th><th class="cl-b2bdfa17"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">grupo_edad</span></p></th><th class="cl-b2bdfa20"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">incidencia</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa21"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1938-1949</span></p></td><td class="cl-b2bdfa22"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">40-49</span></p></td><td class="cl-b2bdfa2a"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">0.54</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa21"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1938-1949</span></p></td><td class="cl-b2bdfa22"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">50-59</span></p></td><td class="cl-b2bdfa2a"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">1.71</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa21"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1938-1949</span></p></td><td class="cl-b2bdfa22"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">60-69</span></p></td><td class="cl-b2bdfa2a"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">3.50</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa21"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1938-1949</span></p></td><td class="cl-b2bdfa22"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">70-79</span></p></td><td class="cl-b2bdfa2a"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">2.65</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa21"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1950-1959</span></p></td><td class="cl-b2bdfa22"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">40-49</span></p></td><td class="cl-b2bdfa2a"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">0.33</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa21"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1950-1959</span></p></td><td class="cl-b2bdfa22"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">50-59</span></p></td><td class="cl-b2bdfa2a"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">2.35</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2b"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1950-1959</span></p></td><td class="cl-b2bdfa2c"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">60-69</span></p></td><td class="cl-b2bdfa2d"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">4.90</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2b"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1950-1959</span></p></td><td class="cl-b2bdfa2c"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">70-79</span></p></td><td class="cl-b2bdfa2d"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">6.48</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa21"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1960-1969</span></p></td><td class="cl-b2bdfa22"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">40-49</span></p></td><td class="cl-b2bdfa2a"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">0.43</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2b"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1960-1969</span></p></td><td class="cl-b2bdfa2c"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">50-59</span></p></td><td class="cl-b2bdfa2d"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">2.05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2b"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1960-1969</span></p></td><td class="cl-b2bdfa2c"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">60-69</span></p></td><td class="cl-b2bdfa2d"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">5.82</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2b"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1960-1969</span></p></td><td class="cl-b2bdfa2c"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">70-79</span></p></td><td class="cl-b2bdfa2d"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">5.51</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2b"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1970-1977</span></p></td><td class="cl-b2bdfa2c"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">40-49</span></p></td><td class="cl-b2bdfa2d"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">0.44</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2b"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1970-1977</span></p></td><td class="cl-b2bdfa2c"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">50-59</span></p></td><td class="cl-b2bdfa2d"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">1.48</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2b"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1970-1977</span></p></td><td class="cl-b2bdfa2c"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">60-69</span></p></td><td class="cl-b2bdfa2d"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">4.41</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b2bdfa2e"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">1970-1977</span></p></td><td class="cl-b2bdfa34"><p class="cl-b2bdea62"><span class="cl-b2bb9ec4">70-79</span></p></td><td class="cl-b2bdfa35"><p class="cl-b2bdea6c"><span class="cl-b2bb9ec4">8.08</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>Podemos verlo mejor en un gráfico, por razones de extensión omitiremos el código, pero si tienen interés pueden solicitarlo al equipo docente:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Este gráfico muestra, como es esperable, que el grupo de mayor edad generalmente se asocia con un mayor riesgo de morir, pero necesitamos ajustar los efectos de las demás covariables para examinar mejor esta relación.</p>
+<p>Dado que en este ejemplo nos interesa modelar la tasa de incidencia vamos a necesitar incorporar dentro del modelo un termino de desplazamiento (en inglés <em>“offset”</em>).</p>
+<p>Creamos el modelo saturado para trazar iteraciones <em>backward</em>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> grupo_edad <span class="sc">+</span> arsenico, <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>El término <code>offset = log(persona_anio)</code> permite que la variable <code>persona_anio</code> sea el denominador de los recuentos de <code>muertes</code>. Se necesita una transformación logarítmica ya que, para un modelo lineal generalizado de Poisson, la función enlace es el log.</p>
+<p>Veamos la salida resumen del modelo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = muertes ~ periodo + grupo_edad + arsenico, family = poisson, 
+    data = datos, offset = log(persona_anio))
+
+Coefficients:
+                  Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)       -10.6363     0.2756 -38.594  &lt; 2e-16 ***
+periodo1950-1959    0.4087     0.2126   1.923   0.0545 .  
+periodo1960-1969    0.4413     0.2022   2.183   0.0290 *  
+periodo1970-1977    0.3181     0.2063   1.542   0.1231    
+grupo_edad50-59     1.4565     0.2458   5.925 3.12e-09 ***
+grupo_edad60-69     2.3527     0.2392   9.837  &lt; 2e-16 ***
+grupo_edad70-79     2.6024     0.2578  10.096  &lt; 2e-16 ***
+arsenico1-4 años    0.7949     0.1582   5.024 5.06e-07 ***
+arsenico15+ años    1.0468     0.1775   5.896 3.72e-09 ***
+arsenico5-14 años   0.6070     0.2059   2.948   0.0032 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 376.02  on 113  degrees of freedom
+Residual deviance: 116.69  on 104  degrees of freedom
+AIC: 355.47
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<p>Este primer modelo con todas las covariables muestra como significativos a casi todos los niveles de las variables respecto a las referencias.</p>
+<p>Un problema del ajuste de la regresión de Poisson, es el no cumplimiento del supuesto “media es igual a la varianza”. Generalmente se presente en forma de dispersión excesiva y a veces insuficiente, donde la varianza es mayor o menor que el valor medio, respectivamente.</p>
+<p>Podemos probar la bondad de ajuste del modelo en función de la significancia de la sobredispersión de los errores de un modelo de Poisson, aplicando la función <code>check_overdispersion()</code> del paquete <code>performance</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overdispersion test
+
+       dispersion ratio =   1.116
+  Pearson's Chi-Squared = 116.079
+                p-value =   0.197</code></pre>
+</div>
+</div>
+<p>El componente <code>Pearson's Chi-Squared</code> se calcula a partir de la deviance del modelo. Cómo toda prueba de bondad de ajuste buscamos que <em>p</em> sea mayor a 0,05.</p>
+<p>Por ahora el valor de <em>p</em> indica un buen ajuste.</p>
+<p>Ahora probamos quitar de a una variable en la primer tanda iterativa.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) arsénico</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> grupo_edad, </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) grupo etario</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> arsenico, </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>         </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) periodo</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad <span class="sc">+</span> arsenico, </span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Para comparar performance podemos usar <code>compare_perfomance()</code> del paquete <code>performance</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod1, mod2, mod3, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name | Model | AIC (weights) | BIC (weights) | Nagelkerke's R2 |  RMSE
+----------------------------------------------------------------------
+mod1 |   glm | 396.6 (&lt;.001) | 415.8 (&lt;.001) |           0.877 | 2.208
+mod2 |   glm | 534.7 (&lt;.001) | 553.9 (&lt;.001) |           0.496 | 3.470
+mod3 |   glm | 355.0 (&gt;.999) | 374.2 (&gt;.999) |           0.926 | 1.595</code></pre>
+</div>
+</div>
+<p>Buscamos el menor AIC, que en este caso es <code>mod3</code> (modelo con variables <code>grupo_edad</code> y <code>arsenico</code>)</p>
+<p>En la segunda fase de iteración partimos de este modelo y quitamos otra variable, lo que signica en nuestro ejemplo construir regresiones simples:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) arsénico</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>mod4<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos) </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) grupo etario</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>mod4<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> arsenico, </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Volvemos a comparar:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod3, mod4<span class="fl">.1</span>, mod4<span class="fl">.2</span>, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name   | Model | AIC (weights) | BIC (weights) | Nagelkerke's R2 |  RMSE
+------------------------------------------------------------------------
+mod3   |   glm | 355.0 (&gt;.999) | 374.2 (&gt;.999) |           0.926 | 1.595
+mod4.1 |   glm | 394.5 (&lt;.001) | 405.4 (&lt;.001) |           0.871 | 2.181
+mod4.2 |   glm | 537.9 (&lt;.001) | 548.8 (&lt;.001) |           0.451 | 3.416</code></pre>
+</div>
+</div>
+<p>El mejor modelo continúa siendo <code>mod3</code>, por lo que vamos a probar su bondad de ajuste:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overdispersion test
+
+       dispersion ratio =   1.128
+  Pearson's Chi-Squared = 120.713
+                p-value =   0.172</code></pre>
+</div>
+</div>
+<p>El <em>p</em> valor del test confirma un buen ajuste.</p>
+<p>Procedemos a chequear significancia de las variables explicativas:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = muertes ~ grupo_edad + arsenico, family = poisson, 
+    data = datos, offset = log(persona_anio))
+
+Coefficients:
+                  Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)       -10.2972     0.2237 -46.032  &lt; 2e-16 ***
+grupo_edad50-59     1.4624     0.2454   5.960 2.53e-09 ***
+grupo_edad60-69     2.3502     0.2380   9.873  &lt; 2e-16 ***
+grupo_edad70-79     2.5987     0.2564  10.136  &lt; 2e-16 ***
+arsenico1-4 años    0.8041     0.1577   5.099 3.42e-07 ***
+arsenico15+ años    0.9976     0.1758   5.673 1.40e-08 ***
+arsenico5-14 años   0.5957     0.2059   2.893  0.00381 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 376.02  on 113  degrees of freedom
+Residual deviance: 122.25  on 107  degrees of freedom
+AIC: 355.04
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<p>Todos los niveles de las variables son significativos respecto a sus niveles de referencia.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod3, <span class="at">exponentiate =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="idtgbymygg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#idtgbymygg table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#idtgbymygg thead, #idtgbymygg tbody, #idtgbymygg tfoot, #idtgbymygg tr, #idtgbymygg td, #idtgbymygg th {
+  border-style: none;
+}
+
+#idtgbymygg p {
+  margin: 0;
+  padding: 0;
+}
+
+#idtgbymygg .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#idtgbymygg .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#idtgbymygg .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#idtgbymygg .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#idtgbymygg .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#idtgbymygg .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#idtgbymygg .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#idtgbymygg .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#idtgbymygg .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#idtgbymygg .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#idtgbymygg .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#idtgbymygg .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#idtgbymygg .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#idtgbymygg .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#idtgbymygg .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#idtgbymygg .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#idtgbymygg .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#idtgbymygg .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#idtgbymygg .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#idtgbymygg .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#idtgbymygg .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#idtgbymygg .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#idtgbymygg .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#idtgbymygg .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#idtgbymygg .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#idtgbymygg .gt_left {
+  text-align: left;
+}
+
+#idtgbymygg .gt_center {
+  text-align: center;
+}
+
+#idtgbymygg .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#idtgbymygg .gt_font_normal {
+  font-weight: normal;
+}
+
+#idtgbymygg .gt_font_bold {
+  font-weight: bold;
+}
+
+#idtgbymygg .gt_font_italic {
+  font-style: italic;
+}
+
+#idtgbymygg .gt_super {
+  font-size: 65%;
+}
+
+#idtgbymygg .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#idtgbymygg .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#idtgbymygg .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#idtgbymygg .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#idtgbymygg .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#idtgbymygg .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#idtgbymygg .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>IRR</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>IRR</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">grupo_edad</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="ci"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;40-49</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="ci">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;50-59</td>
+<td class="gt_row gt_center" headers="estimate">4.32</td>
+<td class="gt_row gt_center" headers="ci">2.72, 7.16</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;60-69</td>
+<td class="gt_row gt_center" headers="estimate">10.5</td>
+<td class="gt_row gt_center" headers="ci">6.73, 17.2</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;70-79</td>
+<td class="gt_row gt_center" headers="estimate">13.4</td>
+<td class="gt_row gt_center" headers="ci">8.27, 22.7</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">arsenico</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="ci"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;&lt;1 año</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="ci">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1-4 años</td>
+<td class="gt_row gt_center" headers="estimate">2.23</td>
+<td class="gt_row gt_center" headers="ci">1.63, 3.02</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;15+ años</td>
+<td class="gt_row gt_center" headers="estimate">2.71</td>
+<td class="gt_row gt_center" headers="ci">1.90, 3.79</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;5-14 años</td>
+<td class="gt_row gt_center" headers="estimate">1.81</td>
+<td class="gt_row gt_center" headers="ci">1.19, 2.67</td>
+<td class="gt_row gt_center" headers="p.value">0.004</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="odd">
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> IRR = Incidence Rate Ratio, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<p>Traducidos a riesgo, mediante la exponenciación de los coeficientes, observamos que los diferentes categorías de años de exposición al arsénico no varían entre sí. Esto nos hace pensar que puede valer la pena agruparlo en solo dos niveles.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Recategoriza arsénico</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arsenico_cat =</span> <span class="fu">if_else</span>(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    arsenico <span class="sc">==</span> <span class="st">"&lt;1 año"</span>, <span class="st">"&lt;1 año"</span>, <span class="st">"1+ años"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.factor</span>())</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Modelo con arsénico recategorizado</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>mod5 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad <span class="sc">+</span> arsenico_cat,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(persona_anio), </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> poisson, </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> datos)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Compara modelos</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod3, mod5, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Comparison of Model Performance Indices
+
+Name | Model | AIC (weights) | BIC (weights) | Nagelkerke's R2 |  RMSE
+----------------------------------------------------------------------
+mod3 |   glm | 355.0 (0.350) | 374.2 (0.034) |           0.926 | 1.595
+mod5 |   glm | 353.8 (0.650) | 367.5 (0.966) |           0.924 | 1.613</code></pre>
+</div>
+</div>
+<p>El <code>mod5</code> tiene mejor <em>performance</em> que el modelo anterior.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(mod5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overdispersion test
+
+       dispersion ratio =   1.147
+  Pearson's Chi-Squared = 125.038
+                p-value =    0.14</code></pre>
+</div>
+</div>
+<p>El ajuste continúa siendo bueno.</p>
+<p>Chequeamos significancia:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = muertes ~ grupo_edad + arsenico_cat, family = poisson, 
+    data = datos, offset = log(persona_anio))
+
+Coefficients:
+                    Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)         -10.3112     0.2233 -46.169  &lt; 2e-16 ***
+grupo_edad50-59       1.4702     0.2453   5.994 2.04e-09 ***
+grupo_edad60-69       2.3661     0.2372   9.976  &lt; 2e-16 ***
+grupo_edad70-79       2.6238     0.2548  10.297  &lt; 2e-16 ***
+arsenico_cat1+ años   0.8109     0.1210   6.699 2.09e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 376.02  on 113  degrees of freedom
+Residual deviance: 125.02  on 109  degrees of freedom
+AIC: 353.8
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<p>Las variables incluídas son significativas.</p>
+<p>En esta etapa, aceptaríamos el <code>mod5</code> como el mejor modelo, ya que tiene el AIC más pequeño entre todos los modelos que hemos probado.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod5, <span class="at">exponentiate =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="mhlzazzket" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mhlzazzket table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#mhlzazzket thead, #mhlzazzket tbody, #mhlzazzket tfoot, #mhlzazzket tr, #mhlzazzket td, #mhlzazzket th {
+  border-style: none;
+}
+
+#mhlzazzket p {
+  margin: 0;
+  padding: 0;
+}
+
+#mhlzazzket .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#mhlzazzket .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#mhlzazzket .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#mhlzazzket .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#mhlzazzket .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#mhlzazzket .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#mhlzazzket .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#mhlzazzket .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#mhlzazzket .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#mhlzazzket .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#mhlzazzket .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#mhlzazzket .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#mhlzazzket .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#mhlzazzket .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#mhlzazzket .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mhlzazzket .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#mhlzazzket .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#mhlzazzket .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#mhlzazzket .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mhlzazzket .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#mhlzazzket .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mhlzazzket .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#mhlzazzket .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mhlzazzket .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mhlzazzket .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mhlzazzket .gt_left {
+  text-align: left;
+}
+
+#mhlzazzket .gt_center {
+  text-align: center;
+}
+
+#mhlzazzket .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#mhlzazzket .gt_font_normal {
+  font-weight: normal;
+}
+
+#mhlzazzket .gt_font_bold {
+  font-weight: bold;
+}
+
+#mhlzazzket .gt_font_italic {
+  font-style: italic;
+}
+
+#mhlzazzket .gt_super {
+  font-size: 65%;
+}
+
+#mhlzazzket .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#mhlzazzket .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#mhlzazzket .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#mhlzazzket .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#mhlzazzket .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#mhlzazzket .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#mhlzazzket .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>IRR</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>IRR</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">grupo_edad</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="ci"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;40-49</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="ci">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;50-59</td>
+<td class="gt_row gt_center" headers="estimate">4.35</td>
+<td class="gt_row gt_center" headers="ci">2.74, 7.21</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;60-69</td>
+<td class="gt_row gt_center" headers="estimate">10.7</td>
+<td class="gt_row gt_center" headers="ci">6.85, 17.4</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;70-79</td>
+<td class="gt_row gt_center" headers="estimate">13.8</td>
+<td class="gt_row gt_center" headers="ci">8.51, 23.2</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">arsenico_cat</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="ci"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;&lt;1 año</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="ci">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1+ años</td>
+<td class="gt_row gt_center" headers="estimate">2.25</td>
+<td class="gt_row gt_center" headers="ci">1.77, 2.85</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="odd">
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> IRR = Incidence Rate Ratio, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<p>Concluimos que aquellas personas expuestas al arsénico durante al menos un año, tienen 2,25 veces mayor riesgo de muerte por enfermedad respiratoria.</p>
+<p>Expliquemos de donde deriva este cálculo. En los modelos de Poisson de este tipo, la estructura de la compensación (<em>offset</em>) definida como <strong>log(persona-tiempo)</strong> convierte al resultado en <strong>log(densidad de incidencia)</strong>.</p>
+<p>La tabla creada al comienzo del ejemplo proporciona la densidad de incidencia bruta por grupo de edad y período. Cada uno de los modelos de regresión de Poisson anteriores se puede utilizar para calcular la densidad de incidencia prevista cuando se dan las variables del modelo. Por ejemplo, para calcular la densidad de incidencia de una población de 100.000 personas de entre 40 y 49 años que estuvieron expuestas al arsénico durante menos de un año utilizando <code>mod5</code>, podemos ejecutar:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Genera nuevos datos</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">grupo_edad =</span> <span class="st">"40-49"</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">arsenico_cat =</span> <span class="st">"&lt;1 año"</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">persona_anio =</span> <span class="dv">100000</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Predice datos</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> mod5, <span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">"response"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1 
+3.325736 </code></pre>
+</div>
+</div>
+<p>Esta población tendría una densidad de incidencia estimada de 33,26 por 100.000 personas-año.</p>
+<p>En un estudio de casos y controles, como los vistos en la Unidad 4, el OR se utiliza para comparar la prevalencia de exposición entre casos y controles. En un estudio de cohorte, este valor es igual a la relación entre las probabilidades de contraer una enfermedad entre el grupo expuesto y el no expuesto. La razón de los riesgos para los dos grupos se denomina entonces “razón de riesgo” o “riesgo relativo”.</p>
+<p>En un estudio de cohorte real, los sujetos no siempre tienen la misma duración de seguimiento. El riesgo relativo ignora la duración del seguimiento. Por tanto, no es una buena medida de comparación del riesgo entre los dos grupos.</p>
+<p>En este ejercicio, todos los sujetos agrupan sus tiempos de seguimiento y este número se denomina “tiempo-persona”, que luego se utiliza como denominador del evento, lo que da como resultado una “densidad de incidencia”.</p>
+<p>Comparar la densidad de incidencia entre dos grupos de sujetos por su estado de exposición es más justo que comparar los riesgos crudos. La relación entre las densidades de incidencia de dos grupos se denomina razón de densidades de incidencia (RDI), que es una forma mejorada de riesgo relativo.</p>
+<p>En el <code>mod5</code>, para calcular la razón de densidad de incidencia entre los sujetos expuestos al arsénico durante uno o más años frente a los expuestos durante menos de un año, podemos dividir la incidencia entre los primeros por la del segundo grupo.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Genera nuevos datos</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">grupo_edad =</span> <span class="fu">rep</span>(<span class="st">"40-49"</span>, <span class="dv">2</span>),</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">arsenico_cat =</span> <span class="fu">c</span>(<span class="st">"&lt;1 año"</span>, <span class="st">"1+ años"</span>),</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">persona_anio =</span> <span class="fu">rep</span>(<span class="dv">100000</span>, <span class="dv">2</span>))</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Densidad de incidencia</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>di <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod5, <span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">"response"</span>) </span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Razón densidad de incidencia</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>rdi.arsenico <span class="ot">&lt;-</span> di[<span class="dv">2</span>] <span class="sc">/</span> di[<span class="dv">1</span>]</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>rdi.arsenico</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       2 
+2.249864 </code></pre>
+</div>
+</div>
+<p>El código anterior comienza agregando una nueva fila al dataframe <code>newdata</code> que tiene lo mismo que la primera fila, excepto que la variable <code>arsenico_cat</code> es <code>"1+ años"</code>.</p>
+<p>A continuación, se calculan las respuestas o densidades de incidencia de las dos condiciones.</p>
+<p>La RDI se obtiene luego de la división de las densidades de incidencia para <code>arsenico_cat = "&lt;1 año"</code> con <code>arsenico_cat = "1+ años"</code>. Una forma más corta de obtenerla es mediante el coeficiente de la variable específica <code>arsenico</code>, utilizando R <code>base</code> o el paquete <code>gtsummary</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod5, <span class="at">exponentiate =</span> T,</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">include =</span> <span class="st">"arsenico_cat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="xezpytpimw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xezpytpimw table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#xezpytpimw thead, #xezpytpimw tbody, #xezpytpimw tfoot, #xezpytpimw tr, #xezpytpimw td, #xezpytpimw th {
+  border-style: none;
+}
+
+#xezpytpimw p {
+  margin: 0;
+  padding: 0;
+}
+
+#xezpytpimw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#xezpytpimw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#xezpytpimw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#xezpytpimw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#xezpytpimw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#xezpytpimw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#xezpytpimw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#xezpytpimw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#xezpytpimw .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#xezpytpimw .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#xezpytpimw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#xezpytpimw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#xezpytpimw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#xezpytpimw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#xezpytpimw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xezpytpimw .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#xezpytpimw .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#xezpytpimw .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#xezpytpimw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xezpytpimw .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#xezpytpimw .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xezpytpimw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#xezpytpimw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xezpytpimw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xezpytpimw .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xezpytpimw .gt_left {
+  text-align: left;
+}
+
+#xezpytpimw .gt_center {
+  text-align: center;
+}
+
+#xezpytpimw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#xezpytpimw .gt_font_normal {
+  font-weight: normal;
+}
+
+#xezpytpimw .gt_font_bold {
+  font-weight: bold;
+}
+
+#xezpytpimw .gt_font_italic {
+  font-style: italic;
+}
+
+#xezpytpimw .gt_super {
+  font-size: 65%;
+}
+
+#xezpytpimw .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#xezpytpimw .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#xezpytpimw .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#xezpytpimw .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#xezpytpimw .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#xezpytpimw .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#xezpytpimw .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header gt_col_headings">
+<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="<strong>IRR</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>IRR</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>p-value</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">arsenico_cat</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="ci"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;&lt;1 año</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="ci">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1+ años</td>
+<td class="gt_row gt_center" headers="estimate">2.25</td>
+<td class="gt_row gt_center" headers="ci">1.77, 2.85</td>
+<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> IRR = Incidence Rate Ratio, CI = Confidence Interval</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<p>También podemos mostrar la salida mediante un gráfico de <code>ggplot2</code>, tal como vimos en la unidad 4:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Convierte la salida del modelo a dataframe</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>mod5_df <span class="ot">&lt;-</span> mod5 <span class="sc">%&gt;%</span> </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>(<span class="at">exponentiate =</span> T, <span class="at">conf.int =</span> T) </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Genero gráfico</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>mod5_df <span class="sc">%&gt;%</span> </span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>     <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> estimate, <span class="at">y =</span> term,</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low, <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># añade línea vertical</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, </span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"#073966"</span>) <span class="sc">+</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># añade estimadores</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">color =</span> <span class="st">"#418A80"</span>) <span class="sc">+</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cambia color de fondo</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="2100"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="bibliografía" class="level2 unnumbered">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Bibliografía</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-hernández-ávila2011" class="csl-entry" role="listitem">
+Hernández-Ávila, Mauricio. 2011. <em>Epidemiología: diseño y análisis de estudios</em>. Buenos Aires: Editorial Médica Panamericana.
+</div>
+<div id="ref-performance" class="csl-entry" role="listitem">
+Lüdecke, Daniel, Mattan S. Ben-Shachar, Indrajeet Patil, Philip Waggoner, and Dominique Makowski. 2021. <span>“<span></span>Performance<span></span>: An <span></span>r<span></span> Package for Assessment, Comparison and Testing of Statistical Models”</span> 6: 3139. <a href="https://doi.org/10.21105/joss.03139">https://doi.org/10.21105/joss.03139</a>.
+</div>
+<div id="ref-nolasco2016" class="csl-entry" role="listitem">
+Nolasco, A. 2016. <span>“Estadística Avanzada En Ciencias de La Salud.”</span> <em>Modelos Lineales</em>.
+</div>
+<div id="ref-pérezhoyos2001" class="csl-entry" role="listitem">
+Pérez Hoyos, Santiago. 2001. <em>Introducción a la regresión Poisson</em>. 1a. ed. València: Escola Valenciana d’Estudis per a la Salut.
+</div>
+<div id="ref-RCoreTeam2021" class="csl-entry" role="listitem">
+R Core Team. 2024. <span>“R: A Language and Environment for Statistical Computing.”</span> <a href="https://www.r-project.org/">https://www.r-project.org/</a>.
+</div>
+<div id="ref-salinas-rodríguez2009" class="csl-entry" role="listitem">
+Salinas-Rodríguez, Aarón, Betty Manrique-Espinoza, and Sandra G Sosa-Rubí. 2009. <span>“Análisis Estadístico Para Datos de Conteo: Aplicaciones Para El Uso de Los Servicios de Salud.”</span> <em>Salud Pública de México</em> 51: 397–406.
+</div>
+<div id="ref-gtsummary" class="csl-entry" role="listitem">
+Sjoberg, Daniel D., Karissa Whiting, Michael Curry, Jessica A. Lavery, and Joseph Larmarange. 2021. <span>“Reproducible Summary Tables with the Gtsummary Package”</span> 13: 570–80. <a href="https://doi.org/10.32614/RJ-2021-053">https://doi.org/10.32614/RJ-2021-053</a>.
+</div>
+<div id="ref-tidyverse" class="csl-entry" role="listitem">
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span></span>Tidyverse<span></span>”</span> 4: 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

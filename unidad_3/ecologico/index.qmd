@@ -92,7 +92,7 @@ En un estudio ecológico, existen distintos **niveles de medición** de las vari
 
 Esta distinción es importante, porque para las dos primeras siempre existe el recurso de la medición individual, en tanto que en las mediciones globales, el diseño ecológico es la única alternativa viable.
 
-## **Clasificación de estudios ecológicos**
+## Clasificación de estudios ecológicos
 
 -   Exploratorios.
 
