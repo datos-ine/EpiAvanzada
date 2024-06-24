@@ -5,6 +5,7 @@ editor: visual
 toc: true
 toc-location: left
 toc-title: "Contenidos"
+toc-location: left
 theme: "../../custom.scss"
 bibliography: references.bib
 nocite: |
