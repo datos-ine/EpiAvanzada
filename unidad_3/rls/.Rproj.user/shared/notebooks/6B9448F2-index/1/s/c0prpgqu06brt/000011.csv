@@ -1,0 +1,2 @@
+"0","# Limpia environment"
+"0","rm(list = setdiff(ls(), ""pal""))"

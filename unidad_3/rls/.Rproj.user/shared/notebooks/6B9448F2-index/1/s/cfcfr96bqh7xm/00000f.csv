@@ -1,0 +1,8 @@
+"0","#| fig-width: 5.5"
+"0","#| fig-height: 5.5"
+"0",""
+"0","## Test normalidad"
+"0","lillie.test(datos$target_death_rate)"
+"2","Error in lillie.test(datos$target_death_rate) : 
+  could not find function ""lillie.test""
+"

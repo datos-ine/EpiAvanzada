@@ -1,0 +1,8 @@
+"0","datos %>% "
+"0","  ggplot(aes(x = pct_public_coverage, y = target_death_rate)) +"
+"0","  geom_point(color = pal[3]) +"
+"0","  # Añade línea de regresión"
+"0","  geom_smooth(method = ""lm"", color = pal[6]) + "
+"0","  theme_classic()"
+"1","[38;5;252m`geom_smooth()` using formula = 'y ~ x'[39m
+"
