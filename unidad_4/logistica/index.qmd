@@ -17,7 +17,7 @@ nocite: |
 knitr::opts_chunk$set(message = F, 
                       warning = F,
                       fig.align = "center", 
-                      out.width = "80%",
+                      out.width = "90%",
                       dpi = 300)
 
 showtext::showtext_opts(dpi = 300)
