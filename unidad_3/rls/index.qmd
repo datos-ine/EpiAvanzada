@@ -499,41 +499,68 @@ Gráficamente:
 
 ```{r}
 #| echo: false
-# create dummy data
-df <- tibble(x = c(1, 2, 3, 4, 5, 6, 7),
-             y = c(2500, 4000, 3000, 5000, 4000, 5500, 3500))
+# Create a sample dataset with 7 points
+set.seed(123)
+data <- tibble(
+  x = c(1, 2, 3, 4, 5, 6, 7),
+  y = c(2.5, 4, 3, 5, 4, 5.5, 3.5)
+  # y = c(4, 6, 7, 8, 6, 7, 9)
+)
 
-# fit model
-model <- lm(y ~ x, data = df)
+# Fit a linear model
+model <- lm(y ~ x, data = data)
 
-# add residuals and predicted
-df <- df |> 
-  mutate(predicted = predict(model),
-         residuals = residuals(model))
+# add predicted
+data <- data %>%
+  mutate(fitted = predict(model))
 
-
-# plot
-df |> 
-  ggplot(mapping = aes(x = x, y = y)) +
-  # geoms
-  geom_segment(mapping = aes(xend = x, yend = predicted),
-            alpha = .3, linetype = "dashed") +
-  geom_point(color = pal[6], size = 4, alpha = .7) +
-  geom_line(aes(y = predicted), color = pal[3], linewidth = 1) +
-  # geom_smooth(method = "lm", se = F, color = pal[3]) +
-  # text annotations
-  annotate(geom = "text", x = 4, y = 2500,
-           label = expression(hat(Y) == b[0] + b[1] * x)) +
-  annotate(geom = "text", x = 7.5, y = 4100,
-           label = expression(y - hat(y) == e)) +
-  annotate(geom = "text", x = 7, y = 3000, label = expression(y[7])) +
-  annotate(geom = "text", x = 7, y = 5000, label = expression(hat(y)[7])) +
-  # theme
-  scale_x_continuous(limits = c(0, max(df$x) + 1)) +
-  scale_y_continuous(limits = c(0, 6000)) +
-  labs(x = NULL, y = NULL) +
-  theme_minimal()
+# Function to calculate perpendicular residuals
+get_perpendicular_points <- function(x, y, coef) {
+  slope <- coef[2]
+  intercept <- coef[1]
   
+  # Calculate the projection of (x, y) onto the regression line
+  x_proj <- (x + slope * (y - intercept)) / (1 + slope^2)
+  y_proj <- (slope * x + (slope^2 * y + intercept)) / (1 + slope^2)
+  
+  tibble(x_proj = x_proj, y_proj = y_proj)
+}
+
+# Calculate the perpendicular points
+perpendicular_points <- data %>%
+  rowwise() %>%
+  mutate(get_perpendicular_points(x, y, coef(model)))
+
+# Combine the original data with the perpendicular points
+data <- data %>%
+  left_join(perpendicular_points)
+
+# Plot
+data |> 
+ggplot(mapping = aes(x = x, y = y)) +
+  # add geoms
+  geom_segment(mapping = aes(xend = x_proj, yend = y_proj), 
+               linetype = "dashed", alpha = .5) +
+  geom_point(color = pal[6], size = 4, alpha = .7) +
+  geom_abline(intercept = coef(model)[1], 
+              slope = coef(model)[2], 
+              color = pal[4]) +
+  
+  # axis
+  scale_x_continuous(limits = c(0, max(data$x) + 1), n.breaks = 7) +
+  scale_y_continuous(limits = c(0, max(data$y) + 1),
+                     labels = function(y) y * 1000) +
+  
+  # add text labels
+  
+  annotate(geom = "text", x = 4, y = 2.5,
+           label = expression(hat(Y) == b[0] + b[1] * x)) +
+  annotate(geom = "text", x = 7.5, y = 4.1,
+           label = expression(y - hat(y) == e)) +
+  annotate(geom = "text", x = 7, y = 3, label = expression(y[7])) +
+  annotate(geom = "text", x = 7, y = 5, label = expression(hat(y)[7])) +
+  # theme
+  theme_minimal()
 ```
 
 Donde:
