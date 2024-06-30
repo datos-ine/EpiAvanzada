@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -442,12 +442,12 @@ $ median_age          &lt;dbl&gt; 39.1, 39.6, 45.0, 41.0, 32.2, 40.8, 45.4, 56.5
 <h3 class="anchored" data-anchor-id="diagrama-de-dispersión">Diagrama de dispersión</h3>
 <p>Para dibujar gráficos de dispersión podemos utilizar funciones del paquete <code>ggplot2</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> median_age, <span class="at">y =</span> target_death_rate)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> median_age, <span class="at">y =</span> target_death_rate)) <span class="sc">+</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># gráfico de dispersión</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#49917A"</span>) <span class="sc">+</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> pal[<span class="dv">6</span>]) <span class="sc">+</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># modifico color de fondo</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -459,7 +459,7 @@ $ median_age          &lt;dbl&gt; 39.1, 39.6, 45.0, 41.0, 32.2, 40.8, 45.4, 56.5
 </div>
 </div>
 </div>
-<p>En todos los casos, lo que observamos en el gráfico es una clara relación inversa entre las variables, dado que las ciudades que tienen altos valores en porcentajes de ciclistas tiene bajos valores en porcentajes de cardiopatías y viceversa.</p>
+<p>En todos los casos, lo que observamos en el gráfico es una clara relación inversa entre las variables, dado que los condados en las que las personas tienen mayor mediana de edad, tienen bajos valores en porcentajes de muertes por cáncer y viceversa.</p>
 </section>
 <section id="correlación" class="level3">
 <h3 class="anchored" data-anchor-id="correlación">Correlación</h3>
@@ -510,7 +510,7 @@ sample estimates:
 <p>Anteriormente mencionamos que para dar por válidos, los modelos lineales debían cumplir con cuatro presupuestos: independencia, linealidad, homocedasticidad y normalidad.</p>
 <p>Habitualmente la comprobación precisa de estos criterios se realiza con los residuos del modelo al finalizar el proceso, pero también nos podemos adelantar efectuando un análisis previo de los datos de forma similar a lo realizado en ANOVA.</p>
 <p>La independencia, también conocida como no autocorrelación, pueden afirmarse de forma general, a partir del conocimiento previo de la fuente de los datos y su forma de recolección, aunque siempre conviene verificarla en los residuos.</p>
-<p>La linealidad es producto de la relación entre las variables cardiopatias y ciclistas, que confirmamos mediante el diagrama de dispersión y la <span class="math inline">\(r\)</span> de Pearson significativa.</p>
+<p>La linealidad es producto de la relación entre las variables <code>target_death_rate</code> y <code>median_age</code>, que confirmamos mediante el diagrama de dispersión y la <span class="math inline">\(r\)</span> de Pearson significativa.</p>
 <p>La homocedasticidad es conveniente definirla a partir del modelo realizado, donde buscamos que la varianza de la gráfica de los residuos sea aproximadamente constante a lo largo del eje x. También se puede probar mediante contraste de hipótesis (test de Breusch-Pagan)</p>
 <p>Finalmente para la normalidad utilizamos el mismo análisis previo visto en la unidad anterior (ver <a href="https://cballejo.github.io/R_Epi_Avanzada/Unidad2/Anova/">ANOVA - Unidad 2</a>)</p>
 <div class="cell" data-layout-align="center">
@@ -604,19 +604,19 @@ F-statistic: 4.321 on 1 and 234 DF,  p-value: 0.03873</code></pre>
 </div>
 </div>
 <p>Con <code>summary()</code> observamos que los resultados son numerosos y comprenden a:</p>
-<p><strong>Call</strong>: formula del modelo</p>
-<p><strong>Residuals</strong>: distribución de los residuos (mediana, mínimo, máximo y percentilos 25-75)</p>
-<p><strong>Coefficients</strong>: valores del intercepto y de la pendiente. Además se agregan los errores estandar y el estadístico <span class="math inline">\(t\)</span> con el <em>p</em>-valor de probabilidad dada la hipótesis nula que los coeficientes sean iguales a cero. (Lo que se pretende mediante estos contrastes es determinar si los efectos de la constante intercepto y de la variable independiente son realmente importantes para explicar la variable dependiente o si, por el contario, pueden considerarse nulos.)</p>
-<p><strong>Residual standard error</strong>: Error estándar de los residuos con sus grados de libertad</p>
-<p><strong>Multiple R-squared</strong>: Coeficiente de determinación <span class="math inline">\(R^2\)</span></p>
-<p><strong>Adjusted R-squared</strong>: Coeficiente <span class="math inline">\(R^2\)</span> ajustado</p>
-<p><strong>F-statistic</strong>: estadístico <span class="math inline">\(F\)</span> sobre la hipótesis nula que el cociente entre la varianza de la ecuación de regresión y la varianza de los residuos es igual a 1.</p>
-<p><strong>p-value</strong>: p-valor del estadistico <span class="math inline">\(F\)</span>.</p>
+<p><code>Call</code>: formula del modelo</p>
+<p><code>Residuals</code>: distribución de los residuos (mediana, mínimo, máximo y percentilos 25-75)</p>
+<p><code>Coefficients</code>: valores del intercepto y de la pendiente. Además se agregan los errores estandar y el estadístico <span class="math inline">\(t\)</span> con el <em>p</em>-valor de probabilidad dada la hipótesis nula que los coeficientes sean iguales a cero. (Lo que se pretende mediante estos contrastes es determinar si los efectos de la constante intercepto y de la variable independiente son realmente importantes para explicar la variable dependiente o si, por el contario, pueden considerarse nulos.)</p>
+<p><code>Residual standard error</code>: Error estándar de los residuos con sus grados de libertad</p>
+<p><code>Multiple R-squared</code>: Coeficiente de determinación <span class="math inline">\(R^2\)</span></p>
+<p><code>Adjusted R-squared</code>: Coeficiente <span class="math inline">\(R^2\)</span> ajustado</p>
+<p><code>F-statistic</code>: estadístico <span class="math inline">\(F\)</span> sobre la hipótesis nula que el cociente entre la varianza de la ecuación de regresión y la varianza de los residuos es igual a 1.</p>
+<p><code>p-value</code>: p-valor del estadistico <span class="math inline">\(F\)</span>.</p>
 <p>Como elemento extra, notese que la salida en R tiene unos códigos que ayudan a realizar la lectura de la significación de los coeficientes. Funciona mediante el uso de asteriscos (*) al extremo derecho de cada parámetro calculado.</p>
 <p>Debajo de la tabla de coeficientes se encuentra la referencia del significado de los códigos, que van desde el 0 hasta el 1 como posible resultado del valor de probabilidad, y donde:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="tabwid"><style>.cl-e4aeb214{table-layout:auto;}.cl-e4a7cabc{font-family:'Calibri';font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e4a7cad0{font-family:'Calibri';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e4aa6dd0{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e4aa7dac{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e4aa7db6{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e4aa7db7{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e4aeb214"><thead><tr style="overflow-wrap:break-word;"><th class="cl-e4aa7dac"><p class="cl-e4aa6dd0"><span class="cl-e4a7cabc">Código</span></p></th><th class="cl-e4aa7dac"><p class="cl-e4aa6dd0"><span class="cl-e4a7cabc">Rango</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e4aa7db6"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">***</span></p></td><td class="cl-e4aa7db6"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">0 a 0,001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e4aa7db6"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">**</span></p></td><td class="cl-e4aa7db6"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">0,001 a 0,01</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e4aa7db6"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">*</span></p></td><td class="cl-e4aa7db6"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">0,01 a 0,05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e4aa7db6"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">.</span></p></td><td class="cl-e4aa7db6"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">0,05 a 0,1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e4aa7db7"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0"></span></p></td><td class="cl-e4aa7db7"><p class="cl-e4aa6dd0"><span class="cl-e4a7cad0">0,1 a 1</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-9ccb01dc{table-layout:auto;}.cl-9cb5c128{font-family:'Calibri';font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-9cb5c150{font-family:'Calibri';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-9cbde6c8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-9cbe21ce{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9cbe21e2{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9cbe21ec{background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-9ccb01dc"><thead><tr style="overflow-wrap:break-word;"><th class="cl-9cbe21ce"><p class="cl-9cbde6c8"><span class="cl-9cb5c128">Código</span></p></th><th class="cl-9cbe21ce"><p class="cl-9cbde6c8"><span class="cl-9cb5c128">Rango</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-9cbe21e2"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">***</span></p></td><td class="cl-9cbe21e2"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">0 a 0,001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9cbe21e2"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">**</span></p></td><td class="cl-9cbe21e2"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">0,001 a 0,01</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9cbe21e2"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">*</span></p></td><td class="cl-9cbe21e2"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">0,01 a 0,05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9cbe21e2"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">.</span></p></td><td class="cl-9cbe21e2"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">0,05 a 0,1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-9cbe21ec"><p class="cl-9cbde6c8"><span class="cl-9cb5c150"></span></p></td><td class="cl-9cbe21ec"><p class="cl-9cbde6c8"><span class="cl-9cb5c150">0,1 a 1</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 <section id="estructura-del-objeto-resultado-de-regresión" class="level4">
@@ -652,6 +652,7 @@ F-statistic: 4.321 on 1 and 234 DF,  p-value: 0.03873</code></pre>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">intercept =</span> T, </span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">conf.level =</span> .<span class="dv">95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
+<div>
 <div id="osncjrvket" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#osncjrvket table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -1093,7 +1094,7 @@ F-statistic: 4.321 on 1 and 234 DF,  p-value: 0.03873</code></pre>
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="header gt_col_headings">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
@@ -1123,6 +1124,7 @@ F-statistic: 4.321 on 1 and 234 DF,  p-value: 0.03873</code></pre>
 
 </table>
 
+</div>
 </div>
 </div>
 </div>
@@ -1182,13 +1184,13 @@ median_age   -1.278138   0.1416719</code></pre>
 <p>Retomando la cuestión gráfica, podemos dibujar la recta de regresión lineal sobre el diagrama de dispersión hecho con <code>ggplot2</code> adicionando una capa más al gráfico mediante <code>geom_smooth()</code> e indicando <code>method = "lm"</code> como método. Además de la recta se puede ver el IC (zona gris alrededor de ella).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> </span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> median_age, <span class="at">y =</span> target_death_rate)) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> median_age, <span class="at">y =</span> target_death_rate)) <span class="sc">+</span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a> <span class="co"># diagrama de dispersión</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#49917A"</span>) <span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>(<span class="at">color =</span> pal[<span class="dv">6</span>]) <span class="sc">+</span></span>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># añade línea de regresión</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"#1E6590"</span>) <span class="sc">+</span> </span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> pal[<span class="dv">3</span>]) <span class="sc">+</span> </span>
 <span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cambia color de fondo</span></span>
 <span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1393,7 +1395,7 @@ FALSE
 <section id="bondad-de-ajuste-del-modelo" class="level3">
 <h3 class="anchored" data-anchor-id="bondad-de-ajuste-del-modelo">Bondad de ajuste del modelo</h3>
 <p>Una vez que se ha ajustado un modelo es necesario verificar su eficiencia, ya que aun siendo la línea que mejor se ajusta a las observaciones de entre todas las posibles, el modelo puede ser malo. Las medidas más utilizadas para medir la calidad del ajuste son: error estándar de los residuales, el test <span class="math inline">\(F\)</span> y el coeficiente de determinación <span class="math inline">\(R^2\)</span>.</p>
-<p>Estos valores se encuentran en la parte final de la salida del <code>summary(modelo)</code>, donde leemos RSE - error estandar de los residuos (<strong>Residual standar error</strong>), coeficiente de determinación <span class="math inline">\(R^2\)</span> (<strong>Multiple R-squared</strong>) y <span class="math inline">\(R^2\)</span> ajustado (<strong>Adjusted R-squared</strong>).</p>
+<p>Estos valores se encuentran en la parte final de la salida del <code>summary(modelo)</code>, donde leemos RSE - error estandar de los residuos (<code>Residual standar error</code>), coeficiente de determinación <span class="math inline">\(R^2\)</span> (<code>Multiple R-squared</code>) y <span class="math inline">\(R^2\)</span> ajustado (<code>Adjusted R-squared</code>).</p>
 <p>Podemos acceder al valor de <span class="math inline">\(R^2\)</span> del modelo usando la función <code>r2()</code> del paquete <code>performance</code></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">r2</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
