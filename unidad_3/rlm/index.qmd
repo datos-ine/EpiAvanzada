@@ -939,7 +939,7 @@ El paquete `lmtest` permite evaluar independencia según estadístico de Durbin-
 dwtest(mod_multiple)
 ```
 
-El valor de *p* es de `r round(dwtest(mod_multiple)$p.value, 3)` por lo que no podemos rechazar la hipótesis nula de inexistencia de autocorrelación (independencia)
+El valor de *p* es de `{r} round(dwtest(mod_multiple)$p.value, 3)` por lo que no podemos rechazar la hipótesis nula de inexistencia de autocorrelación (independencia)
 
 **Linealidad**
 
@@ -949,7 +949,14 @@ El paquete `lmtest` implementa el *Ramsey's RESET* bajo la función `resettest()
 resettest(mod_multiple)
 ```
 
-El *p*-valor es de `r round(resettest(mod_multiple)$p.value, 3)` por lo que no podemos rechazar la hipótesis nula de linealidad.
+```{r}
+#| echo: false
+
+p_valor <- round(resettest(mod_multiple)$p.value, 3)
+```
+
+
+El *p*-valor es de `{r} p_valor` por lo que no podemos rechazar la hipótesis nula de linealidad.
 
 **Normalidad**
 
@@ -959,7 +966,7 @@ El paquete `nortest` permite chequear normalidad mediante test de Lilliefors.
 lillie.test(mod_multiple$residuals)
 ```
 
-Los resultados del test nos confirman lo visto en el grafico Q-Q, el valor *p* es de `r round(lillie.test(mod_multiple$residuals)$p.value, 3)` y no podemos descartar normalidad de los residuos.
+Los resultados del test nos confirman lo visto en el grafico Q-Q, el valor *p* es de `{r} round(lillie.test(mod_multiple$residuals)$p.value, 3)` y no podemos descartar normalidad de los residuos.
 
 **Homocedasticidad**
 
@@ -991,9 +998,9 @@ fit <- summary(mod_multiple)
 fit
 ```
 
-El modelo `mod_multiple` es capaz de explicar el 97,95 % de la variabilidad observada en la proporción de cardiopatías de estas ciudades ($R^2_{ajustado}$: `r round(fit$adj.r.squared, 4)`). El test F global muestra que es significativo (*p*-valor: $< 2,2e^{-16}$).
+El modelo `mod_multiple` es capaz de explicar el 97,95 % de la variabilidad observada en la proporción de cardiopatías de estas ciudades ($R^2_{ajustado}$: `{r} round(fit$adj.r.squared, 4)`). El test F global muestra que es significativo (*p*-valor: $< 2,2e^{-16}$).
 
-El coeficiente de pendiente de la recta para la proporción de ciclistas fue de `r round(fit$coefficients[2],2)` por lo que la proporción de cardiopatías disminuye un 0,2 % por cada 1 % que sube la proporción de ciclistas manteniendo constante la variable fumadores. Por otra parte, fumadores tiene un coeficiente de `round(fit$coefficients[3],2)`, por lo que la proporción de cardiopatías aumenta un 0,17 % por cada 1 % que sube la proporción de fumadores de la ciudad manteniendo constante la variable ciclistas.
+El coeficiente de pendiente de la recta para la proporción de ciclistas fue de `{r} round(fit$coefficients[2],2)` por lo que la proporción de cardiopatías disminuye un 0,2 % por cada 1 % que sube la proporción de ciclistas manteniendo constante la variable fumadores. Por otra parte, fumadores tiene un coeficiente de `{r} round(fit$coefficients[3],2)`, por lo que la proporción de cardiopatías aumenta un 0,18 % por cada 1 % que sube la proporción de fumadores de la ciudad manteniendo constante la variable ciclistas.
 
 Se satisfacen todas las condiciones para la regresión lineal.
 
