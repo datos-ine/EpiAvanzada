@@ -36,7 +36,7 @@ pal <- scico::scico(n = 12, palette = "navia")
 
 ## Introducción
 
-Un estudio de casos y controles (cyc) es un estudio analítico observacional que comienza con la identificación de un grupo de casos (personas que sufren algún evento particular de salud) y un grupo de controles (individuos que no tienen esa condición). Entonces, la frecuencia de la exposición a un factor se mide en los dos grupos y se compara. Básicamente, la hipótesis que subyace en un estudio de cyc es que si la frecuencia de la exposición es mayor en casos que en controles, la exposición podría ser un factor de riesgo, mientras que si es menor, la exposición podría ser un factor protector.
+Un estudio de casos y controles (CyC) es un estudio analítico observacional que comienza con la identificación de un grupo de casos (personas que sufren algún evento particular de salud) y un grupo de controles (individuos que no tienen esa condición). Entonces, la frecuencia de la exposición a un factor se mide en los dos grupos y se compara. Básicamente, la hipótesis que subyace en un estudio de CyC es que si la frecuencia de la exposición es mayor en casos que en controles, la exposición podría ser un factor de riesgo, mientras que si es menor, la exposición podría ser un factor protector.
 
 Los principales aspectos metodológicos a tener en cuenta para llevar adelante un estudio de casos y controles son:
 
@@ -56,17 +56,17 @@ Comenzaremos diciendo que es fundamental tener criterios precisos para la defini
 
 Algunos autores consideran a los estudios de casos y controles como una estrategia metodológica para estudiar una cohorte. Esto nos permite visualizar dos modalidades de selección de casos:
 
-1)  los que semejan las cohortes de densidad de incidencia donde los casos se reclutan a medida que se van presentando (incidentes). Generalmente se utilizan en el contexto de casos incidentes con periodos de exposición o latencia prolongados
+1)  Los que semejan las cohortes de densidad de incidencia donde los casos se reclutan a medida que se van presentando (incidentes). Generalmente se utilizan en el contexto de casos incidentes con periodos de exposición o latencia prolongados.
 
-2)  los que semejan cohortes de incidencia acumulada, donde los casos se seleccionan al final del estudio, establecido previamente el período de seguimiento.
+2)  Los que semejan cohortes de incidencia acumulada, donde los casos se seleccionan al final del estudio, establecido previamente el período de seguimiento.
 
 **Selección de los controles** La fuente de los controles quedará definida en la medida en que se definan claramente los criterios de selección de casos, así como la población hipotética de origen. Las principales consideraciones serían:
 
 a)  Los controles deben seleccionarse de la misma base poblacional (de la cohorte hipotética) de donde se originaron los casos. La idea sería que si uno de estos controles desarrollara el evento en cuestión, pasaría a formar parte del grupo de los casos. Esto último implica que los controles estuvieron en riesgo de desarrollar el evento en forma simultánea a los casos.
 b)  Los controles deben seleccionarse independientemente de su condición de expuestos o no expuestos.
-c)  La probabilidad de selección para los controles debe ser proporcional al tiempo que el sujeto estuvo en riesgo de desarrollar el evento o enfermedad en estudio
-d)  Para evitar la confusión, es posible aparear por las variables confusoras en la fase de diseño
-e)  Los procedimientos para medir la exposición, deben ser los mismos, tanto en casos como en controles
+c)  La probabilidad de selección para los controles debe ser proporcional al tiempo que el sujeto estuvo en riesgo de desarrollar el evento o enfermedad en estudio.
+d)  Para evitar la confusión, es posible aparear por las variables confusoras en la fase de diseño.
+e)  Los procedimientos para medir la exposición, deben ser los mismos, tanto en casos como en controles.
 
 Existen diferentes posibilidades de obtención de controles, como: poblacionales, hospitalarios, de vecindario, controles obtenidos de un registro de mortalidad, etc; dependerá de la fuente de casos.
 
@@ -86,10 +86,16 @@ En los últimos tiempos, se ha profundizado en los aspectos metodológicos de lo
 
 Quienes desean profundizar estos tópicos sobre el diseño de los CyC, pueden leer el capítulo correspondiente de *“Epidemiología. Diseño y análisis de estudios”* de @hernández-ávila2011. Comenzaremos ahora con la parte de análisis de estos diseños.
 
-## **Análisis estadístico**
+## Análisis estadístico
 
 Primeramente, recordemos que la medida de asociación empleada en CyC es el *Odds ratio* (OR). Como ustedes ya habrán estudiado previamente, el análisis de los estudios de casos y controles se basa en los conceptos de *odds* y *odds ratios* y se realiza mediante la comparación de casos y controles con respecto a la frecuencia de exposición a través del *odds ratio* de la exposición, que es el *odds* de la exposición entre los casos dividido por el *odds* de la exposición entre los controles.
 
-Ahora, en esta nueva versión multivariada, la metodología más apropiada es la [**regresión logística**](https://datos-ine.github.io/EpiAvanzada/unidad_4/logistica) en estudios de casos y controles no apareados, y **regresión logística condicional** en estudios de casos y controles apareados.
+El modelo multivariado a utilizar para estudios de casos y controles no apareados es la [**regresión logística**](https://datos-ine.github.io/EpiAvanzada/unidad_4/logistica), que desarrollaremos en esta unidad. Por otro lado, los estudios de CyC apareados se analizan mediante modelos de **regresión logística condicional**, los cuales no son abordados en el contenido del curso. Quienes necesiten utilizar regresiones logísticas condicionales para el análisis de sus datos, pueden conocer más sobre las mismas visitando alguno de los siguientes enlaces:
+
+-   [clogit {survival}](https://stat.ethz.ch/R-manual/R-patched/library/survival/html/clogit.html),
+
+-   [RPubs: Regresión logística condicional](https://rpubs.com/daneira66/regresion_logistica_condicional)
+
+-   [Introduction to Regression Methods for Public Health Using R: Conditional logistic regression for matched case-control data](https://www.bookdown.org/rwnahhas/RMPH/blr-conditional.html)
 
 ## Bibliografía
