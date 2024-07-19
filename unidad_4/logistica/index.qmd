@@ -1101,13 +1101,15 @@ Para nuestro ejemplo:
 
 -   Número de observaciones: 800
 
--   Número de variables independientes en el modelo (`mod_interaccion`): 4
+-   Número de variables independientes en `mod_interaccion`: 4
 
 Aplicando la fórmula de Freeman:
 
-$$
-n = 10(4+1) = 50
-$$
+```{r}
+n_min = 10 * (4 + 1)
+
+n_min
+```
 
 Dado que el modelo incluye 4 variables independientes, la fórmula sugiere que se necesita un mínimo de 50 observaciones. En nuestro caso, el tamaño de la muestra es 800, lo cual supera ampliamente el requisito mínimo de 50 observaciones, confirmando que tenemos un tamaño de muestra adecuado para el modelo propuesto.
 
