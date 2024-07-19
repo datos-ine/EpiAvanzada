@@ -1017,7 +1017,7 @@ Los resultados para cada una de las variables independientes es cercano a 1, por
 
 ### Interacción
 
-En este punto aplica el mismo concepto y explicación que la expresada en el material de [RLM de la Unidad 3](https://datos-ine.github.io/EpiAvanzada/unidad_3/rlm/).
+En este punto aplica el mismo concepto y explicación que la expresada en el material de [RLM de la Unidad 3](https://datos-ine.github.io/EpiAvanzada/unidad_3/rlm/#confusi%C3%B3n-e-interacci%C3%B3n-en-rlm).
 
 Ante la pregunta de la existencia de una variable modificadora de efecto dentro de la regresión múltiple, podemos realizar un análisis comparativo separando por estratos o subgrupos. El objetivo es identificar si la relación de la variable respuesta y una variable independiente cambia de acuerdo al nivel de otra variable independiente.
 
