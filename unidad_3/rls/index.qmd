@@ -675,18 +675,18 @@ La variable dependiente es la tasa de mortalidad (`target_death_rate`) y la inde
 Para dibujar gráficos de dispersión podemos utilizar funciones del paquete `ggplot2`.
 
 ```{r}
-datos %>% 
+datos |> 
   
-  ggplot(aes(x = median_age, y = target_death_rate)) +
+  ggplot(mapping = aes(x = median_age, y = target_death_rate)) +
   
   # gráfico de dispersión
-  geom_point(color = "#49917A") + 
+  geom_point(color = pal[6]) +
   
   # modifico color de fondo
   theme_minimal()
 ```
 
-En todos los casos, lo que observamos en el gráfico es una clara relación inversa entre las variables, dado que las ciudades que tienen altos valores en porcentajes de ciclistas tiene bajos valores en porcentajes de cardiopatías y viceversa.
+En todos los casos, lo que observamos en el gráfico es una clara relación inversa entre las variables, dado que los condados en las que las personas tienen mayor mediana de edad, tienen bajos valores en porcentajes de muertes por cáncer y viceversa.
 
 ### Correlación
 
@@ -736,7 +736,7 @@ Habitualmente la comprobación precisa de estos criterios se realiza con los res
 
 La independencia, también conocida como no autocorrelación, pueden afirmarse de forma general, a partir del conocimiento previo de la fuente de los datos y su forma de recolección, aunque siempre conviene verificarla en los residuos.
 
-La linealidad es producto de la relación entre las variables cardiopatias y ciclistas, que confirmamos mediante el diagrama de dispersión y la $r$ de Pearson significativa.
+La linealidad es producto de la relación entre las variables `target_death_rate` y `median_age`, que confirmamos mediante el diagrama de dispersión y la $r$ de Pearson significativa.
 
 La homocedasticidad es conveniente definirla a partir del modelo realizado, donde buscamos que la varianza de la gráfica de los residuos sea aproximadamente constante a lo largo del eje x. También se puede probar mediante contraste de hipótesis (test de Breusch-Pagan)
 
@@ -805,21 +805,21 @@ summary(modelo)
 
 Con `summary()` observamos que los resultados son numerosos y comprenden a:
 
-**Call**: formula del modelo
+`Call`: formula del modelo
 
-**Residuals**: distribución de los residuos (mediana, mínimo, máximo y percentilos 25-75)
+`Residuals`: distribución de los residuos (mediana, mínimo, máximo y percentilos 25-75)
 
-**Coefficients**: valores del intercepto y de la pendiente. Además se agregan los errores estandar y el estadístico $t$ con el *p*-valor de probabilidad dada la hipótesis nula que los coeficientes sean iguales a cero. (Lo que se pretende mediante estos contrastes es determinar si los efectos de la constante intercepto y de la variable independiente son realmente importantes para explicar la variable dependiente o si, por el contario, pueden considerarse nulos.)
+`Coefficients`: valores del intercepto y de la pendiente. Además se agregan los errores estandar y el estadístico $t$ con el *p*-valor de probabilidad dada la hipótesis nula que los coeficientes sean iguales a cero. (Lo que se pretende mediante estos contrastes es determinar si los efectos de la constante intercepto y de la variable independiente son realmente importantes para explicar la variable dependiente o si, por el contario, pueden considerarse nulos.)
 
-**Residual standard error**: Error estándar de los residuos con sus grados de libertad
+`Residual standard error`: Error estándar de los residuos con sus grados de libertad
 
-**Multiple R-squared**: Coeficiente de determinación $R^2$
+`Multiple R-squared`: Coeficiente de determinación $R^2$
 
-**Adjusted R-squared**: Coeficiente $R^2$ ajustado
+`Adjusted R-squared`: Coeficiente $R^2$ ajustado
 
-**F-statistic**: estadístico $F$ sobre la hipótesis nula que el cociente entre la varianza de la ecuación de regresión y la varianza de los residuos es igual a 1.
+`F-statistic`: estadístico $F$ sobre la hipótesis nula que el cociente entre la varianza de la ecuación de regresión y la varianza de los residuos es igual a 1.
 
-**p-value**: p-valor del estadistico $F$.
+`p-value`: p-valor del estadistico $F$.
 
 Como elemento extra, notese que la salida en R tiene unos códigos que ayudan a realizar la lectura de la significación de los coeficientes. Funciona mediante el uso de asteriscos (\*) al extremo derecho de cada parámetro calculado.
 
@@ -950,13 +950,13 @@ Retomando la cuestión gráfica, podemos dibujar la recta de regresión lineal s
 
 ```{r}
 datos %>% 
-  ggplot(aes(x = median_age, y = target_death_rate)) +
+  ggplot(mapping = aes(x = median_age, y = target_death_rate)) +
   
  # diagrama de dispersión
-   geom_point(color = "#49917A") +
+   geom_point(color = pal[6]) +
   
   # añade línea de regresión
-  geom_smooth(method = "lm", color = "#1E6590") + 
+  geom_smooth(method = "lm", color = pal[3]) + 
   
   # cambia color de fondo
   theme_minimal()
@@ -1142,7 +1142,7 @@ En el caso de detectar algún valor de este tipo, sobre todo si es severo, es im
 
 Una vez que se ha ajustado un modelo es necesario verificar su eficiencia, ya que aun siendo la línea que mejor se ajusta a las observaciones de entre todas las posibles, el modelo puede ser malo. Las medidas más utilizadas para medir la calidad del ajuste son: error estándar de los residuales, el test $F$ y el coeficiente de determinación $R^2$.
 
-Estos valores se encuentran en la parte final de la salida del `summary(modelo)`, donde leemos RSE - error estandar de los residuos (**Residual standar error**), coeficiente de determinación $R^2$ (**Multiple R-squared**) y $R^2$ ajustado (**Adjusted R-squared**).
+Estos valores se encuentran en la parte final de la salida del `summary(modelo)`, donde leemos RSE - error estandar de los residuos (`Residual standar error`), coeficiente de determinación $R^2$ (`Multiple R-squared`) y $R^2$ ajustado (`Adjusted R-squared`).
 
 Podemos acceder al valor de $R^2$ del modelo usando la función `r2()` del paquete `performance`
 
