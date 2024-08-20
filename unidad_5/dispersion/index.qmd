@@ -144,7 +144,7 @@ tbl_stack(tbls = list(tbl_regression(fit_pois, exponentiate = T),
 
 Entre sus limitaciones, estos modelos no son adecuados para datos con subdispersión, son computacionalmente complejos y su ajuste depende de la estructura específica de los datos, lo que puede afectar la estabilidad de las estimaciones.
 
-### Distribución Conway-Maxwell Poisson 
+### Distribución Conway-Maxwell Poisson
 
 El modelo Conway-Maxwell Poisson (COM-Poisson) es altamente flexible, permitiendo manejar tanto sobredispersión como subdispersión en datos de conteo, y ofrece una generalización del modelo Poisson estándar. Su capacidad para modelar datos con exceso de ceros y su aplicabilidad en diversos campos lo hacen versátil. En R, podemos ajustarlos usando la función `glmmTMB()` con el argumento `family = compois()`.
 
@@ -192,8 +192,10 @@ tbl_regression(fit_zi, exponentiate = T)
 Existen diversas soluciones para tratar la sobredispersión, subdispersión y exceso de ceros en modelos de conteo. En este documento, nos enfocamos en las estrategias más comunes que pueden ser abordadas mediante modelos lineales generalizados utilizando el paquete `glmmTMB`.
 
 | Problema                          | Modelo                                        |
-|-----------------------------------|-----------------------------------------------|
+|-------------------------------|-----------------------------------------|
 | Sobredispersión                   | `glmmTMB(formula, family = nbinom2)`          |
 | Subdispersión                     | `glmmTMB(formula, family = compois)`          |
 | Sobredispersión + Exceso de Ceros | `glmmTMB(formula, family = nbinom2, zi = ~1)` |
 :::
+
+## Referencias
