@@ -139,7 +139,14 @@ window.Quarto = {
   <li><a href="#aplicación-en-r" id="toc-aplicación-en-r" class="nav-link" data-scroll-target="#aplicación-en-r">Aplicación en R</a>
   <ul class="collapse">
   <li><a href="#construcción-de-un-modelo-de-regresión-de-poisson-en-r" id="toc-construcción-de-un-modelo-de-regresión-de-poisson-en-r" class="nav-link" data-scroll-target="#construcción-de-un-modelo-de-regresión-de-poisson-en-r">Construcción de un modelo de regresión de Poisson en R</a></li>
-  <li><a href="#ejemplo-práctico" id="toc-ejemplo-práctico" class="nav-link" data-scroll-target="#ejemplo-práctico">Ejemplo práctico</a></li>
+  </ul></li>
+  <li><a href="#ejemplo-práctico-en-r" id="toc-ejemplo-práctico-en-r" class="nav-link" data-scroll-target="#ejemplo-práctico-en-r">Ejemplo práctico en R</a>
+  <ul class="collapse">
+  <li><a href="#offset" id="toc-offset" class="nav-link" data-scroll-target="#offset"><em>Offset</em></a></li>
+  <li><a href="#bondad-de-ajuste" id="toc-bondad-de-ajuste" class="nav-link" data-scroll-target="#bondad-de-ajuste">Bondad de ajuste</a></li>
+  <li><a href="#selección-de-variables-explicativas" id="toc-selección-de-variables-explicativas" class="nav-link" data-scroll-target="#selección-de-variables-explicativas">Selección de variables explicativas</a></li>
+  <li><a href="#interpretación-de-los-resultados" id="toc-interpretación-de-los-resultados" class="nav-link" data-scroll-target="#interpretación-de-los-resultados">Interpretación de los resultados</a></li>
+  <li><a href="#densidad-de-incidencia" id="toc-densidad-de-incidencia" class="nav-link" data-scroll-target="#densidad-de-incidencia">Densidad de incidencia</a></li>
   </ul></li>
   <li><a href="#bibliografía" id="toc-bibliografía" class="nav-link" data-scroll-target="#bibliografía">Bibliografía</a></li>
   </ul>
@@ -217,14 +224,14 @@ ln(d)=ln(n)+\alpha+\beta_1x_1+\beta_2x_2+\dots+\beta_nx_n
 <li><p><strong>Proporcionalidad de eventos al tamaño del intervalo:</strong> La cantidad de eventos en un intervalo dado debe ser proporcional al tamaño del intervalo. Esto significa que si duplicamos el intervalo, esperaríamos aproximadamente el doble de eventos.</p></li>
 <li><p><strong>Mutuamente excluyentes en el tiempo:</strong> No pueden ocurrir dos o más eventos en el mismo instante puntual. Cada evento debe ser individual y ocurrir en un momento distinto.</p></li>
 </ol>
-<p>Una característica fundamental de la distribución de Poisson es que la media y la varianza deben ser iguales, lo que se conoce como el supuesto de <strong>equidispersión</strong>. Si la varianza observada en los datos supera la varianza esperada bajo este modelo, se enfrenta a un problema de <strong>sobredispersión</strong>. La sobredispersión es común en la práctica y puede sesgar la estimación de los errores estándar de los coeficientes, por lo que es fundamental diagnosticarla y tratarla adecuadamente. Un método para evaluar la sobredispersión es utilizar el <strong>coeficiente de variación (CV)</strong>, definido como el cociente entre la varianza estimada y la media estimada.</p>
+<p>Una característica fundamental de la distribución de Poisson es que la media y la varianza deben ser iguales, lo que se conoce como el supuesto de <strong>equidispersión</strong>. Cuando la varianza observada en los datos excede la varianza esperada bajo este modelo, se enfrenta a un problema de <strong>sobredispersión</strong>. Un método común para detectar sobredispersión es calcular el <strong>coeficiente de variación</strong> (CV), definido como el cociente entre la varianza y la media estimadas. La sobredispersión es frecuente en la práctica y puede afectar la precisión de las estimaciones de los errores estándar de los coeficientes, por lo que es fundamental diagnosticarla y tratarla adecuadamente.</p>
 <p>Otra situación en la que el modelo de Poisson puede no ser adecuado es cuando hay un número excesivo de ceros en los datos, es decir, cuando la frecuencia observada de ceros es mayor de lo que predice el modelo. Esto se debe a que el <span class="math inline">\(ln(0)\)</span> no está definido. De manera particular, es posible que el mecanismo aleatorio que dio origen a los datos de conteo muestre una mayor concentración para algún valor específico, que puede ser el cero (como ocurre con algunas variables vinculadas a salud) o cualquier otro valor positivo. Esto implica que dicho valor tiene una mayor probabilidad de ocurrencia que la especificada por la distribución Poisson o cualquier otra distribución.</p>
-<p>Al finalizar esta unidad, exploraremos cómo detectar y manejar tanto la sobredispersión de los datos como el exceso de ceros, para asegurar que el modelo elegido sea el más adecuado para los datos analizados.</p>
+<p>En el <a href="https://datos-ine.github.io/EpiAvanzada/unidad_5/dispersion/">siguiente capítulo</a> de esta unidad, exploraremos cómo detectar y manejar tanto la sobredispersión de los datos como el exceso de ceros, para asegurar que el modelo elegido sea el más adecuado para los datos analizados.</p>
 </section>
 </section>
 <section id="aplicación-en-r" class="level2">
 <h2 class="anchored" data-anchor-id="aplicación-en-r">Aplicación en R</h2>
-<p>La regresión de Poisson está implementada en R como parte de la familia de <strong>Modelos Lineales Generalizados (GLM)</strong>, similar a la regresión logística vista en la unidad anterior. Esta técnica permite modelar variables de respuesta que representan conteos, asegurando que los valores predichos permanezcan dentro de límites razonables.</p>
+<p>La regresión de Poisson está implementada en R como parte de la familia de <a href="https://datos-ine.github.io/EpiAvanzada/unidad_4/logistica/#modelos-lineales-generalizados"><strong>Modelos Lineales Generalizados (GLM)</strong></a>. Esta técnica permite modelar variables de respuesta que representan conteos, asegurando que los valores predichos permanezcan dentro de límites razonables.</p>
 <p>Un criterio importante en la selección de la función de enlace dentro de los GLM es garantizar que los valores ajustados del modelo sean coherentes con la naturaleza de la variable respuesta. Para la distribución de Poisson, la función de enlace predeterminada es el <strong>logaritmo</strong> natural. Esta elección asegura que los recuentos ajustados sean siempre mayores o iguales a cero, lo cual es esencial en el contexto de datos de conteo.</p>
 <p>En la práctica, esto significa que el modelo ajustado con errores de Poisson y una función de enlace logarítmica linealiza la relación entre la variable respuesta (conteos) y las variables independientes, permitiendo una interpretación clara y coherente de los resultados.</p>
 <section id="construcción-de-un-modelo-de-regresión-de-poisson-en-r" class="level3">
@@ -269,11 +276,11 @@ variable\_dependiente \sim variable\_indepen_1 + variable\_indepen_2 +\dots+ var
 <li><p><code>modelo$null.deviance</code>: Devianza del modelo nulo.</p></li>
 </ul>
 </section>
-<section id="ejemplo-práctico" class="level3">
-<h3 class="anchored" data-anchor-id="ejemplo-práctico">Ejemplo práctico</h3>
-<p>Para ilustrar las funciones y la metodología de análisis en R, utilizaremos datos de un estudio de cohorte ocupacional que investiga la asociación entre las muertes respiratorias y la exposición al arsénico en la industria, ajustando por varios otros factores de riesgo.</p>
-<section id="variables-del-estudio" class="level4">
-<h4 class="anchored" data-anchor-id="variables-del-estudio">Variables del Estudio</h4>
+</section>
+<section id="ejemplo-práctico-en-r" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplo-práctico-en-r">Ejemplo práctico en R</h2>
+<p>Para ilustrar las funciones y la metodología de análisis en R, utilizaremos datos de un estudio de cohorte ocupacional que investiga la asociación entre las muertes respiratorias y la exposición al arsénico en la industria, ajustando por varios otros factores de riesgo (“<code>cohorte_ocupacional.txt</code>”).</p>
+<p><strong>Variables del estudio</strong></p>
 <ul>
 <li><p><code>muertes</code>: Número de muertes por persona-años (<code>persona_anio</code>) en cada categoría. Nuestra variable de interés es la tasa de incidencia de mortalidad.</p></li>
 <li><p><code>grupo_edad</code>: Grupo de edad de los sujetos.</p></li>
@@ -281,26 +288,27 @@ variable\_dependiente \sim variable\_indepen_1 + variable\_indepen_2 +\dots+ var
 <li><p><code>comienzo</code>: Año de inicio del empleo.</p></li>
 <li><p><code>arsenico</code>: Nivel de exposición al arsénico durante el período de estudio.</p></li>
 </ul>
-<p>Activemos paquetes y leamos los datos:</p>
+<p>Comenzaremos activando los paquetes necesarios:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Carga paquetes</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># chequeo de supuestos</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># tablas regresión</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># formato de tablas</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># manejo de datos</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="do">### Carga datos</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"cohorte_ocupacional.txt"</span>)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="do">### Explora datos</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># chequeo de supuestos</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tablas regresión</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># formato de tablas</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flextable)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># manejo de datos</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Cargamos la base de datos y exploramos su estructura:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Carga datos</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"cohorte_ocupacional.txt"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">### Explora datos</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 114
 Columns: 6
@@ -312,96 +320,97 @@ $ comienzo     &lt;chr&gt; "1925 y post", "1925 y post", "1925 y post", "1925 y 
 $ arsenico     &lt;chr&gt; "&lt;1 año", "1-4 años", "5-14 años", "15+ años", "&lt;1 año", …</code></pre>
 </div>
 </div>
-<p>Las variables <code>grupo_edad</code>, <code>periodo</code>, <code>comienzo</code> y <code>arsenico</code> son categóricas y debemos convertirlas a factor. Podemos hacer esto variable por variable o usando el comando <code>across()</code> dentro de <code>mutate()</code>:</p>
+<p>Las variables <code>grupo_edad</code>, <code>periodo</code>, <code>comienzo</code> y <code>arsenico</code> son de tipo character y debemos convertirlas a factor. Podemos hacer esto manualmente para cada variable, o usar el comando <code>across()</code> que permite modificar varias columnas a la vez:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Transformo a factor</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(grupo_edad<span class="sc">:</span>arsenico, <span class="at">.fns =</span> <span class="sc">~</span> <span class="fu">as.factor</span>(.x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Transformo a factor</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> grupo_edad<span class="sc">:</span>arsenico, </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">.fns =</span> <span class="sc">~</span> <span class="fu">as.factor</span>(.x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Revisemos los niveles de cada factor:</p>
+<p>Revisemos como quedaron los niveles de cada factor:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># grupo etario</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>grupo_edad)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># grupo etario</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>grupo_edad)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "40-49" "50-59" "60-69" "70-79"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># periodo</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>periodo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># periodo</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>periodo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "1938-1949" "1950-1959" "1960-1969" "1970-1977"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># comienzo</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>comienzo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># comienzo</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>comienzo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "&lt; 1925"      "1925 y post"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># arsenico</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>arsenico)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># arsenico</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(datos<span class="sc">$</span>arsenico)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "&lt;1 año"    "1-4 años"  "15+ años"  "5-14 años"</code></pre>
 </div>
 </div>
-<p>Exploremos los datos de la base organizando la información de persona-años por edad y período. Transformaremos la salida en una tabla usando las funciones <code>flextable()</code> y <code>autofit()</code> del paquete <code>flextable</code>.</p>
+<p>Ahora vamos a explorar los datos de la base organizando la información de persona-años por edad y período. Transformaremos la salida en una tabla usando las funciones <code>flextable()</code> y <code>autofit()</code> del paquete <code>flextable</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Creo tabla</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>datos  <span class="sc">|&gt;</span>  </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad, <span class="at">wt =</span> persona_anio) <span class="sc">|&gt;</span> </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> grupo_edad, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># formato de tabla</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flextable</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autofit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Creo tabla</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>datos  <span class="sc">|&gt;</span>  </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad, <span class="at">wt =</span> persona_anio) <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> grupo_edad, <span class="at">values_from =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># formato de tabla</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flextable</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autofit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="tabwid"><style>.cl-3f59922a{}.cl-3f52b414{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-3f5534be{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-3f5534bf{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-3f5545f8{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f5545f9{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f554602{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f554603{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f554604{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f55460c{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f55460d{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f55460e{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f55460f{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-3f59922a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-3f5545f8"><p class="cl-3f5534be"><span class="cl-3f52b414">periodo</span></p></th><th class="cl-3f5545f9"><p class="cl-3f5534bf"><span class="cl-3f52b414">40-49</span></p></th><th class="cl-3f5545f9"><p class="cl-3f5534bf"><span class="cl-3f52b414">50-59</span></p></th><th class="cl-3f554602"><p class="cl-3f5534bf"><span class="cl-3f52b414">60-69</span></p></th><th class="cl-3f554602"><p class="cl-3f5534bf"><span class="cl-3f52b414">70-79</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-3f554603"><p class="cl-3f5534be"><span class="cl-3f52b414">1938-1949</span></p></td><td class="cl-3f554604"><p class="cl-3f5534bf"><span class="cl-3f52b414">92,171</span></p></td><td class="cl-3f554604"><p class="cl-3f5534bf"><span class="cl-3f52b414">64,211</span></p></td><td class="cl-3f55460c"><p class="cl-3f5534bf"><span class="cl-3f52b414">40,056</span></p></td><td class="cl-3f55460c"><p class="cl-3f5534bf"><span class="cl-3f52b414">15,072</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f554603"><p class="cl-3f5534be"><span class="cl-3f52b414">1950-1959</span></p></td><td class="cl-3f554604"><p class="cl-3f5534bf"><span class="cl-3f52b414">149,493</span></p></td><td class="cl-3f554604"><p class="cl-3f5534bf"><span class="cl-3f52b414">102,234</span></p></td><td class="cl-3f55460c"><p class="cl-3f5534bf"><span class="cl-3f52b414">48,960</span></p></td><td class="cl-3f55460c"><p class="cl-3f5534bf"><span class="cl-3f52b414">18,511</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f554603"><p class="cl-3f5534be"><span class="cl-3f52b414">1960-1969</span></p></td><td class="cl-3f554604"><p class="cl-3f5534bf"><span class="cl-3f52b414">161,234</span></p></td><td class="cl-3f554604"><p class="cl-3f5534bf"><span class="cl-3f52b414">136,627</span></p></td><td class="cl-3f55460c"><p class="cl-3f5534bf"><span class="cl-3f52b414">75,552</span></p></td><td class="cl-3f55460c"><p class="cl-3f5534bf"><span class="cl-3f52b414">27,240</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f55460d"><p class="cl-3f5534be"><span class="cl-3f52b414">1970-1977</span></p></td><td class="cl-3f55460e"><p class="cl-3f5534bf"><span class="cl-3f52b414">90,730</span></p></td><td class="cl-3f55460e"><p class="cl-3f5534bf"><span class="cl-3f52b414">115,040</span></p></td><td class="cl-3f55460f"><p class="cl-3f5534bf"><span class="cl-3f52b414">79,366</span></p></td><td class="cl-3f55460f"><p class="cl-3f5534bf"><span class="cl-3f52b414">33,410</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-c4bd21e6{}.cl-c4b68700{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c4b8fbc0{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-c4b8fbc1{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-c4b90ff2{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4b90ff3{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4b90ff4{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4b90ffc{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4b90ffd{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4b91006{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4b91007{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4b91008{width:0.837in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4b91009{width:0.752in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-c4bd21e6"><thead><tr style="overflow-wrap:break-word;"><th class="cl-c4b90ff2"><p class="cl-c4b8fbc0"><span class="cl-c4b68700">periodo</span></p></th><th class="cl-c4b90ff3"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">40-49</span></p></th><th class="cl-c4b90ff3"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">50-59</span></p></th><th class="cl-c4b90ff4"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">60-69</span></p></th><th class="cl-c4b90ff4"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">70-79</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-c4b90ffc"><p class="cl-c4b8fbc0"><span class="cl-c4b68700">1938-1949</span></p></td><td class="cl-c4b90ffd"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">92,171</span></p></td><td class="cl-c4b90ffd"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">64,211</span></p></td><td class="cl-c4b91006"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">40,056</span></p></td><td class="cl-c4b91006"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">15,072</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4b90ffc"><p class="cl-c4b8fbc0"><span class="cl-c4b68700">1950-1959</span></p></td><td class="cl-c4b90ffd"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">149,493</span></p></td><td class="cl-c4b90ffd"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">102,234</span></p></td><td class="cl-c4b91006"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">48,960</span></p></td><td class="cl-c4b91006"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">18,511</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4b90ffc"><p class="cl-c4b8fbc0"><span class="cl-c4b68700">1960-1969</span></p></td><td class="cl-c4b90ffd"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">161,234</span></p></td><td class="cl-c4b90ffd"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">136,627</span></p></td><td class="cl-c4b91006"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">75,552</span></p></td><td class="cl-c4b91006"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">27,240</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4b91007"><p class="cl-c4b8fbc0"><span class="cl-c4b68700">1970-1977</span></p></td><td class="cl-c4b91008"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">90,730</span></p></td><td class="cl-c4b91008"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">115,040</span></p></td><td class="cl-c4b91009"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">79,366</span></p></td><td class="cl-c4b91009"><p class="cl-c4b8fbc1"><span class="cl-c4b68700">33,410</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 <p>Ahora hacemos lo mismo para el número de muertes y calculamos la incidencia por 10000 personas-año para cada celda:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Creo objeto para personas-años</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>personas_años <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">wt =</span> persona_anio,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"p.a"</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="do">### Creo tabla</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad, <span class="at">wt =</span> muertes) <span class="sc">|&gt;</span> </span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(personas_años) <span class="sc">|&gt;</span> </span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">incidencia =</span> <span class="fu">round</span>(n<span class="sc">/</span>p.a<span class="sc">*</span><span class="dv">10000</span>,<span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n, <span class="sc">-</span>p.a) <span class="sc">|&gt;</span> </span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># formato de tabla</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flextable</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autofit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Creo objeto para personas-años</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>personas_anios <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">wt =</span> persona_anio,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"p.a"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="do">### Creo tabla</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(periodo, grupo_edad, <span class="at">wt =</span> muertes) <span class="sc">|&gt;</span> </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(personas_anios) <span class="sc">|&gt;</span> </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">incidencia =</span> <span class="fu">round</span>(n<span class="sc">/</span>p.a<span class="sc">*</span><span class="dv">10000</span>,<span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n, <span class="sc">-</span>p.a) <span class="sc">|&gt;</span> </span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># formato de tabla</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flextable</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autofit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="tabwid"><style>.cl-3f861d9a{}.cl-3f7f26b6{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-3f8212d6{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-3f8212d7{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-3f822172{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f82217c{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f82217d{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f82217e{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f82217f{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f822186{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f822187{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f822188{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f822189{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f822190{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f822191{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3f822192{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-3f861d9a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-3f822172"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">periodo</span></p></th><th class="cl-3f82217c"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">grupo_edad</span></p></th><th class="cl-3f82217d"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">incidencia</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-3f82217e"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1938-1949</span></p></td><td class="cl-3f82217f"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">40-49</span></p></td><td class="cl-3f822186"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">0.54</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f82217e"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1938-1949</span></p></td><td class="cl-3f82217f"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">50-59</span></p></td><td class="cl-3f822186"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">1.71</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f82217e"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1938-1949</span></p></td><td class="cl-3f82217f"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">60-69</span></p></td><td class="cl-3f822186"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">3.50</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f82217e"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1938-1949</span></p></td><td class="cl-3f82217f"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">70-79</span></p></td><td class="cl-3f822186"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">2.65</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f82217e"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1950-1959</span></p></td><td class="cl-3f82217f"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">40-49</span></p></td><td class="cl-3f822186"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">0.33</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f82217e"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1950-1959</span></p></td><td class="cl-3f82217f"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">50-59</span></p></td><td class="cl-3f822186"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">2.35</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822187"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1950-1959</span></p></td><td class="cl-3f822188"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">60-69</span></p></td><td class="cl-3f822189"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">4.90</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822187"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1950-1959</span></p></td><td class="cl-3f822188"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">70-79</span></p></td><td class="cl-3f822189"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">6.48</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f82217e"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1960-1969</span></p></td><td class="cl-3f82217f"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">40-49</span></p></td><td class="cl-3f822186"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">0.43</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822187"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1960-1969</span></p></td><td class="cl-3f822188"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">50-59</span></p></td><td class="cl-3f822189"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">2.05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822187"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1960-1969</span></p></td><td class="cl-3f822188"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">60-69</span></p></td><td class="cl-3f822189"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">5.82</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822187"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1960-1969</span></p></td><td class="cl-3f822188"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">70-79</span></p></td><td class="cl-3f822189"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">5.51</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822187"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1970-1977</span></p></td><td class="cl-3f822188"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">40-49</span></p></td><td class="cl-3f822189"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">0.44</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822187"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1970-1977</span></p></td><td class="cl-3f822188"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">50-59</span></p></td><td class="cl-3f822189"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">1.48</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822187"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1970-1977</span></p></td><td class="cl-3f822188"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">60-69</span></p></td><td class="cl-3f822189"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">4.41</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-3f822190"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">1970-1977</span></p></td><td class="cl-3f822191"><p class="cl-3f8212d6"><span class="cl-3f7f26b6">70-79</span></p></td><td class="cl-3f822192"><p class="cl-3f8212d7"><span class="cl-3f7f26b6">8.08</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-c4ec8bca{}.cl-c4e63342{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c4e87b16{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-c4e87b20{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-c4e88ec6{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88ec7{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88ec8{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88ed0{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88ed1{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88ed2{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88ed3{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88eda{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88edb{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88edc{width:1.016in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88edd{width:1.101in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c4e88ee4{width:0.965in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-c4ec8bca"><thead><tr style="overflow-wrap:break-word;"><th class="cl-c4e88ec6"><p class="cl-c4e87b16"><span class="cl-c4e63342">periodo</span></p></th><th class="cl-c4e88ec7"><p class="cl-c4e87b16"><span class="cl-c4e63342">grupo_edad</span></p></th><th class="cl-c4e88ec8"><p class="cl-c4e87b20"><span class="cl-c4e63342">incidencia</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed0"><p class="cl-c4e87b16"><span class="cl-c4e63342">1938-1949</span></p></td><td class="cl-c4e88ed1"><p class="cl-c4e87b16"><span class="cl-c4e63342">40-49</span></p></td><td class="cl-c4e88ed2"><p class="cl-c4e87b20"><span class="cl-c4e63342">0.54</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed0"><p class="cl-c4e87b16"><span class="cl-c4e63342">1938-1949</span></p></td><td class="cl-c4e88ed1"><p class="cl-c4e87b16"><span class="cl-c4e63342">50-59</span></p></td><td class="cl-c4e88ed2"><p class="cl-c4e87b20"><span class="cl-c4e63342">1.71</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed0"><p class="cl-c4e87b16"><span class="cl-c4e63342">1938-1949</span></p></td><td class="cl-c4e88ed1"><p class="cl-c4e87b16"><span class="cl-c4e63342">60-69</span></p></td><td class="cl-c4e88ed2"><p class="cl-c4e87b20"><span class="cl-c4e63342">3.50</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed0"><p class="cl-c4e87b16"><span class="cl-c4e63342">1938-1949</span></p></td><td class="cl-c4e88ed1"><p class="cl-c4e87b16"><span class="cl-c4e63342">70-79</span></p></td><td class="cl-c4e88ed2"><p class="cl-c4e87b20"><span class="cl-c4e63342">2.65</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed0"><p class="cl-c4e87b16"><span class="cl-c4e63342">1950-1959</span></p></td><td class="cl-c4e88ed1"><p class="cl-c4e87b16"><span class="cl-c4e63342">40-49</span></p></td><td class="cl-c4e88ed2"><p class="cl-c4e87b20"><span class="cl-c4e63342">0.33</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed0"><p class="cl-c4e87b16"><span class="cl-c4e63342">1950-1959</span></p></td><td class="cl-c4e88ed1"><p class="cl-c4e87b16"><span class="cl-c4e63342">50-59</span></p></td><td class="cl-c4e88ed2"><p class="cl-c4e87b20"><span class="cl-c4e63342">2.35</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed3"><p class="cl-c4e87b16"><span class="cl-c4e63342">1950-1959</span></p></td><td class="cl-c4e88eda"><p class="cl-c4e87b16"><span class="cl-c4e63342">60-69</span></p></td><td class="cl-c4e88edb"><p class="cl-c4e87b20"><span class="cl-c4e63342">4.90</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed3"><p class="cl-c4e87b16"><span class="cl-c4e63342">1950-1959</span></p></td><td class="cl-c4e88eda"><p class="cl-c4e87b16"><span class="cl-c4e63342">70-79</span></p></td><td class="cl-c4e88edb"><p class="cl-c4e87b20"><span class="cl-c4e63342">6.48</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed0"><p class="cl-c4e87b16"><span class="cl-c4e63342">1960-1969</span></p></td><td class="cl-c4e88ed1"><p class="cl-c4e87b16"><span class="cl-c4e63342">40-49</span></p></td><td class="cl-c4e88ed2"><p class="cl-c4e87b20"><span class="cl-c4e63342">0.43</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed3"><p class="cl-c4e87b16"><span class="cl-c4e63342">1960-1969</span></p></td><td class="cl-c4e88eda"><p class="cl-c4e87b16"><span class="cl-c4e63342">50-59</span></p></td><td class="cl-c4e88edb"><p class="cl-c4e87b20"><span class="cl-c4e63342">2.05</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed3"><p class="cl-c4e87b16"><span class="cl-c4e63342">1960-1969</span></p></td><td class="cl-c4e88eda"><p class="cl-c4e87b16"><span class="cl-c4e63342">60-69</span></p></td><td class="cl-c4e88edb"><p class="cl-c4e87b20"><span class="cl-c4e63342">5.82</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed3"><p class="cl-c4e87b16"><span class="cl-c4e63342">1960-1969</span></p></td><td class="cl-c4e88eda"><p class="cl-c4e87b16"><span class="cl-c4e63342">70-79</span></p></td><td class="cl-c4e88edb"><p class="cl-c4e87b20"><span class="cl-c4e63342">5.51</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed3"><p class="cl-c4e87b16"><span class="cl-c4e63342">1970-1977</span></p></td><td class="cl-c4e88eda"><p class="cl-c4e87b16"><span class="cl-c4e63342">40-49</span></p></td><td class="cl-c4e88edb"><p class="cl-c4e87b20"><span class="cl-c4e63342">0.44</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed3"><p class="cl-c4e87b16"><span class="cl-c4e63342">1970-1977</span></p></td><td class="cl-c4e88eda"><p class="cl-c4e87b16"><span class="cl-c4e63342">50-59</span></p></td><td class="cl-c4e88edb"><p class="cl-c4e87b20"><span class="cl-c4e63342">1.48</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88ed3"><p class="cl-c4e87b16"><span class="cl-c4e63342">1970-1977</span></p></td><td class="cl-c4e88eda"><p class="cl-c4e87b16"><span class="cl-c4e63342">60-69</span></p></td><td class="cl-c4e88edb"><p class="cl-c4e87b20"><span class="cl-c4e63342">4.41</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c4e88edc"><p class="cl-c4e87b16"><span class="cl-c4e63342">1970-1977</span></p></td><td class="cl-c4e88edd"><p class="cl-c4e87b16"><span class="cl-c4e63342">70-79</span></p></td><td class="cl-c4e88ee4"><p class="cl-c4e87b20"><span class="cl-c4e63342">8.08</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 <p>Podemos visualizar la incidencia de muertes ajustadas por periodo y grupo de edad mediante un gráfico. Aunque el código exacto se omite por razones de extensión, los interesados pueden solicitarlo al equipo docente.</p>
-<p>A continuación se muestra un gráfico que ilustra la incidencia de muertes (mortalidad) ajustada por grupo de edad y periodo:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Este gráfico muestra la incidencia de muertes (mortalidad) por grupo de edad y período. Es visible que el grupo de mayor edad tiende a tener una incidencia más alta, lo que es consistente con la expectativa de que el riesgo de muerte aumenta con la edad.</p>
-<p>Sin embargo, para obtener una comprensión más precisa de esta relación, es crucial ajustar por otras covariables. La regresión de Poisson nos permitirá examinar cómo la exposición al arsénico y otros factores afectan la mortalidad, controlando simultáneamente por la edad y otros posibles factores de confusión.</p>
+<p>En el gráfico anterior, podemos observar que el grupo de mayor edad tiende a tener una incidencia más alta, lo que es consistente con la expectativa de que el riesgo de muerte aumenta con la edad. Sin embargo, para obtener una comprensión más precisa de esta relación, es crucial ajustar por otras covariables. La regresión de Poisson nos permitirá examinar cómo la exposición al arsénico y otros factores afectan la mortalidad, controlando simultáneamente por la edad y otros posibles factores de confusión.</p>
+<section id="offset" class="level3">
+<h3 class="anchored" data-anchor-id="offset"><em>Offset</em></h3>
 <p>Dado que en este ejemplo nos interesa modelar la tasa de incidencia vamos a necesitar incorporar dentro del modelo un termino de desplazamiento (en inglés <em>“offset”</em>).</p>
 <p>Creamos el modelo saturado para trazar iteraciones <em>backward</em>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> grupo_edad <span class="sc">+</span> arsenico, </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> grupo_edad <span class="sc">+</span> arsenico, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>El término <code>offset = log(persona_anio)</code> en el modelo de regresión de Poisson permite que la variable <code>persona_anio</code> actúe como el denominador en el cálculo de las tasas de mortalidad. La transformación logarítmica es necesaria porque la función de enlace del modelo de Poisson es el logaritmo.</p>
 <p>Para obtener un resumen del modelo ajustado, utilizamos la función <code>summary()</code>, que proporciona una visión detallada de los resultados del modelo:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -433,9 +442,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
 <p>Este primer modelo, que incluye todas las covariables, muestra que casi todos los niveles de las variables son significativos respecto a las categorías de referencia.</p>
+</section>
+<section id="bondad-de-ajuste" class="level3">
+<h3 class="anchored" data-anchor-id="bondad-de-ajuste">Bondad de ajuste</h3>
 <p>Para evaluar la bondad de ajuste del modelo y verificar la presencia de sobredispersión, podemos utilizar la función <code>check_overdispersion()</code> del paquete <code>performance</code>. Esta función ayuda a identificar si los errores del modelo presentan una dispersión excesiva en comparación con la esperada bajo la distribución de Poisson:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Overdispersion test
 
@@ -445,29 +457,32 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
 <p>El componente de <code>Pearson's Chi-Squared</code> se calcula a partir de la devianza del modelo. En las pruebas de bondad de ajuste, buscamos que el valor de <em>p</em> sea mayor a 0.05, lo cual indica que el modelo se ajusta adecuadamente a los datos.</p>
-<p>Actualmente, el valor de <em>p</em> indica un buen ajuste del modelo. Para mejorar el modelo y asegurarnos de que incluimos solo las variables significativas, procederemos a eliminar variables una por una en una primera ronda de iteración.</p>
+</section>
+<section id="selección-de-variables-explicativas" class="level3">
+<h3 class="anchored" data-anchor-id="selección-de-variables-explicativas">Selección de variables explicativas</h3>
+<p>Para mejorar el modelo anterior y asegurarnos de que incluimos solo las variables significativas, procederemos a eliminar variables una por una en una primera ronda de iteración mediante un proceso <em>backwards</em> manual.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) arsénico</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> grupo_edad, </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) grupo etario</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> arsenico, </span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>         </span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) periodo</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad <span class="sc">+</span> arsenico, </span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) arsénico</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> grupo_edad, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) grupo etario</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> periodo <span class="sc">+</span> arsenico, </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>         </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) periodo</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad <span class="sc">+</span> arsenico, </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Para comparar los modelos podemos usar la función <code>compare_perfomance()</code> del paquete <code>performance</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod1, mod2, mod3, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod1, mod2, mod3, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Comparison of Model Performance Indices
 
@@ -481,21 +496,21 @@ mod3 |   glm | 355.0 (&gt;.999) | 374.2 (&gt;.999) |           0.926 | 1.595</co
 <p>Buscamos el menor AIC, que en este caso es <code>mod3</code> (modelo con variables <code>grupo_edad</code> y <code>arsenico</code>)</p>
 <p>En la segunda fase de iteración partimos de este modelo y quitamos otra variable, lo que signica en nuestro ejemplo construir regresiones simples:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) arsénico</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>mod4<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad, </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos) </span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) grupo etario</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>mod4<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> arsenico, </span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) arsénico</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>mod4<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad, </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos) </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (-) grupo etario</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>mod4<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> arsenico, </span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(persona_anio),</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> poisson,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> datos) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Volvemos a comparar:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod3, mod4<span class="fl">.1</span>, mod4<span class="fl">.2</span>, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod3, mod4<span class="fl">.1</span>, mod4<span class="fl">.2</span>, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Comparison of Model Performance Indices
 
@@ -508,7 +523,7 @@ mod4.2 |   glm | 537.9 (&lt;.001) | 548.8 (&lt;.001) |           0.451 | 3.416</
 </div>
 <p>El mejor modelo continúa siendo <code>mod3</code>, por lo que vamos a probar su bondad de ajuste:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Overdispersion test
 
@@ -520,7 +535,7 @@ mod4.2 |   glm | 537.9 (&lt;.001) | 548.8 (&lt;.001) |           0.451 | 3.416</
 <p>El <em>p</em> valor del test confirma un buen ajuste.</p>
 <p>Procedemos a chequear significancia de las variables explicativas:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -550,25 +565,25 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 <p>Todos los niveles de las variables son significativos respecto a sus niveles de referencia.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod3, <span class="at">exponentiate =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod3, <span class="at">exponentiate =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="bbuynonkmc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bbuynonkmc table {
+<div id="oaqyxfmvnr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#oaqyxfmvnr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#bbuynonkmc thead, #bbuynonkmc tbody, #bbuynonkmc tfoot, #bbuynonkmc tr, #bbuynonkmc td, #bbuynonkmc th {
+#oaqyxfmvnr thead, #oaqyxfmvnr tbody, #oaqyxfmvnr tfoot, #oaqyxfmvnr tr, #oaqyxfmvnr td, #oaqyxfmvnr th {
   border-style: none;
 }
 
-#bbuynonkmc p {
+#oaqyxfmvnr p {
   margin: 0;
   padding: 0;
 }
 
-#bbuynonkmc .gt_table {
+#oaqyxfmvnr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -594,12 +609,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_caption {
+#oaqyxfmvnr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#bbuynonkmc .gt_title {
+#oaqyxfmvnr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -611,7 +626,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-width: 0;
 }
 
-#bbuynonkmc .gt_subtitle {
+#oaqyxfmvnr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -623,7 +638,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-top-width: 0;
 }
 
-#bbuynonkmc .gt_heading {
+#oaqyxfmvnr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -635,13 +650,13 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_bottom_border {
+#oaqyxfmvnr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_col_headings {
+#oaqyxfmvnr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -656,7 +671,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_col_heading {
+#oaqyxfmvnr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -676,7 +691,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   overflow-x: hidden;
 }
 
-#bbuynonkmc .gt_column_spanner_outer {
+#oaqyxfmvnr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -688,15 +703,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 4px;
 }
 
-#bbuynonkmc .gt_column_spanner_outer:first-child {
+#oaqyxfmvnr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#bbuynonkmc .gt_column_spanner_outer:last-child {
+#oaqyxfmvnr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#bbuynonkmc .gt_column_spanner {
+#oaqyxfmvnr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -708,11 +723,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
   width: 100%;
 }
 
-#bbuynonkmc .gt_spanner_row {
+#oaqyxfmvnr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#bbuynonkmc .gt_group_heading {
+#oaqyxfmvnr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -738,7 +753,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   text-align: left;
 }
 
-#bbuynonkmc .gt_empty_group_heading {
+#oaqyxfmvnr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -753,15 +768,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   vertical-align: middle;
 }
 
-#bbuynonkmc .gt_from_md > :first-child {
+#oaqyxfmvnr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#bbuynonkmc .gt_from_md > :last-child {
+#oaqyxfmvnr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#bbuynonkmc .gt_row {
+#oaqyxfmvnr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -780,7 +795,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   overflow-x: hidden;
 }
 
-#bbuynonkmc .gt_stub {
+#oaqyxfmvnr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -793,7 +808,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#bbuynonkmc .gt_stub_row_group {
+#oaqyxfmvnr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -807,15 +822,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   vertical-align: top;
 }
 
-#bbuynonkmc .gt_row_group_first td {
+#oaqyxfmvnr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#bbuynonkmc .gt_row_group_first th {
+#oaqyxfmvnr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#bbuynonkmc .gt_summary_row {
+#oaqyxfmvnr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -825,16 +840,16 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#bbuynonkmc .gt_first_summary_row {
+#oaqyxfmvnr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_first_summary_row.thick {
+#oaqyxfmvnr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#bbuynonkmc .gt_last_summary_row {
+#oaqyxfmvnr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -844,7 +859,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_grand_summary_row {
+#oaqyxfmvnr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -854,7 +869,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#bbuynonkmc .gt_first_grand_summary_row {
+#oaqyxfmvnr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -864,7 +879,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_last_grand_summary_row_top {
+#oaqyxfmvnr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -874,11 +889,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_striped {
+#oaqyxfmvnr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#bbuynonkmc .gt_table_body {
+#oaqyxfmvnr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -887,7 +902,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_footnotes {
+#oaqyxfmvnr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -901,7 +916,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_footnote {
+#oaqyxfmvnr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -910,7 +925,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#bbuynonkmc .gt_sourcenotes {
+#oaqyxfmvnr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -924,7 +939,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#bbuynonkmc .gt_sourcenote {
+#oaqyxfmvnr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -932,72 +947,72 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#bbuynonkmc .gt_left {
+#oaqyxfmvnr .gt_left {
   text-align: left;
 }
 
-#bbuynonkmc .gt_center {
+#oaqyxfmvnr .gt_center {
   text-align: center;
 }
 
-#bbuynonkmc .gt_right {
+#oaqyxfmvnr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#bbuynonkmc .gt_font_normal {
+#oaqyxfmvnr .gt_font_normal {
   font-weight: normal;
 }
 
-#bbuynonkmc .gt_font_bold {
+#oaqyxfmvnr .gt_font_bold {
   font-weight: bold;
 }
 
-#bbuynonkmc .gt_font_italic {
+#oaqyxfmvnr .gt_font_italic {
   font-style: italic;
 }
 
-#bbuynonkmc .gt_super {
+#oaqyxfmvnr .gt_super {
   font-size: 65%;
 }
 
-#bbuynonkmc .gt_footnote_marks {
+#oaqyxfmvnr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#bbuynonkmc .gt_asterisk {
+#oaqyxfmvnr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#bbuynonkmc .gt_indent_1 {
+#oaqyxfmvnr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#bbuynonkmc .gt_indent_2 {
+#oaqyxfmvnr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#bbuynonkmc .gt_indent_3 {
+#oaqyxfmvnr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#bbuynonkmc .gt_indent_4 {
+#oaqyxfmvnr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#bbuynonkmc .gt_indent_5 {
+#oaqyxfmvnr .gt_indent_5 {
   text-indent: 25px;
 }
 
-#bbuynonkmc .katex-display {
+#oaqyxfmvnr .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#bbuynonkmc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#oaqyxfmvnr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1106,20 +1121,20 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 <p>Traducidos a riesgo, mediante la exponenciación de los coeficientes, observamos que los diferentes categorías de años de exposición al arsénico no varían entre sí. Esto nos hace pensar que puede valer la pena agruparlo en solo dos niveles.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Recategoriza arsénico</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> </span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arsenico_cat =</span> <span class="fu">if_else</span>(</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    arsenico <span class="sc">==</span> <span class="st">"&lt;1 año"</span>, <span class="st">"&lt;1 año"</span>, <span class="st">"1+ años"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.factor</span>())</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Modelo con arsénico recategorizado</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>mod5 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad <span class="sc">+</span> arsenico_cat,</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(persona_anio), </span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> poisson, </span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> datos)</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Compara modelos</span></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod3, mod5, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Recategoriza arsénico</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arsenico_cat =</span> <span class="fu">if_else</span>(</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    arsenico <span class="sc">==</span> <span class="st">"&lt;1 año"</span>, <span class="st">"&lt;1 año"</span>, <span class="st">"1+ años"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as.factor</span>())</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Modelo con arsénico recategorizado</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>mod5 <span class="ot">&lt;-</span> <span class="fu">glm</span>(muertes <span class="sc">~</span> grupo_edad <span class="sc">+</span> arsenico_cat,</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(persona_anio), </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> poisson, </span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> datos)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Compara modelos</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="fu">compare_performance</span>(mod3, mod5, <span class="at">metrics =</span> <span class="st">"common"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Comparison of Model Performance Indices
 
@@ -1131,7 +1146,7 @@ mod5 |   glm | 353.8 (0.650) | 367.5 (0.966) |           0.924 | 1.613</code></p
 </div>
 <p>El <code>mod5</code> tiene mejor <em>performance</em> que el modelo anterior.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(mod5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(mod5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Overdispersion test
 
@@ -1143,7 +1158,7 @@ mod5 |   glm | 353.8 (0.650) | 367.5 (0.966) |           0.924 | 1.613</code></p
 <p>El ajuste continúa siendo bueno.</p>
 <p>Chequeamos significancia:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1172,25 +1187,25 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <p>Las variables incluídas son significativas.</p>
 <p>En esta etapa, aceptaríamos el <code>mod5</code> como el mejor modelo, ya que tiene el AIC más pequeño entre todos los modelos que hemos probado.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod5, <span class="at">exponentiate =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod5, <span class="at">exponentiate =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="sfkjfcwvlb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#sfkjfcwvlb table {
+<div id="rflgdzwbzq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rflgdzwbzq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#sfkjfcwvlb thead, #sfkjfcwvlb tbody, #sfkjfcwvlb tfoot, #sfkjfcwvlb tr, #sfkjfcwvlb td, #sfkjfcwvlb th {
+#rflgdzwbzq thead, #rflgdzwbzq tbody, #rflgdzwbzq tfoot, #rflgdzwbzq tr, #rflgdzwbzq td, #rflgdzwbzq th {
   border-style: none;
 }
 
-#sfkjfcwvlb p {
+#rflgdzwbzq p {
   margin: 0;
   padding: 0;
 }
 
-#sfkjfcwvlb .gt_table {
+#rflgdzwbzq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1216,12 +1231,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_caption {
+#rflgdzwbzq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#sfkjfcwvlb .gt_title {
+#rflgdzwbzq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1233,7 +1248,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-width: 0;
 }
 
-#sfkjfcwvlb .gt_subtitle {
+#rflgdzwbzq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1245,7 +1260,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-top-width: 0;
 }
 
-#sfkjfcwvlb .gt_heading {
+#rflgdzwbzq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1257,13 +1272,13 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_bottom_border {
+#rflgdzwbzq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_col_headings {
+#rflgdzwbzq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1278,7 +1293,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_col_heading {
+#rflgdzwbzq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1298,7 +1313,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   overflow-x: hidden;
 }
 
-#sfkjfcwvlb .gt_column_spanner_outer {
+#rflgdzwbzq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1310,15 +1325,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 4px;
 }
 
-#sfkjfcwvlb .gt_column_spanner_outer:first-child {
+#rflgdzwbzq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#sfkjfcwvlb .gt_column_spanner_outer:last-child {
+#rflgdzwbzq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#sfkjfcwvlb .gt_column_spanner {
+#rflgdzwbzq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1330,11 +1345,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
   width: 100%;
 }
 
-#sfkjfcwvlb .gt_spanner_row {
+#rflgdzwbzq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#sfkjfcwvlb .gt_group_heading {
+#rflgdzwbzq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1360,7 +1375,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   text-align: left;
 }
 
-#sfkjfcwvlb .gt_empty_group_heading {
+#rflgdzwbzq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1375,15 +1390,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   vertical-align: middle;
 }
 
-#sfkjfcwvlb .gt_from_md > :first-child {
+#rflgdzwbzq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#sfkjfcwvlb .gt_from_md > :last-child {
+#rflgdzwbzq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#sfkjfcwvlb .gt_row {
+#rflgdzwbzq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1402,7 +1417,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   overflow-x: hidden;
 }
 
-#sfkjfcwvlb .gt_stub {
+#rflgdzwbzq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1415,7 +1430,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#sfkjfcwvlb .gt_stub_row_group {
+#rflgdzwbzq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1429,15 +1444,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   vertical-align: top;
 }
 
-#sfkjfcwvlb .gt_row_group_first td {
+#rflgdzwbzq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#sfkjfcwvlb .gt_row_group_first th {
+#rflgdzwbzq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#sfkjfcwvlb .gt_summary_row {
+#rflgdzwbzq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1447,16 +1462,16 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#sfkjfcwvlb .gt_first_summary_row {
+#rflgdzwbzq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_first_summary_row.thick {
+#rflgdzwbzq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#sfkjfcwvlb .gt_last_summary_row {
+#rflgdzwbzq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1466,7 +1481,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_grand_summary_row {
+#rflgdzwbzq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1476,7 +1491,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#sfkjfcwvlb .gt_first_grand_summary_row {
+#rflgdzwbzq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1486,7 +1501,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_last_grand_summary_row_top {
+#rflgdzwbzq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1496,11 +1511,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_striped {
+#rflgdzwbzq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#sfkjfcwvlb .gt_table_body {
+#rflgdzwbzq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1509,7 +1524,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_footnotes {
+#rflgdzwbzq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1523,7 +1538,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_footnote {
+#rflgdzwbzq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1532,7 +1547,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#sfkjfcwvlb .gt_sourcenotes {
+#rflgdzwbzq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1546,7 +1561,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#sfkjfcwvlb .gt_sourcenote {
+#rflgdzwbzq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1554,72 +1569,72 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#sfkjfcwvlb .gt_left {
+#rflgdzwbzq .gt_left {
   text-align: left;
 }
 
-#sfkjfcwvlb .gt_center {
+#rflgdzwbzq .gt_center {
   text-align: center;
 }
 
-#sfkjfcwvlb .gt_right {
+#rflgdzwbzq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#sfkjfcwvlb .gt_font_normal {
+#rflgdzwbzq .gt_font_normal {
   font-weight: normal;
 }
 
-#sfkjfcwvlb .gt_font_bold {
+#rflgdzwbzq .gt_font_bold {
   font-weight: bold;
 }
 
-#sfkjfcwvlb .gt_font_italic {
+#rflgdzwbzq .gt_font_italic {
   font-style: italic;
 }
 
-#sfkjfcwvlb .gt_super {
+#rflgdzwbzq .gt_super {
   font-size: 65%;
 }
 
-#sfkjfcwvlb .gt_footnote_marks {
+#rflgdzwbzq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#sfkjfcwvlb .gt_asterisk {
+#rflgdzwbzq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#sfkjfcwvlb .gt_indent_1 {
+#rflgdzwbzq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#sfkjfcwvlb .gt_indent_2 {
+#rflgdzwbzq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#sfkjfcwvlb .gt_indent_3 {
+#rflgdzwbzq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#sfkjfcwvlb .gt_indent_4 {
+#rflgdzwbzq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#sfkjfcwvlb .gt_indent_5 {
+#rflgdzwbzq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#sfkjfcwvlb .katex-display {
+#rflgdzwbzq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#sfkjfcwvlb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#rflgdzwbzq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1714,42 +1729,50 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
 </div>
+</section>
+<section id="interpretación-de-los-resultados" class="level3">
+<h3 class="anchored" data-anchor-id="interpretación-de-los-resultados">Interpretación de los resultados</h3>
 <p>Concluimos que las personas expuestas al arsénico durante al menos un año tienen un riesgo 2,25 veces mayor de muerte por enfermedad respiratoria en comparación con aquellas no expuestas. Para entender cómo se obtiene este cálculo, consideremos que en los modelos de Poisson, la estructura de compensación (<em>offset</em>) definida como <code>log(persona_anio)</code> transforma el resultado en el logaritmo de la densidad de incidencia.</p>
 <p>El término <code>offset = log(persona_anio)</code> en el modelo de Poisson convierte el recuento de eventos en una densidad de incidencia, ajustada por el tiempo de seguimiento. Esto permite que el modelo estime tasas de incidencia de acuerdo con el tiempo de exposición.</p>
 <p>Los coeficientes del modelo de Poisson se interpretan en términos de tasas de incidencia. En particular, el coeficiente asociado a la variable de exposición al arsénico se transforma mediante la exponenciación para obtener el riesgo relativo. Si el coeficiente de la variable <code>arsenico</code> es <span class="math inline">\(\beta\)</span>, el riesgo relativo (RR) se calcula como <span class="math inline">\(e^\beta\)</span>. En nuestro caso, si <span class="math inline">\(e^\beta = 2,25\)</span>, esto indica que las personas expuestas al arsénico durante al menos un año tienen un riesgo 2,25 veces mayor de muerte por enfermedad respiratoria en comparación con las no expuestas.</p>
+</section>
+<section id="densidad-de-incidencia" class="level3">
+<h3 class="anchored" data-anchor-id="densidad-de-incidencia">Densidad de incidencia</h3>
 <p>Para calcular la densidad de incidencia esperada en una población específica, utilizamos el modelo ajustado. Por ejemplo, para una población de 100.000 personas de entre 40 y 49 años expuestas al arsénico durante menos de un año, podemos usar el modelo <code>mod5</code>. En R, esto se hace creando un nuevo conjunto de datos con las características deseadas y utilizando la función <code>predict()</code> para obtener la tasa de incidencia ajustada:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Genera nuevos datos</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">grupo_edad =</span> <span class="st">"40-49"</span>,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">arsenico_cat =</span> <span class="st">"&lt;1 año"</span>,</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">persona_anio =</span> <span class="dv">100000</span>)</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Predice datos</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> mod5, <span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">"response"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Genera nuevos datos</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">grupo_edad =</span> <span class="st">"40-49"</span>,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">arsenico_cat =</span> <span class="st">"&lt;1 año"</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">persona_anio =</span> <span class="dv">100000</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Predice datos</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(<span class="at">object =</span> mod5, <span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">"response"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       1 
 3.325736 </code></pre>
 </div>
 </div>
 <p>Esta población tendría una densidad de incidencia estimada de 33,26 por 100.000 personas-año.</p>
-<p>En un estudio de casos y controles, como los vistos en la Unidad 4, el OR se utiliza para comparar la prevalencia de exposición entre casos y controles. En un estudio de cohorte, este valor es igual a la relación entre las probabilidades de contraer una enfermedad entre el grupo expuesto y el no expuesto. La razón de los riesgos para los dos grupos se denomina entonces “razón de riesgo” o “riesgo relativo”.</p>
+<p><strong>Riesgo relativo</strong></p>
+<p>En un estudio de casos y controles, como los vistos en la Unidad 4, el OR se utiliza para comparar la prevalencia de exposición entre casos y controles. En un estudio de cohorte, este valor es igual a la relación entre las probabilidades de contraer una enfermedad entre el grupo expuesto y el no expuesto. La razón de los riesgos para los dos grupos se denomina entonces “razón de riesgo” o <strong>riesgo relativo</strong> (<strong>RR</strong>).</p>
 <p>En un estudio de cohorte real, los sujetos no siempre tienen la misma duración de seguimiento. El riesgo relativo ignora la duración del seguimiento. Por tanto, no es una buena medida de comparación del riesgo entre los dos grupos.</p>
+<p><strong>Razón de densidad de incidencia</strong></p>
 <p>En este ejercicio, todos los sujetos agrupan sus tiempos de seguimiento y este número se denomina “tiempo-persona”, que luego se utiliza como denominador del evento, lo que da como resultado una “densidad de incidencia”.</p>
-<p>Comparar la densidad de incidencia entre dos grupos de sujetos por su estado de exposición es más justo que comparar los riesgos crudos. La relación entre las densidades de incidencia de dos grupos se denomina razón de densidades de incidencia (RDI), que es una forma mejorada de riesgo relativo.</p>
+<p>Comparar la densidad de incidencia entre dos grupos de sujetos por su estado de exposición es más justo que comparar los riesgos crudos. La relación entre las densidades de incidencia de dos grupos se denomina <strong>razón de densidades de incidencia</strong> (<strong>RDI</strong>), que es una forma mejorada de riesgo relativo.</p>
 <p>En el <code>mod5</code>, para calcular la razón de densidad de incidencia entre los sujetos expuestos al arsénico durante uno o más años frente a los expuestos durante menos de un año, podemos dividir la incidencia entre los primeros por la del segundo grupo.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Genera nuevos datos</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">grupo_edad =</span> <span class="fu">rep</span>(<span class="st">"40-49"</span>, <span class="dv">2</span>),</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">arsenico_cat =</span> <span class="fu">c</span>(<span class="st">"&lt;1 año"</span>, <span class="st">"1+ años"</span>),</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">persona_anio =</span> <span class="fu">rep</span>(<span class="dv">100000</span>, <span class="dv">2</span>))</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Densidad de incidencia</span></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>di <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod5, <span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">"response"</span>) </span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Razón densidad de incidencia</span></span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>rdi.arsenico <span class="ot">&lt;-</span> di[<span class="dv">2</span>] <span class="sc">/</span> di[<span class="dv">1</span>]</span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>rdi.arsenico</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Genera nuevos datos</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">grupo_edad =</span> <span class="fu">rep</span>(<span class="st">"40-49"</span>, <span class="dv">2</span>),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">arsenico_cat =</span> <span class="fu">c</span>(<span class="st">"&lt;1 año"</span>, <span class="st">"1+ años"</span>),</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">persona_anio =</span> <span class="fu">rep</span>(<span class="dv">100000</span>, <span class="dv">2</span>))</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Densidad de incidencia</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>di <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> mod5, <span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">"response"</span>) </span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Razón densidad de incidencia</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>rdi.arsenico <span class="ot">&lt;-</span> di[<span class="dv">2</span>] <span class="sc">/</span> di[<span class="dv">1</span>]</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>rdi.arsenico</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       2 
 2.249864 </code></pre>
@@ -1759,26 +1782,26 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <p>A continuación, se calculan las respuestas o densidades de incidencia de las dos condiciones.</p>
 <p>La RDI se obtiene luego de la división de las densidades de incidencia para <code>arsenico_cat = "&lt;1 año"</code> con <code>arsenico_cat = "1+ años"</code>. Una forma más corta de obtenerla es mediante el coeficiente de la variable específica <code>arsenico</code>, utilizando R <code>base</code> o el paquete <code>gtsummary</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod5, <span class="at">exponentiate =</span> T,                </span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">include =</span> <span class="st">"arsenico_cat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(mod5, <span class="at">exponentiate =</span> T,                </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">include =</span> <span class="st">"arsenico_cat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="nufjtfcxok" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nufjtfcxok table {
+<div id="rickuvkzmx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rickuvkzmx table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#nufjtfcxok thead, #nufjtfcxok tbody, #nufjtfcxok tfoot, #nufjtfcxok tr, #nufjtfcxok td, #nufjtfcxok th {
+#rickuvkzmx thead, #rickuvkzmx tbody, #rickuvkzmx tfoot, #rickuvkzmx tr, #rickuvkzmx td, #rickuvkzmx th {
   border-style: none;
 }
 
-#nufjtfcxok p {
+#rickuvkzmx p {
   margin: 0;
   padding: 0;
 }
 
-#nufjtfcxok .gt_table {
+#rickuvkzmx .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1804,12 +1827,12 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_caption {
+#rickuvkzmx .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#nufjtfcxok .gt_title {
+#rickuvkzmx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1821,7 +1844,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-width: 0;
 }
 
-#nufjtfcxok .gt_subtitle {
+#rickuvkzmx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1833,7 +1856,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-top-width: 0;
 }
 
-#nufjtfcxok .gt_heading {
+#rickuvkzmx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1845,13 +1868,13 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_bottom_border {
+#rickuvkzmx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_col_headings {
+#rickuvkzmx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1866,7 +1889,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_col_heading {
+#rickuvkzmx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1886,7 +1909,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   overflow-x: hidden;
 }
 
-#nufjtfcxok .gt_column_spanner_outer {
+#rickuvkzmx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1898,15 +1921,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 4px;
 }
 
-#nufjtfcxok .gt_column_spanner_outer:first-child {
+#rickuvkzmx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nufjtfcxok .gt_column_spanner_outer:last-child {
+#rickuvkzmx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nufjtfcxok .gt_column_spanner {
+#rickuvkzmx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1918,11 +1941,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
   width: 100%;
 }
 
-#nufjtfcxok .gt_spanner_row {
+#rickuvkzmx .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#nufjtfcxok .gt_group_heading {
+#rickuvkzmx .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1948,7 +1971,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   text-align: left;
 }
 
-#nufjtfcxok .gt_empty_group_heading {
+#rickuvkzmx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1963,15 +1986,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   vertical-align: middle;
 }
 
-#nufjtfcxok .gt_from_md > :first-child {
+#rickuvkzmx .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nufjtfcxok .gt_from_md > :last-child {
+#rickuvkzmx .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nufjtfcxok .gt_row {
+#rickuvkzmx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1990,7 +2013,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   overflow-x: hidden;
 }
 
-#nufjtfcxok .gt_stub {
+#rickuvkzmx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2003,7 +2026,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#nufjtfcxok .gt_stub_row_group {
+#rickuvkzmx .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2017,15 +2040,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
   vertical-align: top;
 }
 
-#nufjtfcxok .gt_row_group_first td {
+#rickuvkzmx .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#nufjtfcxok .gt_row_group_first th {
+#rickuvkzmx .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#nufjtfcxok .gt_summary_row {
+#rickuvkzmx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2035,16 +2058,16 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#nufjtfcxok .gt_first_summary_row {
+#rickuvkzmx .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_first_summary_row.thick {
+#rickuvkzmx .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#nufjtfcxok .gt_last_summary_row {
+#rickuvkzmx .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2054,7 +2077,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_grand_summary_row {
+#rickuvkzmx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2064,7 +2087,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#nufjtfcxok .gt_first_grand_summary_row {
+#rickuvkzmx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2074,7 +2097,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_last_grand_summary_row_top {
+#rickuvkzmx .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2084,11 +2107,11 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_striped {
+#rickuvkzmx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nufjtfcxok .gt_table_body {
+#rickuvkzmx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2097,7 +2120,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_footnotes {
+#rickuvkzmx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2111,7 +2134,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_footnote {
+#rickuvkzmx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2120,7 +2143,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#nufjtfcxok .gt_sourcenotes {
+#rickuvkzmx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2134,7 +2157,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nufjtfcxok .gt_sourcenote {
+#rickuvkzmx .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2142,72 +2165,72 @@ Number of Fisher Scoring iterations: 5</code></pre>
   padding-right: 5px;
 }
 
-#nufjtfcxok .gt_left {
+#rickuvkzmx .gt_left {
   text-align: left;
 }
 
-#nufjtfcxok .gt_center {
+#rickuvkzmx .gt_center {
   text-align: center;
 }
 
-#nufjtfcxok .gt_right {
+#rickuvkzmx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nufjtfcxok .gt_font_normal {
+#rickuvkzmx .gt_font_normal {
   font-weight: normal;
 }
 
-#nufjtfcxok .gt_font_bold {
+#rickuvkzmx .gt_font_bold {
   font-weight: bold;
 }
 
-#nufjtfcxok .gt_font_italic {
+#rickuvkzmx .gt_font_italic {
   font-style: italic;
 }
 
-#nufjtfcxok .gt_super {
+#rickuvkzmx .gt_super {
   font-size: 65%;
 }
 
-#nufjtfcxok .gt_footnote_marks {
+#rickuvkzmx .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#nufjtfcxok .gt_asterisk {
+#rickuvkzmx .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#nufjtfcxok .gt_indent_1 {
+#rickuvkzmx .gt_indent_1 {
   text-indent: 5px;
 }
 
-#nufjtfcxok .gt_indent_2 {
+#rickuvkzmx .gt_indent_2 {
   text-indent: 10px;
 }
 
-#nufjtfcxok .gt_indent_3 {
+#rickuvkzmx .gt_indent_3 {
   text-indent: 15px;
 }
 
-#nufjtfcxok .gt_indent_4 {
+#rickuvkzmx .gt_indent_4 {
   text-indent: 20px;
 }
 
-#nufjtfcxok .gt_indent_5 {
+#rickuvkzmx .gt_indent_5 {
   text-indent: 25px;
 }
 
-#nufjtfcxok .katex-display {
+#rickuvkzmx .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#nufjtfcxok div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#rickuvkzmx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2270,34 +2293,33 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 <p>También podemos mostrar la salida mediante un gráfico de <code>ggplot2</code>, tal como vimos en la unidad 4:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Convierte la salida del modelo a dataframe</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>mod5_df <span class="ot">&lt;-</span> mod5 <span class="sc">%&gt;%</span> </span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>(<span class="at">exponentiate =</span> T, <span class="at">conf.int =</span> T) </span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Genero gráfico</span></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>mod5_df <span class="sc">%&gt;%</span> </span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>     <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> estimate, <span class="at">y =</span> term,</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low, <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># añade línea vertical</span></span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, </span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, </span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"#073966"</span>) <span class="sc">+</span></span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># añade estimadores</span></span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">color =</span> <span class="st">"#418A80"</span>) <span class="sc">+</span></span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cambia color de fondo</span></span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Convierte la salida del modelo a dataframe</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>mod5_df <span class="ot">&lt;-</span> mod5 <span class="sc">%&gt;%</span> </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>(<span class="at">exponentiate =</span> T, <span class="at">conf.int =</span> T) </span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Genero gráfico</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>mod5_df <span class="sc">%&gt;%</span> </span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>     <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> estimate, <span class="at">y =</span> term,</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">xmin =</span> conf.low, <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># añade línea vertical</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">1</span>, </span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, </span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"#073966"</span>) <span class="sc">+</span></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># añade estimadores</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="at">color =</span> <span class="st">"#418A80"</span>) <span class="sc">+</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># cambia color de fondo</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
 </section>
 </section>
 <section id="bibliografía" class="level2 unnumbered">
