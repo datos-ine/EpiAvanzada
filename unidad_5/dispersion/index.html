@@ -184,13 +184,22 @@ Var(Y) &gt; \mu
 \]</span></p>
 <p>Para detectar si un modelo tiene sobredispersión, se puede calcular el <strong>ratio de dispersión</strong>, que es el cociente entre la devianza del modelo y los grados de libertad. Un ratio significativamente mayor que 1 indica sobredispersión.</p>
 <p>En R, la función <code>check_overdispersion()</code> del paquete <code>performance</code> evalúa el ratio de dispersión en un modelo. En el <a href="https://datos-ine.github.io/EpiAvanzada/unidad_5/poisson/#ejemplo-pr%C3%A1ctico">ejemplo de regresión Poisson</a> el cociente del modelo final era cercano a 1, lo cual indicaba que no existía evidencia de sobredispersión y la distribución seleccionada ajustaba bien los datos.</p>
-<p>Veamos ahora un ejemplo de datos con sobredispersión a partir de los casos de dengue reportados en los departamentos de la Costa Atlántica de la provincia de Buenos Aires (PBA)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> entre las semanas epidemiológicas 1 y 20 de 2024<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>Veamos ahora un ejemplo de datos con sobredispersión a partir de los casos de dengue reportados en los departamentos de la Costa Atlántica de la provincia de Buenos Aires (PBA)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> entre las semanas epidemiológicas 1 y 20 de 2024<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Los mismos se encuentran en el archivo “<code>dengue_costa.txt</code>”.</p>
+<p>Comenzaremos por cargar los paquetes necesarios para el análisis:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carga datos</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dengue <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dengue_costa_2024.csv"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Explora datos</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dengue)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmmTMB)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ahora cargamos los datos y exploramos su estructura:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carga datos</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"dengue_costa.txt"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Explora datos</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 1,047
 Columns: 6
@@ -208,15 +217,44 @@ $ casos          &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 <li><p><code>grupo_edad_cat</code>: grupo etario.</p></li>
 <li><p><code>casos</code>: número de casos reportados por departamento, semana epidemiológica y grupo etario. Es la variable dependiente.</p></li>
 </ul>
-<p>Ajustamos un modelo Poisson con todas las variables de interés y chequeamos si existe dispersión de los datos:</p>
+<p>Ajustamos un modelo Poisson con todas las variables de interés:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo Poisson</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fit_pois <span class="ot">&lt;-</span> <span class="fu">glm</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> dengue,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> poisson)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Sobredispersión</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(fit_pois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit_pois <span class="ot">&lt;-</span> <span class="fu">glm</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> datos,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> poisson)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Salida del modelo</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_pois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = casos ~ semana_epi + grupo_edad_cat, family = poisson, 
+    data = datos)
+
+Coefficients:
+                          Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)              -3.092154   0.279663 -11.057  &lt; 2e-16 ***
+semana_epi                0.044249   0.008993   4.920 8.65e-07 ***
+grupo_edad_cat10-19 años  1.172838   0.294392   3.984 6.78e-05 ***
+grupo_edad_cat20-34 años  2.195273   0.271054   8.099 5.54e-16 ***
+grupo_edad_cat35-65 años  2.312218   0.269545   8.578  &lt; 2e-16 ***
+grupo_edad_cat65+ años    0.730874   0.314523   2.324   0.0201 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 1436.5  on 1046  degrees of freedom
+Residual deviance: 1187.9  on 1041  degrees of freedom
+AIC: 1735.1
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+</div>
+<p>El modelo ajustado no incluye un término <em>offset</em>, ya que este se utiliza cuando es necesario ajustar la tasa de eventos por una variable de tiempo o tamaño poblacional. En este ejemplo, podemos asumir que la población de cada departamento se mantiene constante en el periodo estudiado. Además, dado que una misma persona puede infectarse más de una vez con el virus del dengue, no es necesario incorporar un término de ajuste adicional.</p>
+<p>Chequeamos si existe sobredispersión:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_overdispersion</span>(fit_pois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Overdispersion test
 
@@ -239,23 +277,55 @@ Var(Y) &lt; \mu
 <h2 class="anchored" data-anchor-id="control-de-la-sobredispersión-y-subdispersión">Control de la sobredispersión y subdispersión</h2>
 <section id="modelos-quasi-poisson" class="level3">
 <h3 class="anchored" data-anchor-id="modelos-quasi-poisson">Modelos <em>quasi</em>-Poisson</h3>
-<p>Una forma común de abordar la sobredispersión de los datos es mediante el uso de modelos <em>quasi</em>-Poisson. Los mismos, ajustan los errores estándar sin alterar la media predicha, incorporando un parámetro adicional que permite que la varianza sea diferente de la media. Aunque los modelos <em>quasi</em>-Poisson son útiles para corregir la sobredispersión, no explican las causas subyacentes de la misma ni son adecuados para datos con subdispersión o un exceso de ceros. Además, la estimación de parámetros en estos modelos tiende a ser menos eficiente, y se asume que la sobredispersión es constante a lo largo de todas las observaciones, lo que puede llevar a inferencias menos robustas. Debido a estas limitaciones, no profundizaremos en el uso de modelos <em>quasi</em>-Poisson.</p>
+<p>Una forma común de manejar la sobredispersión en los datos es mediante el uso de modelos <em>quasi</em>-Poisson. Estos modelos ajustan los errores estándar sin modificar la media predicha, incorporando un parámetro adicional que permite que la varianza sea distinta a la media. Aunque los modelos quasi-Poisson son útiles para corregir la sobredispersión, no abordan las causas subyacentes de esta ni son adecuados para datos con subdispersión o un exceso de ceros. Además, la estimación de parámetros en estos modelos tiende a ser menos eficiente, ya que asumen que la sobredispersión es constante en todas las observaciones, lo que puede llevar a inferencias menos robustas. Debido a estas limitaciones, no profundizaremos en el uso de los modelos <em>quasi</em>-Poisson.</p>
 </section>
 <section id="distribución-binomial-negativa" class="level3">
 <h3 class="anchored" data-anchor-id="distribución-binomial-negativa">Distribución binomial negativa</h3>
-<p>En los modelos lineales generalizados (GLM), la distribución binomial negativa es especialmente útil para manejar la sobredispersión en datos discretos. Esta distribución aporta flexibilidad, mejora las inferencias estadísticas con estimaciones más precisas, permite procesar grandes volúmenes de datos y se puede combinar con componentes de inflación de ceros. Aunque la familia binomial negativa no está integrada en la función <code>glm()</code> del paquete <code>stats</code>, existen varios paquetes que permiten su implementación. Dado su alto grado de flexibilidad, ajustaremos el modelo binomial negativo utilizando la función <code>glmmTMB()</code> del paquete <code>glmmTMB</code>, especificando el argumento <code>family = nbinom2</code>.</p>
+<p>Dentro de los modelos lineales generalizados (GLM), la distribución binomial negativa es especialmente útil para manejar la sobredispersión en datos discretos. Esta distribución aporta flexibilidad, mejora las inferencias estadísticas con estimaciones más precisas, permite procesar grandes volúmenes de datos y se puede combinar con componentes de inflación de ceros.</p>
+<p>La familia binomial negativa no está integrada en la función <code>glm()</code> del paquete <code>stats</code>. No obstante, existen varios paquetes que permiten su implementación. En el contexto del curso, usaremos el paquete <code>glmmTMB</code> <span class="citation" data-cites="glmmTMB">(<a href="#ref-glmmTMB" role="doc-biblioref">Brooks et al. 2017</a>)</span> para explorar alternativas a los modelos Poisson, dado su alto grado de versatilidad. La función base <code>glmmTMB()</code> permite ajustar desde regresiones lineales y modelos lineales generalizados (GLMs) hasta modelos mucho más complejos, lo que lo convierte en una herramienta poderosa para manejar una amplia variedad de estructuras de datos.</p>
+<p>A modo de ejemplo, ajustaremos el modelo Poisson anterior con <code>glmmTMB()</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo binomial negativo </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fit_nb <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,  </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> dengue,                 </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> <span class="fu">nbinom2</span>())  </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Salida del modelo</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit_pois_tmb <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> datos,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> poisson)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Salida modelo</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_pois_tmb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: poisson  ( log )
+Formula:          casos ~ semana_epi + grupo_edad_cat
+Data: datos
+
+     AIC      BIC   logLik deviance df.resid 
+  1735.1   1764.8   -861.5   1723.1     1041 
+
+
+Conditional model:
+                          Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)              -3.092153   0.279663 -11.057  &lt; 2e-16 ***
+semana_epi                0.044249   0.008993   4.920 8.64e-07 ***
+grupo_edad_cat10-19 años  1.172837   0.294392   3.984 6.78e-05 ***
+grupo_edad_cat20-34 años  2.195272   0.271054   8.099 5.54e-16 ***
+grupo_edad_cat35-65 años  2.312217   0.269545   8.578  &lt; 2e-16 ***
+grupo_edad_cat65+ años    0.730874   0.314523   2.324   0.0201 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Al comparar los resultados del modelo ajustado con <code>glmmTMB</code> y el modelo ajustado con el paquete <code>stats</code>, podemos observar que, aunque no presentan exactamente la misma información, los coeficientes y el AIC son prácticamente idénticos.</p>
+<p>Ahora, ajustaremos el modelo de regresión binomial negativa utilizando el argumento <code>family = nbinom2</code>, que tiene como función de enlace por defecto el logaritmo <code>(link = "log")</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo binomial negativo </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fit_nb <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,  </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> datos,                 </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> nbinom2)  </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Salida del modelo</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Family: nbinom2  ( log )
 Formula:          casos ~ semana_epi + grupo_edad_cat
-Data: dengue
+Data: datos
 
      AIC      BIC   logLik deviance df.resid 
   1538.4   1573.0   -762.2   1524.4     1040 
@@ -278,23 +348,23 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Si comparamos los coeficientes de este modelo con el de Poisson, observamos que son similares, pero los intervalos de confianza varían ligeramente debido al ajuste binomial negativo:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="chjnaaqsvt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#chjnaaqsvt table {
+<div id="skfebkugci" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#skfebkugci table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#chjnaaqsvt thead, #chjnaaqsvt tbody, #chjnaaqsvt tfoot, #chjnaaqsvt tr, #chjnaaqsvt td, #chjnaaqsvt th {
+#skfebkugci thead, #skfebkugci tbody, #skfebkugci tfoot, #skfebkugci tr, #skfebkugci td, #skfebkugci th {
   border-style: none;
 }
 
-#chjnaaqsvt p {
+#skfebkugci p {
   margin: 0;
   padding: 0;
 }
 
-#chjnaaqsvt .gt_table {
+#skfebkugci .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -320,12 +390,12 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_caption {
+#skfebkugci .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#chjnaaqsvt .gt_title {
+#skfebkugci .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -337,7 +407,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-width: 0;
 }
 
-#chjnaaqsvt .gt_subtitle {
+#skfebkugci .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -349,7 +419,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-top-width: 0;
 }
 
-#chjnaaqsvt .gt_heading {
+#skfebkugci .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -361,13 +431,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_bottom_border {
+#skfebkugci .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_col_headings {
+#skfebkugci .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -382,7 +452,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_col_heading {
+#skfebkugci .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -402,7 +472,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   overflow-x: hidden;
 }
 
-#chjnaaqsvt .gt_column_spanner_outer {
+#skfebkugci .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -414,15 +484,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 4px;
 }
 
-#chjnaaqsvt .gt_column_spanner_outer:first-child {
+#skfebkugci .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#chjnaaqsvt .gt_column_spanner_outer:last-child {
+#skfebkugci .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#chjnaaqsvt .gt_column_spanner {
+#skfebkugci .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -434,11 +504,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   width: 100%;
 }
 
-#chjnaaqsvt .gt_spanner_row {
+#skfebkugci .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#chjnaaqsvt .gt_group_heading {
+#skfebkugci .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -464,7 +534,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   text-align: left;
 }
 
-#chjnaaqsvt .gt_empty_group_heading {
+#skfebkugci .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -479,15 +549,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   vertical-align: middle;
 }
 
-#chjnaaqsvt .gt_from_md > :first-child {
+#skfebkugci .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#chjnaaqsvt .gt_from_md > :last-child {
+#skfebkugci .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#chjnaaqsvt .gt_row {
+#skfebkugci .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -506,7 +576,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   overflow-x: hidden;
 }
 
-#chjnaaqsvt .gt_stub {
+#skfebkugci .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -519,7 +589,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#chjnaaqsvt .gt_stub_row_group {
+#skfebkugci .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -533,15 +603,15 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   vertical-align: top;
 }
 
-#chjnaaqsvt .gt_row_group_first td {
+#skfebkugci .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#chjnaaqsvt .gt_row_group_first th {
+#skfebkugci .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#chjnaaqsvt .gt_summary_row {
+#skfebkugci .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -551,16 +621,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#chjnaaqsvt .gt_first_summary_row {
+#skfebkugci .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_first_summary_row.thick {
+#skfebkugci .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#chjnaaqsvt .gt_last_summary_row {
+#skfebkugci .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -570,7 +640,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_grand_summary_row {
+#skfebkugci .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -580,7 +650,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#chjnaaqsvt .gt_first_grand_summary_row {
+#skfebkugci .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -590,7 +660,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_last_grand_summary_row_top {
+#skfebkugci .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -600,11 +670,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_striped {
+#skfebkugci .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#chjnaaqsvt .gt_table_body {
+#skfebkugci .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -613,7 +683,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_footnotes {
+#skfebkugci .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -627,7 +697,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_footnote {
+#skfebkugci .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -636,7 +706,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#chjnaaqsvt .gt_sourcenotes {
+#skfebkugci .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -650,7 +720,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#chjnaaqsvt .gt_sourcenote {
+#skfebkugci .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -658,90 +728,109 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
   padding-right: 5px;
 }
 
-#chjnaaqsvt .gt_left {
+#skfebkugci .gt_left {
   text-align: left;
 }
 
-#chjnaaqsvt .gt_center {
+#skfebkugci .gt_center {
   text-align: center;
 }
 
-#chjnaaqsvt .gt_right {
+#skfebkugci .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#chjnaaqsvt .gt_font_normal {
+#skfebkugci .gt_font_normal {
   font-weight: normal;
 }
 
-#chjnaaqsvt .gt_font_bold {
+#skfebkugci .gt_font_bold {
   font-weight: bold;
 }
 
-#chjnaaqsvt .gt_font_italic {
+#skfebkugci .gt_font_italic {
   font-style: italic;
 }
 
-#chjnaaqsvt .gt_super {
+#skfebkugci .gt_super {
   font-size: 65%;
 }
 
-#chjnaaqsvt .gt_footnote_marks {
+#skfebkugci .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#chjnaaqsvt .gt_asterisk {
+#skfebkugci .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#chjnaaqsvt .gt_indent_1 {
+#skfebkugci .gt_indent_1 {
   text-indent: 5px;
 }
 
-#chjnaaqsvt .gt_indent_2 {
+#skfebkugci .gt_indent_2 {
   text-indent: 10px;
 }
 
-#chjnaaqsvt .gt_indent_3 {
+#skfebkugci .gt_indent_3 {
   text-indent: 15px;
 }
 
-#chjnaaqsvt .gt_indent_4 {
+#skfebkugci .gt_indent_4 {
   text-indent: 20px;
 }
 
-#chjnaaqsvt .gt_indent_5 {
+#skfebkugci .gt_indent_5 {
   text-indent: 25px;
 }
 
-#chjnaaqsvt .katex-display {
+#skfebkugci .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#chjnaaqsvt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#skfebkugci div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
 </colgroup>
 <thead>
-<tr class="header gt_col_headings">
-<th id="<div data-qmd-base64=&quot;KipDaGFyYWN0ZXJpc3RpYyoq&quot;><div class='gt_from_md'><p><strong>Characteristic</strong></p>
+<tr class="header gt_col_headings gt_spanner_row">
+<th rowspan="2" id="<div data-qmd-base64=&quot;KipDaGFyYWN0ZXJpc3RpYyoq&quot;><div class='gt_from_md'><p><strong>Characteristic</strong></p>
 </div></div>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><p><strong>Characteristic</strong></p></th>
-<th id="<div data-qmd-base64=&quot;KipJUlIqKg==&quot;><div class='gt_from_md'><p><strong>IRR</strong></p>
-</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>IRR</strong></p>
+<th colspan="3" id="<div data-qmd-base64=&quot;UG9pc3Nvbg==&quot;><div class='gt_from_md'><p>Poisson</p>
+</div></div>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"></span>
+<p>Poisson</p>
+</th>
+<th colspan="3" id="<div data-qmd-base64=&quot;Qmlub21pYWwgbmVnYXRpdmE=&quot;><div class='gt_from_md'><p>Binomial negativa</p>
+</div></div>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"></span>
+<p>Binomial negativa</p>
+</th>
+</tr>
+<tr class="odd gt_col_headings">
+<th id="<div data-qmd-base64=&quot;KipleHAoQmV0YSkqKg==&quot;><div class='gt_from_md'><p><strong>exp(Beta)</strong></p>
+</div></div>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>exp(Beta)</strong></p></th>
+<th id="<div data-qmd-base64=&quot;Kio5NSUgQ0kqKg==&quot;><div class='gt_from_md'><p><strong>95% CI</strong></p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>95% CI</strong></p>
 <span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipwLXZhbHVlKio=&quot;><div class='gt_from_md'><p><strong>p-value</strong></p>
+</div></div>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>p-value</strong></p></th>
+<th id="<div data-qmd-base64=&quot;KipleHAoQmV0YSkqKg==&quot;><div class='gt_from_md'><p><strong>exp(Beta)</strong></p>
+</div></div>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>exp(Beta)</strong></p></th>
 <th id="<div data-qmd-base64=&quot;Kio5NSUgQ0kqKg==&quot;><div class='gt_from_md'><p><strong>95% CI</strong></p>
 </div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>95% CI</strong></p>
 <span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span></th>
@@ -750,101 +839,70 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </tr>
 </thead>
 <tbody class="gt_table_body">
-<tr class="odd gt_group_heading_row">
-<td colspan="4" id="Poisson" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Poisson</td>
-</tr>
-<tr class="even gt_row_group_first">
-<td class="gt_row gt_left" headers="Poisson  label">semana_epi</td>
-<td class="gt_row gt_center" headers="Poisson  estimate">1.05</td>
-<td class="gt_row gt_center" headers="Poisson  conf.low">1.03, 1.06</td>
-<td class="gt_row gt_center" headers="Poisson  p.value">&lt;0.001</td>
-</tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Poisson  label">grupo_edad_cat</td>
-<td class="gt_row gt_center" headers="Poisson  estimate"><br>
-</td>
-<td class="gt_row gt_center" headers="Poisson  conf.low"><br>
-</td>
-<td class="gt_row gt_center" headers="Poisson  p.value"><br>
-</td>
+<td class="gt_row gt_left" headers="label">semana_epi</td>
+<td class="gt_row gt_center" headers="estimate_1">1.05</td>
+<td class="gt_row gt_center" headers="conf.low_1">1.03, 1.06</td>
+<td class="gt_row gt_center" headers="p.value_1">&lt;0.001</td>
+<td class="gt_row gt_center" headers="estimate_2">1.06</td>
+<td class="gt_row gt_center" headers="conf.low_2">1.03, 1.10</td>
+<td class="gt_row gt_center" headers="p.value_2">&lt;0.001</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Poisson  label">&nbsp;&nbsp;&nbsp;&nbsp;0-9 años</td>
-<td class="gt_row gt_center" headers="Poisson  estimate">—</td>
-<td class="gt_row gt_center" headers="Poisson  conf.low">—</td>
-<td class="gt_row gt_center" headers="Poisson  p.value"><br>
+<td class="gt_row gt_left" headers="label">grupo_edad_cat</td>
+<td class="gt_row gt_center" headers="estimate_1"><br>
+</td>
+<td class="gt_row gt_center" headers="conf.low_1"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value_1"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate_2"><br>
+</td>
+<td class="gt_row gt_center" headers="conf.low_2"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value_2"><br>
 </td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Poisson  label">&nbsp;&nbsp;&nbsp;&nbsp;10-19 años</td>
-<td class="gt_row gt_center" headers="Poisson  estimate">3.23</td>
-<td class="gt_row gt_center" headers="Poisson  conf.low">1.86, 5.96</td>
-<td class="gt_row gt_center" headers="Poisson  p.value">&lt;0.001</td>
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat10-19 años</td>
+<td class="gt_row gt_center" headers="estimate_1">3.23</td>
+<td class="gt_row gt_center" headers="conf.low_1">1.81, 5.75</td>
+<td class="gt_row gt_center" headers="p.value_1">&lt;0.001</td>
+<td class="gt_row gt_center" headers="estimate_2">3.20</td>
+<td class="gt_row gt_center" headers="conf.low_2">1.67, 6.12</td>
+<td class="gt_row gt_center" headers="p.value_2">&lt;0.001</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Poisson  label">&nbsp;&nbsp;&nbsp;&nbsp;20-34 años</td>
-<td class="gt_row gt_center" headers="Poisson  estimate">8.98</td>
-<td class="gt_row gt_center" headers="Poisson  conf.low">5.47, 15.9</td>
-<td class="gt_row gt_center" headers="Poisson  p.value">&lt;0.001</td>
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat20-34 años</td>
+<td class="gt_row gt_center" headers="estimate_1">8.98</td>
+<td class="gt_row gt_center" headers="conf.low_1">5.28, 15.3</td>
+<td class="gt_row gt_center" headers="p.value_1">&lt;0.001</td>
+<td class="gt_row gt_center" headers="estimate_2">8.87</td>
+<td class="gt_row gt_center" headers="conf.low_2">4.85, 16.3</td>
+<td class="gt_row gt_center" headers="p.value_2">&lt;0.001</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" headers="Poisson  label">&nbsp;&nbsp;&nbsp;&nbsp;35-65 años</td>
-<td class="gt_row gt_center" headers="Poisson  estimate">10.1</td>
-<td class="gt_row gt_center" headers="Poisson  conf.low">6.17, 17.9</td>
-<td class="gt_row gt_center" headers="Poisson  p.value">&lt;0.001</td>
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat35-65 años</td>
+<td class="gt_row gt_center" headers="estimate_1">10.1</td>
+<td class="gt_row gt_center" headers="conf.low_1">5.95, 17.1</td>
+<td class="gt_row gt_center" headers="p.value_1">&lt;0.001</td>
+<td class="gt_row gt_center" headers="estimate_2">9.98</td>
+<td class="gt_row gt_center" headers="conf.low_2">5.47, 18.2</td>
+<td class="gt_row gt_center" headers="p.value_2">&lt;0.001</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left" headers="Poisson  label">&nbsp;&nbsp;&nbsp;&nbsp;65+ años</td>
-<td class="gt_row gt_center" headers="Poisson  estimate">2.08</td>
-<td class="gt_row gt_center" headers="Poisson  conf.low">1.14, 3.95</td>
-<td class="gt_row gt_center" headers="Poisson  p.value">0.020</td>
-</tr>
-<tr class="odd gt_group_heading_row">
-<td colspan="4" id="Binomial negativo" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Binomial negativo</td>
-</tr>
-<tr class="even gt_row_group_first">
-<td class="gt_row gt_left" headers="Binomial negativo  label">semana_epi</td>
-<td class="gt_row gt_center" headers="Binomial negativo  estimate">1.06</td>
-<td class="gt_row gt_center" headers="Binomial negativo  conf.low">1.03, 1.10</td>
-<td class="gt_row gt_center" headers="Binomial negativo  p.value">&lt;0.001</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="Binomial negativo  label">grupo_edad_cat</td>
-<td class="gt_row gt_center" headers="Binomial negativo  estimate"><br>
-</td>
-<td class="gt_row gt_center" headers="Binomial negativo  conf.low"><br>
-</td>
-<td class="gt_row gt_center" headers="Binomial negativo  p.value"><br>
-</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="Binomial negativo  label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat10-19 años</td>
-<td class="gt_row gt_center" headers="Binomial negativo  estimate">3.20</td>
-<td class="gt_row gt_center" headers="Binomial negativo  conf.low">1.67, 6.12</td>
-<td class="gt_row gt_center" headers="Binomial negativo  p.value">&lt;0.001</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="Binomial negativo  label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat20-34 años</td>
-<td class="gt_row gt_center" headers="Binomial negativo  estimate">8.87</td>
-<td class="gt_row gt_center" headers="Binomial negativo  conf.low">4.85, 16.3</td>
-<td class="gt_row gt_center" headers="Binomial negativo  p.value">&lt;0.001</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="Binomial negativo  label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat35-65 años</td>
-<td class="gt_row gt_center" headers="Binomial negativo  estimate">9.98</td>
-<td class="gt_row gt_center" headers="Binomial negativo  conf.low">5.47, 18.2</td>
-<td class="gt_row gt_center" headers="Binomial negativo  p.value">&lt;0.001</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="Binomial negativo  label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat65+ años</td>
-<td class="gt_row gt_center" headers="Binomial negativo  estimate">2.04</td>
-<td class="gt_row gt_center" headers="Binomial negativo  conf.low">1.03, 4.04</td>
-<td class="gt_row gt_center" headers="Binomial negativo  p.value">0.042</td>
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat65+ años</td>
+<td class="gt_row gt_center" headers="estimate_1">2.08</td>
+<td class="gt_row gt_center" headers="conf.low_1">1.12, 3.85</td>
+<td class="gt_row gt_center" headers="p.value_1">0.020</td>
+<td class="gt_row gt_center" headers="estimate_2">2.04</td>
+<td class="gt_row gt_center" headers="conf.low_2">1.03, 4.04</td>
+<td class="gt_row gt_center" headers="p.value_2">0.042</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
 <tr class="even">
-<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span>
-<p>IRR = Incidence Rate Ratio, CI = Confidence Interval</p></td>
+<td colspan="7" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span>
+<p>CI = Confidence Interval</p></td>
 </tr>
 </tfoot>
 
@@ -853,51 +911,30 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 </div>
-<p>Entre sus limitaciones, estos modelos no son adecuados para datos con subdispersión, son computacionalmente complejos y su ajuste depende de la estructura específica de los datos, lo que puede afectar la estabilidad de las estimaciones.</p>
+<p>La regresión binomial negativa tiene como limitación no ser adecuada para datos con subdispersión. Además, son modelos computacionalmente complejos y su ajuste depende de la estructura específica de los datos, lo que puede afectar la estabilidad de las estimaciones.</p>
 </section>
 <section id="distribución-conway-maxwell-poisson" class="level3">
 <h3 class="anchored" data-anchor-id="distribución-conway-maxwell-poisson">Distribución Conway-Maxwell Poisson</h3>
-<p>El modelo Conway-Maxwell Poisson (COM-Poisson) es altamente flexible, permitiendo manejar tanto sobredispersión como subdispersión en datos de conteo, y ofrece una generalización del modelo Poisson estándar. Su capacidad para modelar datos con exceso de ceros y su aplicabilidad en diversos campos lo hacen versátil. En R, podemos ajustarlos usando la función <code>glmmTMB()</code> con el argumento <code>family = compois()</code>.</p>
+<p>Otra alternativa a la regresión de Poisson, que permite controlar tanto sobredispersión como subdispersión y exceso de ceros es el modelo Conway-Maxwell Poisson (COM-Poisson). El mismo ofrece una generalización del modelo Poisson estándar, introduciendo un parámetro adicional que permite ajustar de forma independiente la media y la varianza.</p>
+<p>Podemos ajustar estos modelos con la función <code>glmmTMB()</code> especificando el argumento <code>family = compois()</code>, que tiene como función de enlace por defecto el logaritmo <code>(link = "log")</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo COMPOIS</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fit_compois <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,  </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> dengue,                 </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> <span class="fu">compois</span>())  </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Salida del modelo</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_compois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> Family: compois  ( log )
-Formula:          casos ~ semana_epi + grupo_edad_cat
-Data: dengue
-
-     AIC      BIC   logLik deviance df.resid 
-  1561.2   1595.9   -773.6   1547.2     1040 
-
-
-Dispersion parameter for compois family (): 5.49e+08 
-
-Conditional model:
-                         Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)              -3.21344    0.30790 -10.437  &lt; 2e-16 ***
-semana_epi                0.05512    0.01262   4.369 1.25e-05 ***
-grupo_edad_cat10-19 años  1.16954    0.31183   3.751 0.000176 ***
-grupo_edad_cat20-34 años  2.19252    0.28930   7.579 3.49e-14 ***
-grupo_edad_cat35-65 años  2.31031    0.28777   8.028 9.89e-16 ***
-grupo_edad_cat65+ años    0.72216    0.33125   2.180 0.029247 *  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo COMPOIS</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fit_compois <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,  </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> datos,                 </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> compois)  </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Salida del modelo</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_compois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>Una desventaja de estos modelos es que son computacionalmente complejos y existen pocos softwares y paquetes que permitan su ajuste. Por otro lado, los parámetros son menos intuitivos de interpretar, y puede presentar dificultades en la estimación de parámetros, especialmente en casos de datos limitados o de mala calidad.</p>
+<p>Una desventaja de estos modelos es que son computacionalmente complejos y están implementados en pocos <em>software</em> estadísticos y paquetes de R. Por otro lado, los parámetros son menos intuitivos de interpretar, y puede presentar dificultades en la estimación de parámetros, especialmente en casos de datos limitados o de mala calidad.</p>
 </section>
 </section>
 <section id="exceso-de-ceros-zero-inflation" class="level2">
 <h2 class="anchored" data-anchor-id="exceso-de-ceros-zero-inflation">Exceso de ceros (<em>zero-inflation)</em></h2>
 <p>El exceso de ceros ocurre cuando se observan más ceros en los datos de lo que el modelo Poisson predice. Este fenómeno puede ser un indicativo de que el modelo Poisson no es adecuado para los datos.</p>
-<p>Para identificar un exceso de ceros, se puede utilizar la función <code>check_zeroinflation()</code> del paquete <code>performance</code>. Esta función evalúa si el número de ceros en los datos es mayor de lo esperado bajo el modelo Poisson.</p>
+<p>Para identificar un exceso de ceros, se puede utilizar la función <code>check_zeroinflation()</code> del paquete <code>performance</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_zeroinflation</span>(fit_pois)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_zeroinflation</span>(fit_pois_tmb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Check for zero-inflation
 
@@ -906,21 +943,128 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
             Ratio: 0.90</code></pre>
 </div>
 </div>
-<p>La salida del test indica que la cantidad de ceros observados es superior a la predicha por el modelo Poisson. Para controlar este exceso de ceros se pueden usar modelos <em>zero-inflated</em> Poisson o binomial negativos, dependiendo de si existe o no sobredispersión. En R, podemos ajustar estos modelos usando la función <code>glmmTMB()</code>, añadiendo el argumento <code>zi = ~ 1</code>. Como los datos del ejemplo presentan sobredispersión, mostraremos el modelado usando distribución binomial negativa:</p>
+<p>Los resultados del test indican que los datos presentan un exceso de ceros. Para explorar el origen de este fenómeno, comenzamos tabulando los datos por semana epidemiológica:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo zero-inflated</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fit_zi <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,  </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">zi =</span> <span class="sc">~</span><span class="dv">1</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> dengue,                 </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> <span class="fu">nbinom2</span>())  </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Salida del modelo</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_zi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(semana_epi) <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">casos =</span> <span class="fu">sum</span>(casos))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 × 2
+   semana_epi casos
+        &lt;dbl&gt; &lt;dbl&gt;
+ 1          1     4
+ 2          2     2
+ 3          3     4
+ 4          4     6
+ 5          5     3
+ 6          6     6
+ 7          7     9
+ 8          8    11
+ 9          9    20
+10         10    48
+11         11    51
+12         12    59
+13         13    63
+14         14    49
+15         15    31
+16         16    11
+17         17    12
+18         18     9
+19         19    11
+20         20     1</code></pre>
+</div>
+</div>
+<p>Observamos que se reportaron casos de dengue en todas las semanas epidemiológicas. Ahora, veamos la distribución de los casos por departamento:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(departamento) <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">casos =</span> <span class="fu">sum</span>(casos))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   departamento       casos
+   &lt;chr&gt;              &lt;dbl&gt;
+ 1 BAHIA BLANCA         117
+ 2 CORONEL DORREGO        2
+ 3 GENERAL ALVARADO       6
+ 4 GENERAL PUEYRREDON    75
+ 5 LA COSTA             150
+ 6 LOBERIA                2
+ 7 MAR CHIQUITA           8
+ 8 NECOCHEA              14
+ 9 PINAMAR               28
+10 TRES ARROYOS           8</code></pre>
+</div>
+</div>
+<p>En este caso, todos los departamentos reportaron casos de dengue durante el período de estudio. Procedamos a cruzar los datos por semana epidemiológica y departamento:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(semana_epi, departamento) <span class="sc">|&gt;</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">casos =</span> <span class="fu">sum</span>(casos)) <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">20</span>) <span class="co"># Muestra las primeras 20 observaciones</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 200 × 3
+# Groups:   semana_epi [20]
+   semana_epi departamento       casos
+        &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;
+ 1          1 BAHIA BLANCA           1
+ 2          1 CORONEL DORREGO        0
+ 3          1 GENERAL ALVARADO       0
+ 4          1 GENERAL PUEYRREDON     2
+ 5          1 LA COSTA               1
+ 6          1 LOBERIA                0
+ 7          1 MAR CHIQUITA           0
+ 8          1 NECOCHEA               0
+ 9          1 PINAMAR                0
+10          1 TRES ARROYOS           0
+11          2 BAHIA BLANCA           0
+12          2 CORONEL DORREGO        0
+13          2 GENERAL ALVARADO       0
+14          2 GENERAL PUEYRREDON     1
+15          2 LA COSTA               0
+16          2 LOBERIA                0
+17          2 MAR CHIQUITA           0
+18          2 NECOCHEA               0
+19          2 PINAMAR                1
+20          2 TRES ARROYOS           0
+# ℹ 180 more rows</code></pre>
+</div>
+</div>
+<p>En esta tabla, se observa que no todos los departamentos en La Costa reportaron casos de dengue cada semana epidemiológica. Además, dado que los datos están separados por grupo etario, es razonable suponer que tampoco se reportaron casos para cada grupo en cada departamento y semana epidemiológica.</p>
+<p>Para obtener una visión más detallada, generamos una tabla de frecuencia para los reportes de cero casos:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(datos<span class="sc">$</span>casos) <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> datos$casos   n percent
+           0 821   78.4%
+           1 136   13.0%
+           2  44    4.2%
+           3  23    2.2%
+           4  13    1.2%
+           5   5    0.5%
+           6   2    0.2%
+           7   1    0.1%
+           9   1    0.1%
+          12   1    0.1%</code></pre>
+</div>
+</div>
+<p>La tabla muestra que el 78.4% de los datos corresponden a observaciones con cero reportes de casos de dengue. Esto es esperado en el contexto de datos de vigilancia epidemiológica, donde es común encontrar muchas observaciones sin eventos.</p>
+<p>Este exceso de ceros se puede controlar usando modelos <em>zero-inflated</em>, que tendrán distribución Poisson o binomial negativa según exista o no sobredispersión de los datos.</p>
+<p>Añadiendo el argumento <code>zi = ~ 1</code>, podemos controlar el exceso de ceros en el modelo de regresión binomial negativa ajustada anteriormente. Indicando que la inflación en ceros sigue un modelo de intercepto único (sin predictores adicionales):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo zero-inflated</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>fit_zi_nb <span class="ot">&lt;-</span> <span class="fu">glmmTMB</span>(casos <span class="sc">~</span> semana_epi <span class="sc">+</span> grupo_edad_cat,  </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">zi =</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> datos,                 </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> nbinom2)  </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Salida del modelo</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_zi_nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Family: nbinom2  ( log )
 Formula:          casos ~ semana_epi + grupo_edad_cat
 Zero inflation:         ~1
-Data: dengue
+Data: datos
 
      AIC      BIC   logLik deviance df.resid 
   1540.4   1580.0   -762.2   1524.4     1039 
@@ -943,531 +1087,13 @@ Zero-inflation model:
             Estimate Std. Error z value Pr(&gt;|z|)
 (Intercept)   -16.69    3025.54  -0.006    0.996</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Coeficientes</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(fit_zi, <span class="at">exponentiate =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="vballrxqpf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#vballrxqpf table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#vballrxqpf thead, #vballrxqpf tbody, #vballrxqpf tfoot, #vballrxqpf tr, #vballrxqpf td, #vballrxqpf th {
-  border-style: none;
-}
-
-#vballrxqpf p {
-  margin: 0;
-  padding: 0;
-}
-
-#vballrxqpf .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#vballrxqpf .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#vballrxqpf .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#vballrxqpf .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#vballrxqpf .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#vballrxqpf .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#vballrxqpf .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#vballrxqpf .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#vballrxqpf .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#vballrxqpf .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#vballrxqpf .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#vballrxqpf .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#vballrxqpf .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#vballrxqpf .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#vballrxqpf .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#vballrxqpf .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#vballrxqpf .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#vballrxqpf .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#vballrxqpf .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#vballrxqpf .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#vballrxqpf .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#vballrxqpf .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#vballrxqpf .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#vballrxqpf .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#vballrxqpf .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#vballrxqpf .gt_left {
-  text-align: left;
-}
-
-#vballrxqpf .gt_center {
-  text-align: center;
-}
-
-#vballrxqpf .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#vballrxqpf .gt_font_normal {
-  font-weight: normal;
-}
-
-#vballrxqpf .gt_font_bold {
-  font-weight: bold;
-}
-
-#vballrxqpf .gt_font_italic {
-  font-style: italic;
-}
-
-#vballrxqpf .gt_super {
-  font-size: 65%;
-}
-
-#vballrxqpf .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#vballrxqpf .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#vballrxqpf .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#vballrxqpf .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#vballrxqpf .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#vballrxqpf .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#vballrxqpf .gt_indent_5 {
-  text-indent: 25px;
-}
-
-#vballrxqpf .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-
-#vballrxqpf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header gt_col_headings">
-<th id="<div data-qmd-base64=&quot;KipDaGFyYWN0ZXJpc3RpYyoq&quot;><div class='gt_from_md'><p><strong>Characteristic</strong></p>
-</div></div>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><p><strong>Characteristic</strong></p></th>
-<th id="<div data-qmd-base64=&quot;KipleHAoQmV0YSkqKg==&quot;><div class='gt_from_md'><p><strong>exp(Beta)</strong></p>
-</div></div>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>exp(Beta)</strong></p></th>
-<th id="<div data-qmd-base64=&quot;Kio5NSUgQ0kqKg==&quot;><div class='gt_from_md'><p><strong>95% CI</strong></p>
-</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>95% CI</strong></p>
-<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span></th>
-<th id="<div data-qmd-base64=&quot;KipwLXZhbHVlKio=&quot;><div class='gt_from_md'><p><strong>p-value</strong></p>
-</div></div>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>p-value</strong></p></th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">semana_epi</td>
-<td class="gt_row gt_center" headers="estimate">1.06</td>
-<td class="gt_row gt_center" headers="conf.low">1.03, 1.10</td>
-<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">grupo_edad_cat</td>
-<td class="gt_row gt_center" headers="estimate"><br>
-</td>
-<td class="gt_row gt_center" headers="conf.low"><br>
-</td>
-<td class="gt_row gt_center" headers="p.value"><br>
-</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat10-19 años</td>
-<td class="gt_row gt_center" headers="estimate">3.20</td>
-<td class="gt_row gt_center" headers="conf.low">1.67, 6.12</td>
-<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat20-34 años</td>
-<td class="gt_row gt_center" headers="estimate">8.87</td>
-<td class="gt_row gt_center" headers="conf.low">4.85, 16.3</td>
-<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat35-65 años</td>
-<td class="gt_row gt_center" headers="estimate">9.98</td>
-<td class="gt_row gt_center" headers="conf.low">5.47, 18.2</td>
-<td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;grupo_edad_cat65+ años</td>
-<td class="gt_row gt_center" headers="estimate">2.04</td>
-<td class="gt_row gt_center" headers="conf.low">1.03, 4.04</td>
-<td class="gt_row gt_center" headers="p.value">0.042</td>
-</tr>
-</tbody><tfoot class="gt_footnotes">
-<tr class="odd">
-<td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span>
-<p>CI = Confidence Interval</p></td>
-</tr>
-</tfoot>
-
-</table>
-
 </div>
-</div>
-</div>
+<p>La salida de estos modelos se divide en tres partes que incluyen:</p>
+<ul>
+<li><p><code>Conditional model</code>: coeficientes, error estándar, valor z y significancia para el modelo de conteo binomial negativo.</p></li>
+<li><p><code>Zero-inflation model</code>: coeficiente para la probabilidad de observar un cero adicional, con su respectivo error estándar, valor z y significancia. El coeficiente del intercepto no es significativo, lo que indica que la probabilidad de observar un cero adicional no está significativamente influenciada por las variables en el modelo y podría ser necesario incluir un predictor en <code>zi</code> para mejorar el ajuste del modelo.</p></li>
+<li><p>Estadísticas del modelo: AIC, BIC, logLik, devianza y grados de libertad residuales.</p></li>
+</ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1520,6 +1146,9 @@ Agresti, Alan. 2015. <span>“Chapter 75: Models for Count Data.”</span> In <e
 </div>
 <div id="ref-bolker2024" class="csl-entry" role="listitem">
 Bolker, et al., Ben. 2024. <span>“GLMM FAQ: Model Extensions.”</span> <a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#">https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#</a>.
+</div>
+<div id="ref-glmmTMB" class="csl-entry" role="listitem">
+Brooks, Mollie E., Kasper Kristensen, Koen J. van, Arni Magnusson, Casper W. Berg, Anders Nielsen, Hans J. Skaug, Martin Maechler, and Benjamin M. Bolker. 2017. <span>“<span></span>glmmTMB<span></span> Balances Speed and Flexibility Among Packages for Zero-Inflated Generalized Linear Mixed Modeling”</span> 9. <a href="https://doi.org/10.32614/RJ-2017-066">https://doi.org/10.32614/RJ-2017-066</a>.
 </div>
 <div id="ref-janitor" class="csl-entry" role="listitem">
 Firke, Sam. 2023. <span>“Janitor: Simple Tools for Examining and Cleaning Dirty Data.”</span> <a href="https://CRAN.R-project.org/package=janitor">https://CRAN.R-project.org/package=janitor</a>.
