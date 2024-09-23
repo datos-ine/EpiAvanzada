@@ -1,0 +1,349 @@
+anio	mes	estacion	nom_depto	ecoregion	grupo_edad	prec_mm_cat	casos_lepto
+2014	1	Verano	LA CAPITAL	Delta e Islas del Paraná	0-14	0-41 mm	1
+2014	1	Verano	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2014	1	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	1
+2014	1	Verano	LA CAPITAL	Espinal	30-44	0-41 mm	2
+2014	1	Verano	LAS COLONIAS	Espinal	30-44	42-89 mm	0
+2014	1	Verano	ROSARIO	Delta e Islas del Paraná	0-14	0-41 mm	0
+2014	1	Verano	SAN JAVIER	Delta e Islas del Paraná	30-44	90-139 mm	0
+2014	10	Primavera	IRIONDO	Pampa	45-59	0-41 mm	1
+2014	10	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	2
+2014	10	Primavera	ROSARIO	Pampa	15-29	0-41 mm	0
+2014	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	0
+2014	11	Primavera	LA CAPITAL	Espinal	30-44	0-41 mm	6
+2014	11	Primavera	SAN LORENZO	Delta e Islas del Paraná	0-14	0-41 mm	0
+2014	11	Primavera	VERA	Chaco Húmedo	15-29	0-41 mm	3
+2014	12	Primavera	LA CAPITAL	Delta e Islas del Paraná	0-14	0-41 mm	1
+2014	12	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	1
+2014	2	Verano	CASEROS	Pampa	0-14	0-41 mm	2
+2014	2	Verano	GENERAL LOPEZ	Pampa	0-14	0-41 mm	0
+2014	2	Verano	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	1
+2014	2	Verano	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	1
+2014	3	Verano	GARAY	Delta e Islas del Paraná	30-44	>140 mm	0
+2014	3	Verano	GENERAL OBLIGADO	Chaco Húmedo	45-59	0-41 mm	2
+2014	3	Verano	GENERAL OBLIGADO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2014	3	Verano	IRIONDO	Pampa	60+	42-89 mm	0
+2014	3	Verano	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2014	3	Verano	LA CAPITAL	Espinal	30-44	0-41 mm	1
+2014	3	Verano	LAS COLONIAS	Espinal	60+	>140 mm	1
+2014	3	Verano	SAN JUSTO	Chaco Húmedo	0-14	>140 mm	0
+2014	3	Verano	SAN LORENZO	Pampa	45-59	0-41 mm	0
+2014	4	Otoño	CASTELLANOS	Espinal	15-29	90-139 mm	1
+2014	4	Otoño	IRIONDO	Pampa	45-59	>140 mm	2
+2014	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	0-14	0-41 mm	0
+2014	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	3
+2014	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	1
+2014	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	1
+2014	4	Otoño	LA CAPITAL	Espinal	30-44	0-41 mm	0
+2014	4	Otoño	LAS COLONIAS	Espinal	15-29	90-139 mm	0
+2014	4	Otoño	ROSARIO	Delta e Islas del Paraná	15-29	90-139 mm	1
+2014	4	Otoño	ROSARIO	Delta e Islas del Paraná	45-59	90-139 mm	2
+2014	4	Otoño	SAN JUSTO	Espinal	15-29	>140 mm	2
+2014	4	Otoño	SAN JUSTO	Espinal	30-44	>140 mm	0
+2014	4	Otoño	SAN JUSTO	Espinal	45-59	>140 mm	1
+2014	5	Otoño	CONSTITUCION	Delta e Islas del Paraná	30-44	42-89 mm	1
+2014	5	Otoño	GENERAL LOPEZ	Pampa	15-29	0-41 mm	1
+2014	5	Otoño	GENERAL OBLIGADO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2014	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2014	5	Otoño	LAS COLONIAS	Espinal	30-44	0-41 mm	6
+2014	5	Otoño	SAN CRISTOBAL	Espinal	15-29	0-41 mm	0
+2014	5	Otoño	SAN JERONIMO	Espinal	0-14	0-41 mm	0
+2014	5	Otoño	SAN JUSTO	Espinal	15-29	42-89 mm	0
+2014	5	Otoño	VERA	Chaco Húmedo	15-29	0-41 mm	0
+2014	6	Otoño	GENERAL OBLIGADO	Delta e Islas del Paraná	15-29	0-41 mm	1
+2014	6	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	1
+2014	6	Otoño	LA CAPITAL	Espinal	30-44	0-41 mm	6
+2014	6	Otoño	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	8
+2014	6	Otoño	SAN JUSTO	Espinal	0-14	0-41 mm	0
+2014	6	Otoño	SAN JUSTO	Espinal	15-29	0-41 mm	0
+2014	6	Otoño	SAN LORENZO	Pampa	15-29	0-41 mm	0
+2014	7	Invierno	GARAY	Delta e Islas del Paraná	30-44	0-41 mm	1
+2014	7	Invierno	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	2
+2014	7	Invierno	LA CAPITAL	Espinal	15-29	0-41 mm	2
+2014	8	Invierno	CASTELLANOS	Espinal	60+	0-41 mm	0
+2014	8	Invierno	GARAY	Delta e Islas del Paraná	30-44	0-41 mm	0
+2014	8	Invierno	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	1
+2014	8	Invierno	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2014	8	Invierno	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	0
+2014	8	Invierno	SAN JUSTO	Espinal	30-44	0-41 mm	0
+2014	8	Invierno	SAN LORENZO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2014	8	Invierno	VERA	Chaco Húmedo	15-29	0-41 mm	1
+2014	9	Invierno	CASTELLANOS	Espinal	60+	42-89 mm	5
+2014	9	Invierno	SAN JAVIER	Delta e Islas del Paraná	30-44	42-89 mm	0
+2014	9	Invierno	SAN LORENZO	Pampa	15-29	0-41 mm	1
+2015	1	Verano	CONSTITUCION	Delta e Islas del Paraná	0-14	0-41 mm	0
+2015	1	Verano	GENERAL OBLIGADO	Delta e Islas del Paraná	30-44	0-41 mm	1
+2015	1	Verano	LAS COLONIAS	Espinal	15-29	90-139 mm	2
+2015	1	Verano	ROSARIO	Delta e Islas del Paraná	15-29	>140 mm	1
+2015	1	Verano	ROSARIO	Delta e Islas del Paraná	30-44	>140 mm	2
+2015	1	Verano	ROSARIO	Pampa	15-29	>140 mm	0
+2015	1	Verano	ROSARIO	Pampa	30-44	>140 mm	0
+2015	1	Verano	SAN JAVIER	Delta e Islas del Paraná	30-44	>140 mm	0
+2015	1	Verano	VERA	Chaco Húmedo	15-29	0-41 mm	1
+2015	10	Primavera	CASTELLANOS	Espinal	30-44	42-89 mm	1
+2015	10	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2015	10	Primavera	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	1
+2015	10	Primavera	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	1
+2015	10	Primavera	LA CAPITAL	Espinal	60+	0-41 mm	0
+2015	11	Primavera	GENERAL OBLIGADO	Chaco Húmedo	60+	0-41 mm	1
+2015	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2015	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	1
+2015	11	Primavera	LA CAPITAL	Espinal	15-29	0-41 mm	0
+2015	11	Primavera	LA CAPITAL	Espinal	30-44	0-41 mm	0
+2015	11	Primavera	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	1
+2015	12	Primavera	GENERAL OBLIGADO	Delta e Islas del Paraná	60+	0-41 mm	1
+2015	12	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	1
+2015	12	Primavera	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2015	12	Primavera	ROSARIO	Delta e Islas del Paraná	15-29	42-89 mm	1
+2015	2	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	7
+2015	2	Verano	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	1
+2015	2	Verano	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2015	2	Verano	ROSARIO	Pampa	30-44	0-41 mm	1
+2015	2	Verano	SAN JAVIER	Delta e Islas del Paraná	45-59	90-139 mm	0
+2015	2	Verano	SAN JAVIER	Delta e Islas del Paraná	60+	90-139 mm	3
+2015	3	Verano	CASEROS	Pampa	30-44	0-41 mm	0
+2015	3	Verano	CASEROS	Pampa	45-59	0-41 mm	0
+2015	3	Verano	CASTELLANOS	Espinal	0-14	>140 mm	0
+2015	3	Verano	CASTELLANOS	Espinal	30-44	>140 mm	4
+2015	3	Verano	GARAY	Delta e Islas del Paraná	45-59	>140 mm	2
+2015	3	Verano	GENERAL OBLIGADO	Chaco Húmedo	0-14	0-41 mm	2
+2015	3	Verano	GENERAL OBLIGADO	Chaco Húmedo	15-29	0-41 mm	1
+2015	3	Verano	LA CAPITAL	Delta e Islas del Paraná	0-14	0-41 mm	2
+2015	3	Verano	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	9
+2015	3	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	5
+2015	3	Verano	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	1
+2015	3	Verano	LA CAPITAL	Espinal	0-14	0-41 mm	3
+2015	3	Verano	LA CAPITAL	Espinal	15-29	0-41 mm	0
+2015	3	Verano	LA CAPITAL	Espinal	30-44	0-41 mm	0
+2015	3	Verano	LA CAPITAL	Espinal	45-59	0-41 mm	0
+2015	3	Verano	LAS COLONIAS	Espinal	30-44	>140 mm	7
+2015	3	Verano	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	8
+2015	3	Verano	ROSARIO	Delta e Islas del Paraná	45-59	0-41 mm	5
+2015	3	Verano	ROSARIO	Pampa	15-29	0-41 mm	1
+2015	3	Verano	SAN JAVIER	Delta e Islas del Paraná	15-29	42-89 mm	0
+2015	3	Verano	SAN JAVIER	Delta e Islas del Paraná	60+	42-89 mm	5
+2015	3	Verano	SAN JERONIMO	Espinal	15-29	90-139 mm	0
+2015	3	Verano	SAN JERONIMO	Pampa	30-44	90-139 mm	0
+2015	3	Verano	SAN JUSTO	Espinal	15-29	0-41 mm	2
+2015	4	Otoño	CASEROS	Pampa	60+	0-41 mm	0
+2015	4	Otoño	CASTELLANOS	Espinal	30-44	42-89 mm	0
+2015	4	Otoño	GENERAL OBLIGADO	Chaco Húmedo	0-14	0-41 mm	2
+2015	4	Otoño	GENERAL OBLIGADO	Chaco Húmedo	15-29	0-41 mm	1
+2015	4	Otoño	GENERAL OBLIGADO	Delta e Islas del Paraná	0-14	0-41 mm	1
+2015	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	0-14	0-41 mm	1
+2015	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2015	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	6
+2015	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	1
+2015	4	Otoño	LA CAPITAL	Espinal	15-29	0-41 mm	1
+2015	4	Otoño	LA CAPITAL	Espinal	30-44	0-41 mm	0
+2015	4	Otoño	LAS COLONIAS	Espinal	15-29	0-41 mm	2
+2015	4	Otoño	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	4
+2015	4	Otoño	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	5
+2015	4	Otoño	ROSARIO	Delta e Islas del Paraná	45-59	0-41 mm	2
+2015	4	Otoño	ROSARIO	Delta e Islas del Paraná	60+	0-41 mm	0
+2015	4	Otoño	SAN JERONIMO	Pampa	30-44	0-41 mm	1
+2015	4	Otoño	SAN LORENZO	Delta e Islas del Paraná	30-44	0-41 mm	0
+2015	4	Otoño	SAN LORENZO	Pampa	30-44	0-41 mm	2
+2015	5	Otoño	CASEROS	Pampa	30-44	0-41 mm	2
+2015	5	Otoño	CASEROS	Pampa	45-59	0-41 mm	1
+2015	5	Otoño	CASEROS	Pampa	60+	0-41 mm	2
+2015	5	Otoño	GENERAL OBLIGADO	Chaco Húmedo	15-29	0-41 mm	2
+2015	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2015	5	Otoño	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	1
+2015	6	Otoño	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	2
+2015	6	Otoño	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2015	6	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2015	6	Otoño	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	1
+2015	6	Otoño	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	1
+2015	6	Otoño	ROSARIO	Delta e Islas del Paraná	45-59	0-41 mm	2
+2015	7	Invierno	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2015	7	Invierno	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2015	7	Invierno	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2015	7	Invierno	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	0
+2015	8	Invierno	ROSARIO	Delta e Islas del Paraná	0-14	90-139 mm	0
+2015	8	Invierno	ROSARIO	Delta e Islas del Paraná	15-29	90-139 mm	1
+2015	8	Invierno	SAN JUSTO	Espinal	15-29	90-139 mm	0
+2015	8	Invierno	SAN JUSTO	Espinal	60+	90-139 mm	0
+2015	8	Invierno	SAN LORENZO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2015	9	Invierno	SAN JUSTO	Espinal	30-44	0-41 mm	0
+2015	9	Invierno	SAN LORENZO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2015	9	Invierno	VERA	Chaco Húmedo	0-14	0-41 mm	1
+2016	1	Verano	CASEROS	Pampa	15-29	0-41 mm	2
+2016	1	Verano	CASTELLANOS	Espinal	15-29	0-41 mm	0
+2016	1	Verano	GENERAL OBLIGADO	Chaco Húmedo	30-44	0-41 mm	0
+2016	1	Verano	GENERAL OBLIGADO	Delta e Islas del Paraná	15-29	0-41 mm	4
+2016	1	Verano	LA CAPITAL	Delta e Islas del Paraná	0-14	0-41 mm	0
+2016	1	Verano	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	1
+2016	1	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2016	1	Verano	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2016	1	Verano	LA CAPITAL	Espinal	15-29	0-41 mm	0
+2016	1	Verano	LA CAPITAL	Espinal	30-44	0-41 mm	0
+2016	1	Verano	LA CAPITAL	Espinal	60+	0-41 mm	1
+2016	1	Verano	LAS COLONIAS	Espinal	15-29	0-41 mm	0
+2016	1	Verano	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	3
+2016	1	Verano	SAN JAVIER	Delta e Islas del Paraná	0-14	0-41 mm	0
+2016	10	Primavera	CASTELLANOS	Espinal	15-29	90-139 mm	0
+2016	10	Primavera	CONSTITUCION	Delta e Islas del Paraná	15-29	0-41 mm	3
+2016	10	Primavera	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	1
+2016	10	Primavera	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2016	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2016	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2016	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	0
+2016	11	Primavera	LAS COLONIAS	Espinal	45-59	42-89 mm	2
+2016	11	Primavera	ROSARIO	Delta e Islas del Paraná	0-14	0-41 mm	2
+2016	11	Primavera	ROSARIO	Delta e Islas del Paraná	60+	0-41 mm	0
+2016	12	Primavera	CASTELLANOS	Espinal	30-44	90-139 mm	0
+2016	12	Primavera	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	1
+2016	12	Primavera	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	2
+2016	12	Primavera	LA CAPITAL	Espinal	30-44	0-41 mm	0
+2016	12	Primavera	ROSARIO	Pampa	15-29	0-41 mm	0
+2016	2	Verano	GENERAL OBLIGADO	Chaco Húmedo	15-29	0-41 mm	0
+2016	2	Verano	IRIONDO	Pampa	30-44	0-41 mm	2
+2016	2	Verano	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2016	2	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	1
+2016	2	Verano	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	4
+2016	2	Verano	LA CAPITAL	Espinal	45-59	0-41 mm	0
+2016	2	Verano	ROSARIO	Delta e Islas del Paraná	15-29	42-89 mm	0
+2016	2	Verano	ROSARIO	Delta e Islas del Paraná	30-44	42-89 mm	0
+2016	2	Verano	SAN CRISTOBAL	Espinal	30-44	90-139 mm	0
+2016	2	Verano	SAN LORENZO	Delta e Islas del Paraná	30-44	0-41 mm	0
+2016	2	Verano	VERA	Chaco Húmedo	15-29	0-41 mm	0
+2016	3	Verano	CASTELLANOS	Espinal	15-29	0-41 mm	1
+2016	3	Verano	GENERAL LOPEZ	Pampa	60+	0-41 mm	0
+2016	3	Verano	GENERAL OBLIGADO	Delta e Islas del Paraná	0-14	0-41 mm	0
+2016	3	Verano	GENERAL OBLIGADO	Delta e Islas del Paraná	45-59	0-41 mm	0
+2016	3	Verano	IRIONDO	Pampa	30-44	0-41 mm	2
+2016	3	Verano	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2016	3	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2016	3	Verano	LA CAPITAL	Espinal	30-44	0-41 mm	0
+2016	3	Verano	LA CAPITAL	Espinal	45-59	0-41 mm	0
+2016	3	Verano	LA CAPITAL	Espinal	60+	0-41 mm	0
+2016	3	Verano	LAS COLONIAS	Espinal	15-29	0-41 mm	0
+2016	3	Verano	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	1
+2016	3	Verano	SAN JAVIER	Delta e Islas del Paraná	45-59	42-89 mm	1
+2016	3	Verano	VERA	Chaco Húmedo	15-29	0-41 mm	2
+2016	4	Otoño	IRIONDO	Pampa	30-44	0-41 mm	0
+2016	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2016	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	2
+2016	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2016	4	Otoño	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	10
+2016	4	Otoño	LA CAPITAL	Espinal	0-14	0-41 mm	2
+2016	4	Otoño	LA CAPITAL	Espinal	15-29	0-41 mm	2
+2016	4	Otoño	LAS COLONIAS	Espinal	15-29	>140 mm	1
+2016	4	Otoño	ROSARIO	Delta e Islas del Paraná	0-14	0-41 mm	3
+2016	4	Otoño	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	4
+2016	4	Otoño	SAN JAVIER	Delta e Islas del Paraná	30-44	>140 mm	0
+2016	4	Otoño	SAN JERONIMO	Pampa	60+	>140 mm	0
+2016	4	Otoño	SAN LORENZO	Delta e Islas del Paraná	15-29	0-41 mm	1
+2016	4	Otoño	VERA	Chaco Húmedo	45-59	0-41 mm	0
+2016	5	Otoño	9 DE JULIO	Chaco Seco	30-44	0-41 mm	7
+2016	5	Otoño	CASTELLANOS	Espinal	15-29	0-41 mm	1
+2016	5	Otoño	CASTELLANOS	Espinal	60+	0-41 mm	1
+2016	5	Otoño	CASTELLANOS	Pampa	45-59	0-41 mm	0
+2016	5	Otoño	GENERAL OBLIGADO	Delta e Islas del Paraná	45-59	0-41 mm	0
+2016	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	0-14	0-41 mm	0
+2016	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2016	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2016	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	2
+2016	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	1
+2016	5	Otoño	LA CAPITAL	Espinal	0-14	0-41 mm	0
+2016	5	Otoño	LA CAPITAL	Espinal	15-29	0-41 mm	0
+2016	5	Otoño	LA CAPITAL	Espinal	30-44	0-41 mm	2
+2016	5	Otoño	LA CAPITAL	Espinal	60+	0-41 mm	0
+2016	5	Otoño	LAS COLONIAS	Espinal	30-44	0-41 mm	1
+2016	5	Otoño	SAN LORENZO	Pampa	15-29	0-41 mm	0
+2016	5	Otoño	SAN LORENZO	Pampa	45-59	0-41 mm	2
+2016	5	Otoño	VERA	Chaco Húmedo	15-29	0-41 mm	1
+2016	6	Otoño	CASTELLANOS	Espinal	30-44	42-89 mm	0
+2016	6	Otoño	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2016	6	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	4
+2016	6	Otoño	ROSARIO	Delta e Islas del Paraná	45-59	0-41 mm	1
+2016	6	Otoño	SAN JUSTO	Espinal	45-59	0-41 mm	0
+2016	7	Invierno	GENERAL LOPEZ	Pampa	15-29	0-41 mm	2
+2016	7	Invierno	IRIONDO	Pampa	30-44	0-41 mm	0
+2016	7	Invierno	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	6
+2016	7	Invierno	SAN CRISTOBAL	Espinal	15-29	0-41 mm	2
+2016	8	Invierno	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2016	8	Invierno	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	1
+2016	8	Invierno	SAN CRISTOBAL	Espinal	45-59	0-41 mm	0
+2016	8	Invierno	SAN LORENZO	Pampa	15-29	0-41 mm	0
+2016	9	Invierno	GENERAL LOPEZ	Pampa	15-29	0-41 mm	2
+2016	9	Invierno	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2016	9	Invierno	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	1
+2016	9	Invierno	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	3
+2017	1	Verano	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	1
+2017	1	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	4
+2017	1	Verano	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	3
+2017	1	Verano	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	9
+2017	1	Verano	LA CAPITAL	Espinal	0-14	0-41 mm	1
+2017	1	Verano	LA CAPITAL	Espinal	15-29	0-41 mm	0
+2017	1	Verano	LAS COLONIAS	Espinal	30-44	90-139 mm	0
+2017	1	Verano	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	4
+2017	1	Verano	SAN MARTIN	Pampa	30-44	>140 mm	5
+2017	10	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2017	10	Primavera	ROSARIO	Delta e Islas del Paraná	0-14	0-41 mm	2
+2017	10	Primavera	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2017	10	Primavera	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	2
+2017	10	Primavera	VERA	Chaco Húmedo	45-59	0-41 mm	0
+2017	11	Primavera	CASEROS	Pampa	0-14	0-41 mm	2
+2017	11	Primavera	CASTELLANOS	Espinal	45-59	42-89 mm	0
+2017	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2017	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	1
+2017	11	Primavera	LA CAPITAL	Delta e Islas del Paraná	60+	0-41 mm	5
+2017	11	Primavera	LA CAPITAL	Espinal	15-29	0-41 mm	5
+2017	11	Primavera	LA CAPITAL	Espinal	30-44	0-41 mm	0
+2017	11	Primavera	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2017	11	Primavera	ROSARIO	Pampa	15-29	0-41 mm	0
+2017	11	Primavera	ROSARIO	Pampa	45-59	0-41 mm	4
+2017	12	Primavera	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	2
+2017	2	Verano	GENERAL LOPEZ	Pampa	30-44	0-41 mm	2
+2017	2	Verano	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
+2017	2	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	1
+2017	2	Verano	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	2
+2017	2	Verano	LA CAPITAL	Espinal	0-14	0-41 mm	4
+2017	2	Verano	LA CAPITAL	Espinal	30-44	0-41 mm	1
+2017	2	Verano	LA CAPITAL	Espinal	45-59	0-41 mm	0
+2017	2	Verano	LAS COLONIAS	Espinal	0-14	90-139 mm	0
+2017	2	Verano	LAS COLONIAS	Espinal	15-29	90-139 mm	6
+2017	2	Verano	LAS COLONIAS	Espinal	30-44	90-139 mm	0
+2017	2	Verano	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	4
+2017	2	Verano	ROSARIO	Delta e Islas del Paraná	45-59	0-41 mm	6
+2017	2	Verano	ROSARIO	Delta e Islas del Paraná	60+	0-41 mm	1
+2017	3	Verano	CASEROS	Pampa	60+	0-41 mm	0
+2017	3	Verano	CASTELLANOS	Espinal	30-44	42-89 mm	0
+2017	3	Verano	CASTELLANOS	Espinal	45-59	42-89 mm	0
+2017	3	Verano	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	4
+2017	3	Verano	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	4
+2017	3	Verano	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	3
+2017	3	Verano	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	1
+2017	3	Verano	ROSARIO	Delta e Islas del Paraná	45-59	0-41 mm	1
+2017	3	Verano	SAN JAVIER	Delta e Islas del Paraná	30-44	42-89 mm	0
+2017	3	Verano	VERA	Chaco Húmedo	30-44	0-41 mm	1
+2017	4	Otoño	CASEROS	Pampa	30-44	0-41 mm	0
+2017	4	Otoño	GENERAL OBLIGADO	Delta e Islas del Paraná	15-29	0-41 mm	0
+2017	4	Otoño	SAN JUSTO	Chaco Húmedo	45-59	90-139 mm	0
+2017	4	Otoño	SAN LORENZO	Delta e Islas del Paraná	45-59	0-41 mm	4
+2017	4	Otoño	VERA	Chaco Húmedo	0-14	0-41 mm	9
+2017	5	Otoño	CASEROS	Pampa	45-59	0-41 mm	0
+2017	5	Otoño	CASTELLANOS	Espinal	30-44	0-41 mm	2
+2017	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	2
+2017	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	3
+2017	5	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	0
+2017	5	Otoño	LA CAPITAL	Espinal	60+	0-41 mm	0
+2017	5	Otoño	ROSARIO	Delta e Islas del Paraná	15-29	0-41 mm	1
+2017	5	Otoño	SAN JUSTO	Espinal	45-59	42-89 mm	3
+2017	6	Otoño	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	23
+2017	6	Otoño	LA CAPITAL	Delta e Islas del Paraná	45-59	0-41 mm	2
+2017	6	Otoño	SAN JERONIMO	Espinal	15-29	0-41 mm	0
+2017	6	Otoño	SAN MARTIN	Pampa	15-29	0-41 mm	0
+2017	7	Invierno	ROSARIO	Delta e Islas del Paraná	0-14	0-41 mm	1
+2017	7	Invierno	ROSARIO	Delta e Islas del Paraná	30-44	0-41 mm	2
+2017	7	Invierno	ROSARIO	Delta e Islas del Paraná	45-59	0-41 mm	0
+2017	7	Invierno	SAN LORENZO	Delta e Islas del Paraná	45-59	0-41 mm	0
+2017	7	Invierno	VERA	Chaco Húmedo	15-29	0-41 mm	0
+2017	8	Invierno	IRIONDO	Pampa	45-59	0-41 mm	1
+2017	8	Invierno	LA CAPITAL	Delta e Islas del Paraná	30-44	0-41 mm	0
+2017	8	Invierno	LAS COLONIAS	Espinal	30-44	0-41 mm	0
+2017	8	Invierno	ROSARIO	Delta e Islas del Paraná	0-14	0-41 mm	0
+2017	8	Invierno	VERA	Chaco Húmedo	15-29	0-41 mm	0
+2017	9	Invierno	LA CAPITAL	Delta e Islas del Paraná	15-29	0-41 mm	0
