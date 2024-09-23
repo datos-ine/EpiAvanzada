@@ -305,7 +305,9 @@ compare_performance(fit1c1, fit1c2, rank = T, metrics = "AIC")
 summary(fit1c1)
 ```
 
-**Quito año:**
+##  {background-image="fondo_ppt.png"}
+
+**Quito año del modelo anterior:**
 
 ```{r}
 fit5<- update(fit1c1, ~.- anio)
