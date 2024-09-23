@@ -7,6 +7,7 @@ format:
     code-block-height: 650px
     code-overflow: wrap
     scrollable: false
+    chalkboard: true
     css: "custom.css"
 editor: visual
 ---
@@ -332,14 +333,18 @@ check_zeroinflation(fit5)
 
 ## En resumen {background-image="fondo_ppt.png"}
 
+::: incremental
 -   Al ajustar los datos con distribución Poisson se observaba la presencia de sobredispersión y exceso de ceros.
 
 -   Esto hacía que los errores estándar no se estimaran correctamente y todos los predictores fueran estadísticamente significativos.
 
 -   Al cambiar a la distribución binomial negativa, se corrigió el exceso de dispersión y de ceros y solamente se retuvo la estación el año como variable explicativa.
+:::
 
 ##  {background-image="fondo_ppt.png"}
 
+::: incremental
 -   La incidencia de leptospirosis en Santa Fe aumenta significativamente en verano y otoño, coincidiendo con las mayores precipitaciones y temperaturas.
 
 -   Podrían evaluarse interacciones entre la estación y el año, la estación y las precipitaciones, el año y las precipitaciones, etc.
+:::
