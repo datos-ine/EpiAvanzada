@@ -27,8 +27,6 @@ showtext::showtext_opts(dpi = 300)
 pacman::p_load(
   survival,
   survminer,
-  easystats,
-  flextable,
   tidyverse
 )
 
