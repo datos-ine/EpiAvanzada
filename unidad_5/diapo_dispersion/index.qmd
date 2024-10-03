@@ -1,0 +1,350 @@
+---
+title: "Regresión de Poisson"
+format: 
+  revealjs:
+    footer: "Epidemiología: Nivel Avanzado"
+    transition: slide
+    code-block-height: 650px
+    code-overflow: wrap
+    scrollable: false
+    chalkboard: true
+    css: "custom.css"
+editor: visual
+---
+
+```{r}
+#| echo: false
+# Configuración global
+knitr::opts_chunk$set(message = FALSE, 
+                      warning = FALSE,
+                      echo = TRUE,
+                      fig.align = "center")
+```
+
+## Introducción {background-image="fondo_ppt.png"}
+
+::: incremental
+-   Se utiliza para modelar datos de **conteos** en intervalos de tiempo, geográficos, etc.
+
+-   La variable respuesta es **numérica discreta** y siempre toma valores **positivos**.
+
+-   Las variables explicativas pueden ser categóricas y/o numéricas.
+:::
+
+##  {background-image="fondo_ppt.png"}
+
+::: incremental
+-   Tiene un solo parámetro $\lambda$ (lamba), que representa tanto a la media como la varianza.
+
+-   La función de enlace es el logaritmo natural, que linealiza la relación entre la variable respuesta (conteo) y las variables independientes.
+:::
+
+## Supuestos {background-image="fondo_ppt.png"}
+
+::: incremental
+-   Independencia de observaciones
+
+-   Equidispersión
+
+-   Proporcionalidad de eventos al tamaño del intervalo
+
+-   Eventos mutuamente excluyentes en el tiempo
+:::
+
+## Sobredispersión {background-image="fondo_ppt.png"}
+
+::: incremental
+-   Ocurre cuando la varianza es mayor que la media.
+
+-   Puede ocurrir por heterogeneidad no observada, correlación entre observaciones o alta frecuencia de valores extremos.
+
+-   Sobreestima los errores estándar, disminuyendo la significancia estadística.
+:::
+
+##  {background-image="fondo_ppt.png"}
+
+::: incremental
+-   Se puede detectar mediante el **ratio de dispersión**, usando la función `check_overdispersion()` del paquete `performance.`
+
+-   Un ratio significativamente mayor a 1 indica sobredispersión.
+
+-   Se controla ajustando modelos con distribución **binomial negativa** o **Conway-Maxwell Poisson** (paquete `glmmTMB`).
+:::
+
+## Subdispersión {background-image="fondo_ppt.png"}
+
+::: incremental
+-   Ocurre cuando la varianza es menor que la media.
+
+-   Menos frecuente que la sobredispersión.
+
+-   Subestima los errores estándar, aumentando la significancia estadística.
+
+-   Un ratio significativamente menor a 1 indica evidencia de subdispersión.
+
+-   Se controla ajustando modelos con distribución **Conway-Maxwell Poisson** (paquete `glmmTMB`).
+:::
+
+## Exceso de ceros (*zero-inflation*) {background-image="fondo_ppt.png"}
+
+::: incremental
+-   Ocurre cuando los datos presentan más ceros que los que predice el modelo Poisson.
+
+-   Para evaluar la presencia de exceso de ceros usamos la función `check_zeroinflation()` del paquete `performance`.
+
+-   Podemos controlar el exceso de ceros agregando al modelo el argumento `zi = ~ 1 o zi = ~ var1`, dependiendo si queremos ajustar solo el intercepto o por alguna variable explicativa.
+:::
+
+## Práctica en R {background-image="fondo_ppt.png"}
+
+Trabajaremos con el dataset "`base_pois_lepto.txt`" que contiene datos de casos de leptospirosis reportados al sistema de salud para la provincia de Santa Fe para el periodo 2014-2017.
+
+Cargamos los paquetes necesarios:
+
+```{r}
+library(gtsummary) # Tablas coeficientes
+library(performance) # Chequeo de supuestos
+library(glmmTMB) # Ajuste de modelos
+library(tidyverse) # Manejo de datos
+```
+
+##  {background-image="fondo_ppt.png"}
+
+#### Cargamos el dataset:
+
+```{r}
+datos <- read.delim("base_pois_lepto.txt")
+```
+
+#### Exploramos las variables:
+
+```{r}
+glimpse(datos)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+#### Regresiones univariadas: Año
+
+```{r}
+#| echo: false
+glmmTMB(casos_lepto ~ anio, data = datos, family = poisson) %>% 
+  summary()
+```
+
+##  {background-image="fondo_ppt.png"}
+
+#### Regresiones univariadas: Estación
+
+```{r}
+#| echo: false
+# Estación
+glmmTMB(casos_lepto ~ estacion, data = datos, family = poisson) %>% 
+  summary()
+```
+
+##  {background-image="fondo_ppt.png"}
+
+#### Regresiones univariadas: Ecorregión
+
+```{r}
+#| echo: false
+# Estación
+glmmTMB(casos_lepto ~ ecoregion, data = datos, family = poisson) %>% 
+  summary()
+```
+
+##  {background-image="fondo_ppt.png"}
+
+#### Regresiones univariadas: Grupo etario
+
+```{r}
+#| echo: false
+# Estación
+glmmTMB(casos_lepto ~ grupo_edad, data = datos, family = poisson) %>% 
+  summary()
+```
+
+##  {background-image="fondo_ppt.png"}
+
+### Modelo saturado
+
+```{r}
+# Modelo Poisson
+fit_pois <- glmmTMB(casos_lepto ~ grupo_edad + anio + estacion + 
+                  ecoregion + prec_mm_cat,
+                data = datos,
+                family = poisson)
+```
+
+Para este ejemplo no usaremos un *offset* debido a que no contamos con el dato de la población por departamento y a que pueden ocurrir reinfecciones en distintos años.
+
+##  {background-image="fondo_ppt.png"}
+
+#### Salida del modelo
+
+```{r}
+# Salida del modelo
+summary(fit_pois)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+#### Chequeo residuales
+
+```{r}
+check_model(fit_pois)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+**Chequeo supuesto de equidispersión:**
+
+```{r}
+#| message: true
+check_overdispersion(fit_pois)
+```
+
+**Chequeo exceso de ceros:**
+
+```{r}
+#| message: true
+check_zeroinflation(fit_pois)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+### Modelo con distribución binomial negativa
+
+```{r}
+fit_nb <- glmmTMB(casos_lepto ~ grupo_edad + anio + estacion + 
+                  ecoregion + prec_mm_cat,
+                data = datos,
+                family = nbinom2())
+
+# Salida del modelo
+summary(fit_nb)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+Quito una de las variables no significativas en el modelo saturado:
+
+```{r}
+# (-) Precipitaciones
+fit1 <- update(fit_nb, ~.- prec_mm_cat)
+
+# (-) Grupo etario
+fit2 <- update(fit_nb, ~.- grupo_edad)
+
+# (-) Ecorregión
+fit3 <- update(fit_nb, ~.- ecoregion)
+
+# (-) Año
+fit4 <- update(fit_nb, ~.-anio)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+Comparo *performance* de los modelos:
+
+```{r}
+compare_performance(fit1, fit2, fit3, fit4, 
+                    rank = T, metrics = "AIC")
+```
+
+##  {background-image="fondo_ppt.png"}
+
+Reviso salida del modelo 1 y repito el proceso *step-backwards*
+
+```{r}
+summary(fit1)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+```{r}
+# (-) Ecorregión
+fit1a <- update(fit1, ~.- ecoregion)
+
+# (-) Año
+fit1b <- update(fit1, ~.- anio)
+
+# (-) Grupo etario
+fit1c <- update(fit1, ~.-grupo_edad)
+```
+
+Comparo la performance de los modelos
+
+```{r}
+compare_performance(fit1a, fit1b, fit1c,
+                    rank = T, 
+                    metrics = "AIC")
+```
+
+##  {background-image="fondo_ppt.png"}
+
+Repito proceso a partir de `fit1c`:
+
+```{r}
+# (-) Ecorregión
+fit1c1 <- update(fit1c, ~.- ecoregion)
+
+# (-) Año
+fit1c2 <- update(fit1c, ~.- anio)
+
+# Compara modelos
+compare_performance(fit1c1, fit1c2, rank = T, metrics = "AIC")
+
+```
+
+##  {background-image="fondo_ppt.png"}
+
+**Salida del modelo:**
+
+```{r}
+summary(fit1c1)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+**Quito año del modelo anterior:**
+
+```{r}
+fit5<- update(fit1c1, ~.- anio)
+
+summary(fit5)
+```
+
+##  {background-image="fondo_ppt.png"}
+
+#### Coeficientes del modelo:
+
+```{r}
+tbl_regression(fit5, exponentiate = T)
+```
+
+#### Chequeo exceso de ceros:
+
+```{r}
+#| message: true
+check_zeroinflation(fit5)
+```
+
+## En resumen {background-image="fondo_ppt.png"}
+
+::: incremental
+-   Al ajustar los datos con distribución Poisson se observaba la presencia de sobredispersión y exceso de ceros.
+
+-   Esto hacía que los errores estándar no se estimaran correctamente y todos los predictores fueran estadísticamente significativos.
+
+-   Al cambiar a la distribución binomial negativa, se corrigió el exceso de dispersión y de ceros y solamente se retuvo la estación el año como variable explicativa.
+:::
+
+##  {background-image="fondo_ppt.png"}
+
+::: incremental
+-   La incidencia de leptospirosis en Santa Fe aumenta significativamente en verano y otoño, coincidiendo con las mayores precipitaciones y temperaturas.
+
+-   Podrían evaluarse interacciones entre la estación y el año, la estación y las precipitaciones, el año y las precipitaciones, etc.
+:::
