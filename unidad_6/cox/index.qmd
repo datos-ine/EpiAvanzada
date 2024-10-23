@@ -518,7 +518,7 @@ La H0 que se testea es que la correlación lineal entre el residuo de Schoenfeld
 
 Esto es equivalente a probar H0: pendiente igual a cero o H0: logHR es constante en el tiempo.
 
-De lo expuesto se concluye que existe evidencia significativa al 5% de que se viole el supuesto de riesgos proporcionales, desde el punto de vista global, y para la covariable "*decr*".
+De lo expuesto se concluye que existe evidencia significativa al 5% de que se viole el supuesto de riesgos proporcionales, desde el punto de vista global, y para las covariables "*decr*" y "*fase*".
 
 La validación del supuesto de riesgos proporcionales puede realizarse también en forma gráfica con la función `ggcoxdiagnostics()`.
 
@@ -535,7 +535,7 @@ ggcoxdiagnostics(m5,
 
 La interpretación se facilita con el agregado de una línea de tendencia "lowess", de esta forma, cuando esta línea se desvía de una línea constante, se sospecha una estructura tiempo dependiente en el efecto de la covariable.
 
-Los gráficos confirman lo que hallamos con el test: los residuos tienen un patrón o estructura con el tiempo. En el caso de la variable *decr*, parece visualizarse una relación lineal.
+Los gráficos confirman lo que hallamos con el test: los residuos tienen un patrón o estructura con el tiempo. En el caso de la variable *decr*, parece visualizarse una relación lineal, lo mismo en *fasecb*.
 
 Frente al problema de No proporcionalidad, se deberá evaluar:
 
@@ -593,7 +593,7 @@ Podemos nuevamente chequear la proporcionalidad en este nuevo modelo:
 cox.zph(m5st, transform="km", global=TRUE)
 ```
 
-Y vemos que ahora sí se cumplen los presupuestos del modelo.
+Vemos que el modelo de Cox estratificado tampoco resuelve el problema.
 
 ## Modelo de Cox extendido
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.54">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -1054,7 +1054,7 @@ GLOBAL 18.546  4 0.00097</code></pre>
 <p><strong>¿Qué significa esta salida?</strong></p>
 <p>La H0 que se testea es que la correlación lineal entre el residuo de Schoenfeld y el tiempo de supervivencia es cero.</p>
 <p>Esto es equivalente a probar H0: pendiente igual a cero o H0: logHR es constante en el tiempo.</p>
-<p>De lo expuesto se concluye que existe evidencia significativa al 5% de que se viole el supuesto de riesgos proporcionales, desde el punto de vista global, y para la covariable “<em>decr</em>”.</p>
+<p>De lo expuesto se concluye que existe evidencia significativa al 5% de que se viole el supuesto de riesgos proporcionales, desde el punto de vista global, y para las covariables “<em>decr</em>” y “<em>fase</em>”.</p>
 <p>La validación del supuesto de riesgos proporcionales puede realizarse también en forma gráfica con la función <code>ggcoxdiagnostics()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcoxdiagnostics</span>(m5, </span>
@@ -1071,7 +1071,7 @@ GLOBAL 18.546  4 0.00097</code></pre>
 </div>
 </div>
 <p>La interpretación se facilita con el agregado de una línea de tendencia “lowess”, de esta forma, cuando esta línea se desvía de una línea constante, se sospecha una estructura tiempo dependiente en el efecto de la covariable.</p>
-<p>Los gráficos confirman lo que hallamos con el test: los residuos tienen un patrón o estructura con el tiempo. En el caso de la variable <em>decr</em>, parece visualizarse una relación lineal.</p>
+<p>Los gráficos confirman lo que hallamos con el test: los residuos tienen un patrón o estructura con el tiempo. En el caso de la variable <em>decr</em>, parece visualizarse una relación lineal, lo mismo en <em>fasecb</em>.</p>
 <p>Frente al problema de No proporcionalidad, se deberá evaluar:</p>
 <ul>
 <li><p>Magnitud</p></li>
@@ -1146,7 +1146,7 @@ deag    0.448  1 0.5031
 GLOBAL 11.084  3 0.0113</code></pre>
 </div>
 </div>
-<p>Y vemos que ahora sí se cumplen los presupuestos del modelo.</p>
+<p>Vemos que el modelo de Cox estratificado tampoco resuelve el problema.</p>
 </section>
 <section id="modelo-de-cox-extendido" class="level2">
 <h2 class="anchored" data-anchor-id="modelo-de-cox-extendido">Modelo de Cox extendido</h2>
