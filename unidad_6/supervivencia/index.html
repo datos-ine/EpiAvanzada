@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.54">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -552,52 +552,67 @@ window.Quarto = {
 </div>
 <p>Si llamamos al objeto <strong>KM</strong>, nos devuelve la información que vemos: el número de observaciones, de eventos, la mediana del tiempo de supervivencia y su IC. La función survfit crea curvas de supervivencia a partir de una fórmula (por ejemplo, Kaplan-Meier). Tiene varios argumentos opcionales.El nivel de confianza puede cambiarse usando el segundo argumento, <em>conf.int</em> (por ejemplo, conf.int = 0.90 para límites de confianza del 90%). El argumento <em>conf.type</em> describe el tipo de intervalo de confianza. Más específicamente, describe la transformación para construir el intervalo de confianza. El valor predeterminado es “log”, que equivale a la función de transformación g (t) = log (t). La opción “log-log” usa g (t) = log (-log (t)). Se crea un intervalo de confianza lineal utilizando el argumento <em>conf.type</em> = “plain”. Al igual que muchas funciones en R, la función <code>survfit()</code> devuelve información oculta a la que se puede acceder con los comandos adecuados. A continuación consideramos varios elementos de esta información oculta, que se almacena en una lista, dado que como podrán verificar el objeto KM es una lista.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(KM)<span class="sc">$</span>surv <span class="co"># devuelve las estimaciones de Kaplan-Meier a cada t_i</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>KM<span class="sc">$</span>surv <span class="co"># devuelve las estimaciones de Kaplan-Meier a cada t_i</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 0.9895833 0.9687500 0.9583333 0.9479167 0.9375000 0.9270833 0.9164272
  [8] 0.9057711 0.8951149 0.8844588 0.8738027 0.8631466 0.8524904 0.8418343
-[15] 0.8311782 0.8205220 0.8098659 0.7990677 0.7882695 0.7774713 0.7666731
-[22] 0.7557206 0.7447681 0.7338156 0.7228632 0.7119107 0.7009582 0.6900057
-[29] 0.6790533 0.6681008 0.6571483 0.6456194 0.6340905 0.6225616 0.6110327
-[36] 0.5990516 0.5868261 0.5746005 0.5621092 0.5496179 0.5371266 0.5121440
-[43] 0.4990121 0.4855252 0.4712451 0.4555369 0.4392677</code></pre>
+[15] 0.8311782 0.8205220 0.8098659 0.8098659 0.7990677 0.7882695 0.7774713
+[22] 0.7666731 0.7666731 0.7557206 0.7447681 0.7338156 0.7228632 0.7119107
+[29] 0.7009582 0.6900057 0.6790533 0.6681008 0.6571483 0.6571483 0.6571483
+[36] 0.6571483 0.6456194 0.6340905 0.6225616 0.6110327 0.6110327 0.6110327
+[43] 0.5990516 0.5990516 0.5868261 0.5746005 0.5746005 0.5621092 0.5496179
+[50] 0.5371266 0.5121440 0.5121440 0.5121440 0.4990121 0.4990121 0.4855252
+[57] 0.4855252 0.4855252 0.4712451 0.4712451 0.4712451 0.4712451 0.4555369
+[64] 0.4555369 0.4392677 0.4392677 0.4392677 0.4392677 0.4392677 0.4392677
+[71] 0.4392677 0.4392677</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(KM)<span class="sc">$</span>time <span class="co"># {t_i}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>KM<span class="sc">$</span>time <span class="co"># {t_i}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]  31  32  39  40  48  54  63  65  69  70  71  74  76  78  79  83  84  98 100
-[20] 101 104 120 128 139 149 162 185 200 210 214 216 261 263 281 313 347 370 371
-[39] 415 425 427 434 453 475 522 586 672</code></pre>
+<pre><code> [1]   31   32   39   40   48   54   63   65   69   70   71   74   76   78   79
+[16]   83   84   89   98  100  101  104  110  120  128  139  149  162  185  200
+[31]  210  214  216  229  236  243  261  263  281  313  320  342  347  362  370
+[46]  371  383  415  425  427  434  445  452  453  468  475  487  489  522  531
+[61]  536  571  586  587  672  753  774  846  865  907  980 1000</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(KM)<span class="sc">$</span>n.risk <span class="co"># {Y_i}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>KM<span class="sc">$</span>n.risk <span class="co"># {Y_i}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 96 95 93 92 91 90 87 86 85 84 83 82 81 80 79 78 77 75 74 73 72 70 69 68 67
-[26] 66 65 64 63 62 61 57 56 55 54 51 49 48 46 45 44 43 39 37 34 30 28</code></pre>
+<pre><code> [1] 96 95 93 92 91 90 87 86 85 84 83 82 81 80 79 78 77 76 75 74 73 72 71 70 69
+[26] 68 67 66 65 64 63 62 61 60 59 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44
+[51] 43 41 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(KM)<span class="sc">$</span>n.event <span class="co"># {d_i}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>KM<span class="sc">$</span>n.event <span class="co"># {d_i}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-[39] 1 1 1 2 1 1 1 1 1</code></pre>
+<pre><code> [1] 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 0 0 0 1 1
+[39] 1 1 0 0 1 0 1 1 0 1 1 1 2 0 0 1 0 1 0 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(KM)<span class="sc">$</span>std.err <span class="co">#  error standard de las estimaciones de  K-M a {t_i}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>KM<span class="sc">$</span>std.err <span class="co">#  error standard de las estimaciones de  K-M a {t_i}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.01036227 0.01775805 0.02039469 0.02267769 0.02470529 0.02653610
- [7] 0.02828989 0.02990062 0.03139031 0.03277547 0.03406886 0.03528058
-[13] 0.03641876 0.03749012 0.03850023 0.03945379 0.04035482 0.04123615
-[19] 0.04206898 0.04285613 0.04360007 0.04433152 0.04502166 0.04567236
-[25] 0.04628529 0.04686192 0.04740359 0.04791147 0.04838664 0.04883004
-[31] 0.04924254 0.04970993 0.05014134 0.05053772 0.05089987 0.05129253
-[37] 0.05168218 0.05203137 0.05237821 0.05268268 0.05294552 0.05334865
-[43] 0.05357258 0.05379554 0.05407546 0.05450672 0.05493443</code></pre>
+<pre><code> [1] 0.01047135 0.01833089 0.02128141 0.02392372 0.02635231 0.02862321
+ [7] 0.03086977 0.03301123 0.03506847 0.03705709 0.03898920 0.04087437
+[13] 0.04272043 0.04453385 0.04632006 0.04808377 0.04982901 0.04982901
+[19] 0.05160533 0.05336878 0.05512246 0.05686918 0.05686918 0.05866126
+[25] 0.06045058 0.06223956 0.06403050 0.06582557 0.06762684 0.06943634
+[31] 0.07125603 0.07308784 0.07493368 0.07493368 0.07493368 0.07493368
+[37] 0.07699571 0.07907601 0.08117706 0.08330139 0.08330139 0.08330139
+[43] 0.08562288 0.08562288 0.08807070 0.09055225 0.09055225 0.09318156
+[49] 0.09585329 0.09857177 0.10416729 0.10416729 0.10416729 0.10735729
+[55] 0.10735729 0.11079864 0.11079864 0.11079864 0.11475018 0.11475018
+[61] 0.11475018 0.11475018 0.11965379 0.11965379 0.12505911 0.12505911
+[67] 0.12505911 0.12505911 0.12505911 0.12505911 0.12505911 0.12505911</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(KM)<span class="sc">$</span>lower <span class="co"># estimaciones puntuales inferiores (alternativamente, $upper)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>KM<span class="sc">$</span>lower <span class="co"># estimaciones puntuales inferiores (alternativamente, $upper)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 0.9694806 0.9345627 0.9191827 0.9044952 0.8903077 0.8765055 0.8626241
  [8] 0.8490226 0.8356578 0.8224974 0.8095165 0.7966952 0.7840176 0.7714705
-[15] 0.7590431 0.7467260 0.7345115 0.7221992 0.7099816 0.6978531 0.6858088
-[22] 0.6736413 0.6615542 0.6495440 0.6376072 0.6257411 0.6139430 0.6022106
-[29] 0.5905417 0.5789346 0.5673875 0.5551850 0.5430523 0.5309875 0.5189890
-[36] 0.5065029 0.4937914 0.4811581 0.4682787 0.4554811 0.4427639 0.4175656
-[43] 0.4043229 0.3907508 0.3763321 0.3603082 0.3437786</code></pre>
+[15] 0.7590431 0.7467260 0.7345115 0.7345115 0.7221992 0.7099816 0.6978531
+[22] 0.6858088 0.6858088 0.6736413 0.6615542 0.6495440 0.6376072 0.6257411
+[29] 0.6139430 0.6022106 0.5905417 0.5789346 0.5673875 0.5673875 0.5673875
+[36] 0.5673875 0.5551850 0.5430523 0.5309875 0.5189890 0.5189890 0.5189890
+[43] 0.5065029 0.5065029 0.4937914 0.4811581 0.4811581 0.4682787 0.4554811
+[50] 0.4427639 0.4175656 0.4175656 0.4175656 0.4043229 0.4043229 0.3907508
+[57] 0.3907508 0.3907508 0.3763321 0.3763321 0.3763321 0.3763321 0.3603082
+[64] 0.3603082 0.3437786 0.3437786 0.3437786 0.3437786 0.3437786 0.3437786
+[71] 0.3437786 0.3437786</code></pre>
 </div>
 </div>
 <p>O bien usar directamente</p>

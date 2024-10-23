@@ -499,12 +499,12 @@ Si llamamos al objeto **KM**, nos devuelve la información que vemos: el número
 
 ```{r}
 #| echo: true  
-summary(KM)$surv # devuelve las estimaciones de Kaplan-Meier a cada t_i
-summary(KM)$time # {t_i}
-summary(KM)$n.risk # {Y_i}
-summary(KM)$n.event # {d_i}
-summary(KM)$std.err #  error standard de las estimaciones de  K-M a {t_i}
-summary(KM)$lower # estimaciones puntuales inferiores (alternativamente, $upper)
+KM$surv # devuelve las estimaciones de Kaplan-Meier a cada t_i
+KM$time # {t_i}
+KM$n.risk # {Y_i}
+KM$n.event # {d_i}
+KM$std.err #  error standard de las estimaciones de  K-M a {t_i}
+KM$lower # estimaciones puntuales inferiores (alternativamente, $upper)
 ```
 
 O bien usar directamente
