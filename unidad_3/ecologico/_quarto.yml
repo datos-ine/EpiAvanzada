@@ -1,29 +1,19 @@
 project:
   type: website
-  
+
 website:
-  title: "Estudios ecológicos"
-  back-to-top-navigation: true
-  sidebar: 
-    search: true
-    logo: images/logos_ine.svg
-  body-header: |
-    <center> Este material es parte de la Unidad 3 del curso de Epidemiología - Nivel Avanzado </br>
-    © 2025 Instituto Nacional de Epidemiología "Dr. Juan H. Jara" (ANLIS) - 
-    <a href="http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1"> CC BY-NC 4.0 </a>
-    ![](images/cc01.svg){width="3%"}
-    ![](images/cc02.svg){width="3%"}
-    ![](images/cc03.svg){width="3%"} 
-    </br>
-    </br>
-    </center>
+  title: "ecologico"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
 
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
-    toc-location: left
-    toc-title: "Contenidos"
+
 editor: visual
 
