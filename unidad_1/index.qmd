@@ -1,0 +1,316 @@
+---
+title: "Errores y advertencias en R"
+format: html
+editor: visual
+toc: true
+theme: "../../custom.scss"
+---
+
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+
+### Carga paquetes
+library(tidyverse)
+```
+
+[Este material es parte de la **Unidad 1 del Curso de Epidemiología - Nivel Avanzado del Instituto Nacional de Epidemiología “Dr. Juan H. Jara” - ANLIS**]{.text style="display: block; text-align: center;"}
+
+## Errores comunes en R
+
+Los mensajes de error ocurren cuando `R` no puede completar la ejecución de un comando. Para ilustrar los errores más comunes usaremos el dataset de ejemplo `who2` que viene incluido en la ayuda de `tidyverse`, que contiene información por año, país y grupos etarios del *Informe Global sobre la Tuberculosis de la Organización Mundial de la Salud* (WHO por sus siglas en inglés).
+
+```{r}
+# Carga datos
+data("who2")
+
+# Nombres de columnas
+names(who2)
+```
+
+### Errores de sintaxis
+
+Los errores de sintaxis ocurren cuando una parte del código está mal escrito o incompleto, impidiendo la ejecución del comando.
+
+-   Por ejemplo, si al escribir una función olvidamos el paréntesis de cierre:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina") %>% 
+  mean(sp_m_2534, na.rm = T
+```
+
+-   O el de apertura:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina") %>% 
+  mean sp_m_2534, na.rm = T)
+```
+
+-   Podemos haber colocado un paréntesis extra:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina")) %>%
+  mean(sp_m_2534, na.rm = T)
+```
+
+-   También podemos haber olvidado encerrar entre comillas una cadena de texto:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == Argentina) %>%
+  mean(sp_m_2534, na.rm = T)
+```
+
+-   O haber dejado las comillas sin cerar:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina) %>% 
+  mean(sp_m_2534, na.rm = T)
+```
+
+-   Es posible que hayamos dejado un operador *pipe* `%>%` abierto al terminar de escribir el código:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina") %>% 
+  mean(sp_m_2534, na.rm = T) %>% 
+```
+
+-   A veces escribimos incorrectamente el nombre de la función:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina") %>% 
+  means(sp_m_2534, na.rm = T)
+```
+
+-   O el nombre del objeto (recordar que `R` es sensible a mayúsculas y minúsculas)
+
+```{r}
+#| error: true
+
+Who2 %>% 
+  filter(country == "Argentina") %>% 
+  mean(sp_m_2534, na.rm = T)
+
+WHO2 %>%
+  filter(country == "Argentina") %>% 
+  mean(sp_m_2534, na.rm = T)
+```
+
+-   O se nos olvida separar por comas los argumentos:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina") %>% 
+  mean(sp_m_2534 na.rm = T)
+```
+
+-   También generamos error si colocamos el asignador `<-` en sentido contrario:
+
+```{r}
+#| error: true
+
+who_arg -> who2 %>% 
+  filter(country == "Argentina") %>%    
+  mean(sp_m_2534, na.rm = T)
+```
+
+-   O si lo escribimos de forma incorrecta:
+
+```{r}
+#| error: true
+
+who_arg >- 
+  who2 %>%  
+  filter(country == "Argentina") %>%    
+  mean(sp_m_2534, na.rm = T)
+```
+
+-   En algunos casos podemos haber escrito un comentario de texto en varias líneas y olvidado anteponer el `#` al empezar cada línea:
+
+```{r}
+#| error: true
+
+# Crea objeto con la media de casos para hombres de entre 
+25 y 34 años residentes en Argentina
+
+who_arg >- 
+  who2 %>%
+  filter(country == "Argentina") %>%    
+  mean(sp_m_2534, na.rm = T)
+```
+
+### Errores de objeto no encontrado
+
+Ocurren cuando el código hace referencia a un objeto no cargado en el entorno de trabajo actual.
+
+-   Un ejemplo típico es cuando intentamos usar una función de un paquete que no cargamos:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina") %>% 
+  mean(sp_m_2534, na.rm = T) %>% 
+  flextable()
+```
+
+-   O si llamamos una variable que no existe en el entorno
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(country == "Argentina" & gender == "M") %>%
+  mean(sp_m_2534, na.rm = T)
+```
+
+-   Puede ser también que estemos escribiendo mal el nombre de la variable:
+
+```{r}
+#| error: true
+
+who2 %>% 
+  filter(Country == "Argentina") %>%
+  mean(sp_m_2534, na.rm = T)
+```
+
+### Otros tipos de error
+
+Suelen estar relacionado a causas más complejas, como ser problemas de lógica, operaciones no válidas, errores de tipo de datos o errores en la instalación de paquetes.
+
+## Advertencias en R
+
+A diferencia de los errores, las advertencias permiten continuar con la ejecución del código pero alertan sobre posibles problemas o situaciones inusuales.
+
+Uno de los más frecuentes es cuando queremos usar funciones que van a quedar obsoletas o están difuntas:
+
+```{r}
+#| error: true
+
+library(dlookr)
+
+who2 %>% 
+  select(starts_with("sp_m")) %>% 
+  plot_correlate()
+```
+
+## Solución de errores
+
+A veces los errores y advertencias ocurren cuando la memoria interna está saturada porque tenemos demasiados paquetes y objetos cargados o porque nos quedaron cosas abiertas de sesiones anteriores. Un primer paso entonces es realizar lo siguiente:
+
+-   Reiniciar sesión de `R` desde el menú `Session: Restart R` o con el atajo de teclado `CTRL + SHIFT + F10`.
+
+-   Si quedaran objetos abiertos en el environment, limpiar el mismo apretando el ícono de la escoba o escribiendo en la consola el comando `rm(list = ls())`.
+
+-   Apretar el botón que indica el uso de memoria (a la izquierda del ícono de la escoba) y seleccionar la opción `Free Unused R Memory`.
+
+Si el problema persiste pasaremos a revisar nuestro código exhaustivamente a fin de detectar posibles errores de sintaxis o de objeto no encontrado. RStudio suele marcarnos los errores de código subrayando en rojo el lugar dónde se encuentra el símbolo faltante o sobrante y colocando una X roja en el número de línea correspondiente.
+
+Si al revisar el código no encontramos la fuente del error/advertencia, podemos acceder a la ayuda de la función de las siguientes formas:
+
+-   Consultar la documentación de la función entrando a la ayuda del paquete correspondiente desde la solapa `Packages` y buscando el nombre de la función que nos genera el problema.
+
+-   Ejecutando en la consola `?nombre_de_la_función` (por ejemplo `?mean`), o bien posicionando el cursor sobre la función y presionando la tecla `F1`.
+
+-   Buscando online la documentación del paquete.
+
+Cuando siguiendo los pasos anteriores no pudimos identificar ni resolver el problema, podemos solicitar ayuda online en alguno de los siguientes recursos:
+
+-   Foro del [curso de Avanzada](http://capacitacion.anlis.gob.ar/mod/forum/view.php?id=8083) (recomendada)
+
+-   Buscar el mensaje de error en el buscador de Google
+
+-   Herramientas de inteligencia artificial como [ChatGPT](https://chatgpt.com/), [Gemini](https://gemini.google.com/), etc. (no recomendable para usuarios/as principiantes)
+
+-   Foros específicos de R como [Stack Exchange](https://stackexchange.com/), [Stack Overflow](https://stackoverflow.com/), o de R para Salud Pública como [Comunidad AppliedEpi](https://appliedepi.org/community/) (antes de postear en cualquiera de estos foros, buscar si otra persona no posteó anteriormente el mismo problema)
+
+## Pedido de ayuda en foros
+
+Antes de publicar un mensaje de ayuda en cualquier foro, debemos aprender a contextualizar el problema para que otras personas puedan indicarnos posibles soluciones. Algunos de los pasos a seguir al elaborar un posteo son los siguientes:
+
+1.  Describe el problema de manera clara y concisa
+2.  Proporciona todos los detalles relevantes: el código que estás utilizando, los errores que estás recibiendo y cualquier intento que hayas hecho para resolver el problema por tu cuenta.
+3.  Proporciona información adicional como el sistema operativo que estás usando, la capacidad de almacenamiento en disco y de memoria RAM, si estás usando una red de uso limitado, etc.
+4.  Adjunta capturas de pantalla del error
+
+En el foro del [curso de Avanzada](http://capacitacion.anlis.gob.ar/mod/forum/view.php?id=8083) todos trabajaremos con los mismos datasets ficticios creados con fines educativos. Sin embargo, por lo general en Epidemiología y Salud Pública nos encontramos con datasets con información sensible tales como el nombre y apellido, DNI, domicilio o teléfono de los participantes de un estudio y no podemos publicar esos datos en cualquier parte.
+
+En estos casos, podemos crear un set de datos ficticio con las mismas características que el real o solamente seleccionar algunas columnas y filas que no contengan información que pueda llevar a la identificación del paciente/participante. Por ejemplo, con la base de la WHO que vimos anteriormente, generamos un dataset mínimo de 6 filas y 8 columnas:
+
+```{r}
+who2 %>% 
+  filter(country == "Argentina") %>% 
+  select(year, starts_with("sp_m")) %>% 
+  head()
+
+```
+
+Sin embargo, si se tratara de datos reales, deberíamos presentarlos de alguna forma que permita a otros usuarios/as reproducir el error. Para estos casos, existen paquetes tales como `datapasta` y `reprex`, que permiten crear ejemplos mínimos reproducibles (REPREX por sus siglas en inglés):
+
+```{r}
+#| eval: false
+
+# Creamos el conjunto de datos ficticios
+library(datapasta)
+
+datos <- who2 %>% 
+  filter(country == "Argentina") %>% 
+  select(year, starts_with("sp_m")) %>% 
+  head() %>% 
+  dpasta()
+```
+
+Al ejecutar el comando dpasta(), nuestro código se transforma de la siguiente manera:
+
+```{r}
+library(datapasta)
+
+datos <- who2 %>% 
+  filter(country == "Argentina") %>% 
+  select(year, starts_with("sp_m")) %>% 
+  head() %>% 
+  dpasta()
+
+tibble::tribble(
+  ~year, ~sp_m_014, ~sp_m_1524, ~sp_m_2534, ~sp_m_3544, ~sp_m_4554, ~sp_m_5564, ~sp_m_65,
+   1980,        NA,         NA,         NA,         NA,         NA,         NA,       NA,
+   1981,        NA,         NA,         NA,         NA,         NA,         NA,       NA,
+   1982,        NA,         NA,         NA,         NA,         NA,         NA,       NA,
+   1983,        NA,         NA,         NA,         NA,         NA,         NA,       NA,
+   1984,        NA,         NA,         NA,         NA,         NA,         NA,       NA,
+   1985,        NA,         NA,         NA,         NA,         NA,         NA,       NA
+  )
+
+
+```
+
+Asignamos el código generado al objeto `datos` y con esto ya contamos con un dataset mínimo para que otra persona pueda reproducir el mensaje de error. Para opciones más avanzadas de como compartir ejemplos mínimos reproducibles, pueden consultar la documentación del paquete `reprex`.
+
+::: callout-important
+## Importante
+
+Recuerden publicar sus consultas en el foro de ayuda del curso, en lugar de escribir a los/as docentes por mensajes privados. De esta forma, podemos ayudar a otros/as estudiantes que presenten problemas similares y enriquecer el proceso de aprendizaje.
+:::
