@@ -5,6 +5,7 @@ author:
   - "Christian Ballejo"
   - "Tamara Ricardo"
 lang: es
+output-file: "index.html"
 bibliography: references.bib
 nocite: |
   @*
