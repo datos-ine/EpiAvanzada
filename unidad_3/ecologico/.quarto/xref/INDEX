@@ -1,8 +1,12 @@
 {
   "index.qmd": {
+<<<<<<< HEAD
     "index.html": "447a3ac1"
   },
   "about.qmd": {
     "about.html": "554882d8"
+=======
+    "index.html": "439c6f2a"
+>>>>>>> parent of 2436a1c (Delete unidad_3/ecologico directory)
   }
 }
